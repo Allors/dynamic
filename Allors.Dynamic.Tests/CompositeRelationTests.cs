@@ -27,6 +27,7 @@ namespace Allors.Dynamic.Tests
             Assert.Null(john["WhereOwner"]);
         }
 
+        [Fact]
         public void OneToOneWithIndex()
         {
             var population = new Population();
