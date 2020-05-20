@@ -54,7 +54,7 @@ namespace Allors.Dynamic.Tests
         {
             var population = new Population();
 
-            foreach (var run in Enumerable.Range(0, 1000 * 1000))
+            foreach (var run in Enumerable.Range(0, 10))
             {
                 dynamic acme = population.NewObject();
                 dynamic gizmo = population.NewObject();

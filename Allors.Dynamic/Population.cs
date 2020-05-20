@@ -1,4 +1,5 @@
-﻿using System.Collections.Concurrent;
+﻿using System;
+using System.Collections.Concurrent;
 using System.Dynamic;
 using System.Globalization;
 
@@ -8,20 +9,47 @@ namespace Allors.Dynamic
     {
         private readonly Inflector.Inflector inflector;
 
-        private ConcurrentBag<AllorsDynamicObject> objects;
+        private readonly ConcurrentDictionary<string, Derivation> derivationById;
 
-        private ConcurrentDictionary<string, ConcurrentDictionary<AllorsDynamicObject, object>> roleByAssociationByRelation;
+        private readonly ConcurrentBag<AllorsDynamicObject> objects;
 
-        private ConcurrentDictionary<string, ConcurrentDictionary<object, object>> associationByRoleByRelation;
+        private readonly ConcurrentDictionary<string, ConcurrentDictionary<AllorsDynamicObject, object>> roleByAssociationByRelation;
+        private readonly ConcurrentDictionary<string, ConcurrentDictionary<object, object>> associationByRoleByRelation;
+
+        private ConcurrentDictionary<string, ConcurrentDictionary<AllorsDynamicObject, object>> changedRoleByAssociationByRelation;
+        private ConcurrentDictionary<string, ConcurrentDictionary<object, object>> changedAssociationByRoleByRelation;
+
+        public ConcurrentDictionary<string, Derivation> DerivationById => derivationById;
 
         public Population()
         {
             this.inflector = new Inflector.Inflector(new CultureInfo("en"));
 
+            this.derivationById = new ConcurrentDictionary<string, Derivation>();
+
             this.objects = new ConcurrentBag<AllorsDynamicObject>();
 
             this.roleByAssociationByRelation = new ConcurrentDictionary<string, ConcurrentDictionary<AllorsDynamicObject, object>>();
             this.associationByRoleByRelation = new ConcurrentDictionary<string, ConcurrentDictionary<object, object>>();
+
+            this.changedRoleByAssociationByRelation = new ConcurrentDictionary<string, ConcurrentDictionary<AllorsDynamicObject, object>>();
+            this.changedAssociationByRoleByRelation = new ConcurrentDictionary<string, ConcurrentDictionary<object, object>>();
+        }
+
+        public void Derive()
+        {
+            var changeSet = this.Snapshot();
+
+            while (changeSet.HasChanges)
+            {
+                foreach (var kvp in this.DerivationById)
+                {
+                    var derivation = kvp.Value;
+                    derivation.Derive(changeSet);
+                }
+
+                changeSet = this.Snapshot();
+            }
         }
 
         public AllorsDynamicObject NewObject()
@@ -29,6 +57,48 @@ namespace Allors.Dynamic
             var newObject = new AllorsDynamicObject(this);
             this.objects.Add(newObject);
             return newObject;
+        }
+
+        public ChangeSet Snapshot()
+        {
+            var snapshot = new ChangeSet(this.changedRoleByAssociationByRelation, this.changedAssociationByRoleByRelation);
+
+            foreach (var kvp in this.changedRoleByAssociationByRelation)
+            {
+                var relation = kvp.Key;
+                var changedRoleByAssociation = kvp.Value;
+
+                var roleByAssociation = GetRoleByAssociation(relation);
+
+                foreach (var kvp2 in changedRoleByAssociation)
+                {
+                    var association = kvp2.Key;
+                    var changedRole = kvp2.Value;
+
+                    roleByAssociation[association] = changedRole;
+                }
+            }
+
+            foreach (var kvp in this.changedAssociationByRoleByRelation)
+            {
+                var relation = kvp.Key;
+                var changedRoleByAssociation = kvp.Value;
+
+                var associationByRole = GetAssociationByRole(relation);
+
+                foreach (var kvp2 in changedRoleByAssociation)
+                {
+                    var role = kvp2.Key;
+                    var changedAssociation = kvp2.Value;
+
+                    associationByRole[role] = changedAssociation;
+                }
+            }
+
+            this.changedRoleByAssociationByRelation = new ConcurrentDictionary<string, ConcurrentDictionary<AllorsDynamicObject, object>>();
+            this.changedAssociationByRoleByRelation = new ConcurrentDictionary<string, ConcurrentDictionary<object, object>>();
+
+            return snapshot;
         }
 
         internal bool TryGetIndex(AllorsDynamicObject obj, GetIndexBinder binder, object[] indexes, out object result)
@@ -69,7 +139,7 @@ namespace Allors.Dynamic
             this.Set(obj, binder.Name, value);
             return true;
         }
-        
+
         internal bool TryInvokeMember(dynamic obj, InvokeMemberBinder binder, object[] args, out object result)
         {
             //var name = binder.Name;
@@ -93,7 +163,6 @@ namespace Allors.Dynamic
             result = null;
             return false;
         }
-
 
         //internal void AddRole(InvokeMemberBinder binder, object[] args)
         //{
@@ -137,25 +206,29 @@ namespace Allors.Dynamic
             // Role
             if (!isAssociation)
             {
-                // Lazy create roleByAssociation
-                if (!this.roleByAssociationByRelation.TryGetValue(relationName, out var roleByAssociation))
+                if (this.changedRoleByAssociationByRelation.TryGetValue(relationName, out var changeRoleByAssociation))
                 {
-                    roleByAssociation = new ConcurrentDictionary<AllorsDynamicObject, object>();
-                    this.roleByAssociationByRelation[relationName] = roleByAssociation;
+                    if (changeRoleByAssociation.TryGetValue(obj, out result))
+                    {
+                        return;
+                    }
                 }
 
+                var roleByAssociation = GetRoleByAssociation(relationName);
                 roleByAssociation.TryGetValue(obj, out result);
             }
             // Association
             else
             {
-                // Lazy create associationByRole
-                if (!this.associationByRoleByRelation.TryGetValue(relationName, out var associationByRole))
+                if (this.changedAssociationByRoleByRelation.TryGetValue(relationName, out var changedAssociationByRole))
                 {
-                    associationByRole = new ConcurrentDictionary<object, object>();
-                    this.associationByRoleByRelation[relationName] = associationByRole;
+                    if (changedAssociationByRole.TryGetValue(obj, out result))
+                    {
+                        return;
+                    }
                 }
 
+                var associationByRole = GetAssociationByRole(relationName);
                 associationByRole.TryGetValue(obj, out result);
             }
         }
@@ -166,27 +239,84 @@ namespace Allors.Dynamic
 
             // Association -> Role
             {
-                if (!this.roleByAssociationByRelation.TryGetValue(relationName, out var roleByAssociation))
-                {
-                    roleByAssociation = new ConcurrentDictionary<AllorsDynamicObject, object>();
-                    this.roleByAssociationByRelation[relationName] = roleByAssociation;
-                }
+                var changedRoleByAssociation = GetChangedRoleByAssociation(relationName);
 
-                roleByAssociation[obj] = value;
+                var originalRoleByAssociation = GetRoleByAssociation(relationName);
+                originalRoleByAssociation.TryGetValue(obj, out object originalRole);
+                if (Equals(originalRole, value))
+                {
+                    changedRoleByAssociation.TryRemove(obj, out object deletedValue);
+                }
+                else
+                {
+                    changedRoleByAssociation[obj] = value;
+                }
             }
 
             // Role -> Association
             if (value is AllorsDynamicObject)
             {
-                if (!this.associationByRoleByRelation.TryGetValue(relationName, out var associationByRole))
-                {
-                    associationByRole = new ConcurrentDictionary<object, object>();
-                    this.associationByRoleByRelation[relationName] = associationByRole;
-                }
+                var changedAssociationByRole = GetChangedAssociationByRole(relationName);
 
-                associationByRole[value] = obj;
+                var originalAssociationByRole = GetAssociationByRole(relationName);
+                originalAssociationByRole.TryGetValue(value, out object originalAssociation);
+                if (Equals(originalAssociation, obj))
+                {
+                    changedAssociationByRole.TryRemove(value, out object deletedValue);
+                }
+                else
+                {
+                    changedAssociationByRole[value] = obj;
+                }
+            }
+        }
+
+        private ConcurrentDictionary<object, object> GetAssociationByRole(string relationName)
+        {
+            // Lazy create associationByRole
+            if (!this.associationByRoleByRelation.TryGetValue(relationName, out var associationByRole))
+            {
+                associationByRole = new ConcurrentDictionary<object, object>();
+                this.associationByRoleByRelation[relationName] = associationByRole;
             }
 
+            return associationByRole;
+        }
+
+        private ConcurrentDictionary<AllorsDynamicObject, object> GetRoleByAssociation(string relationName)
+        {
+            // Lazy create roleByAssociation
+            if (!this.roleByAssociationByRelation.TryGetValue(relationName, out var roleByAssociation))
+            {
+                roleByAssociation = new ConcurrentDictionary<AllorsDynamicObject, object>();
+                this.roleByAssociationByRelation[relationName] = roleByAssociation;
+            }
+
+            return roleByAssociation;
+        }
+
+        private ConcurrentDictionary<object, object> GetChangedAssociationByRole(string relationName)
+        {
+            // Lazy create associationByRole
+            if (!this.changedAssociationByRoleByRelation.TryGetValue(relationName, out var changedAssociationByRole))
+            {
+                changedAssociationByRole = new ConcurrentDictionary<object, object>();
+                this.changedAssociationByRoleByRelation[relationName] = changedAssociationByRole;
+            }
+
+            return changedAssociationByRole;
+        }
+
+        private ConcurrentDictionary<AllorsDynamicObject, object> GetChangedRoleByAssociation(string relationName)
+        {
+            // Lazy create roleByAssociation
+            if (!this.changedRoleByAssociationByRelation.TryGetValue(relationName, out var changedRoleByAssociation))
+            {
+                changedRoleByAssociation = new ConcurrentDictionary<AllorsDynamicObject, object>();
+                this.changedRoleByAssociationByRelation[relationName] = changedRoleByAssociation;
+            }
+
+            return changedRoleByAssociation;
         }
     }
 }
