@@ -23,7 +23,7 @@ namespace Allors.Dynamic.Tests
             Assert.Equal("Hello John Doe!", john.Greeting);
         }
 
-        public class FullNameDerivation : Derivation
+        public class FullNameDerivation : IDerivation
         {
             public void Derive(ChangeSet changeSet)
             {
@@ -48,7 +48,7 @@ namespace Allors.Dynamic.Tests
             }
         }
 
-        public class GreetingDerivation : Derivation
+        public class GreetingDerivation : IDerivation
         {
             public void Derive(ChangeSet changeSet)
             {

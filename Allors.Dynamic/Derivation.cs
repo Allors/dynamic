@@ -1,6 +1,6 @@
 ﻿namespace Allors.Dynamic
 {
-    public interface Derivation
+    public interface IDerivation
     {
         void Derive(ChangeSet changeSet);
     }
