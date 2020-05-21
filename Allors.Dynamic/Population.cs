@@ -8,9 +8,6 @@ namespace Allors.Dynamic
     public class Population
     {
         private readonly Inflector.Inflector inflector;
-
-        private readonly ConcurrentDictionary<string, Derivation> derivationById;
-
         private readonly ConcurrentBag<AllorsDynamicObject> objects;
 
         private readonly ConcurrentDictionary<string, ConcurrentDictionary<AllorsDynamicObject, object>> roleByAssociationByRelation;
@@ -19,13 +16,13 @@ namespace Allors.Dynamic
         private ConcurrentDictionary<string, ConcurrentDictionary<AllorsDynamicObject, object>> changedRoleByAssociationByRelation;
         private ConcurrentDictionary<string, ConcurrentDictionary<object, object>> changedAssociationByRoleByRelation;
 
-        public ConcurrentDictionary<string, Derivation> DerivationById => derivationById;
+        public ConcurrentDictionary<string, IDerivation> DerivationById { get; }
 
         public Population()
         {
             this.inflector = new Inflector.Inflector(new CultureInfo("en"));
 
-            this.derivationById = new ConcurrentDictionary<string, Derivation>();
+            this.DerivationById = new ConcurrentDictionary<string, IDerivation>();
 
             this.objects = new ConcurrentBag<AllorsDynamicObject>();
 
