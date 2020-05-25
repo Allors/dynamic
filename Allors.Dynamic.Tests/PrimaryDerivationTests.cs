@@ -9,7 +9,12 @@ namespace Allors.Dynamic.Tests
         [Fact]
         public void Derivation()
         {
-            var population = new DynamicPopulation();
+            var population = new DynamicPopulation(v => v
+             .AddRelation("FirstName")
+             .AddRelation("LastName")
+             .AddRelation("FullName")
+             .AddRelation("DerivedAt")
+          );
 
             population.DerivationById["FullName"] = new FullNameDerivation();
 
