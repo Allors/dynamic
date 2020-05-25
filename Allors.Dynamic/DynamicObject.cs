@@ -2,11 +2,11 @@
 
 namespace Allors.Dynamic
 {
-    public class AllorsDynamicObject : DynamicObject
+    public class DynamicObject : System.Dynamic.DynamicObject
     {
-        private readonly Population population;
+        private readonly DynamicPopulation population;
 
-        internal AllorsDynamicObject(Population population)
+        internal DynamicObject(DynamicPopulation population)
         {
             this.population = population;
         }

@@ -9,7 +9,7 @@ namespace Allors.Dynamic.Tests
         [Fact]
         public void Derivation()
         {
-            var population = new Population();
+            var population = new DynamicPopulation();
 
             population.DerivationById["FullName"] = new FullNameDerivation();
 
@@ -32,9 +32,9 @@ namespace Allors.Dynamic.Tests
             Assert.Equal("Jane Doe Chained", jane.FullName);
         }
 
-        public class FullNameDerivation : IDerivation
+        public class FullNameDerivation : IDynamicDerivation
         {
-            public void Derive(ChangeSet changeSet)
+            public void Derive(DynamicChangeSet changeSet)
             {
                 var firstNames = changeSet.ChangedRoles("FirstName");
                 var lastNames = changeSet.ChangedRoles("LastName");
@@ -57,16 +57,16 @@ namespace Allors.Dynamic.Tests
             }
         }
 
-        public class GreetingDerivation : IDerivation
+        public class GreetingDerivation : IDynamicDerivation
         {
-            private IDerivation derivation;
+            private IDynamicDerivation derivation;
 
-            public GreetingDerivation(IDerivation derivation)
+            public GreetingDerivation(IDynamicDerivation derivation)
             {
                 this.derivation = derivation;
             }
 
-            public void Derive(ChangeSet changeSet)
+            public void Derive(DynamicChangeSet changeSet)
             {
                 this.derivation.Derive(changeSet);
 

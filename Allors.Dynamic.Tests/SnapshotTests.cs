@@ -7,7 +7,10 @@ namespace Allors.Dynamic.Tests
         [Fact]
         public void Snapshot()
         {
-            var population = new Population();
+            var population = new DynamicPopulation(v => v
+                .AddRelation("FirstName")
+                .AddRelation("LastName")
+             );
 
             dynamic john = population.NewObject();
             dynamic jane = population.NewObject();

@@ -8,7 +8,9 @@ namespace Allors.Dynamic.Tests
         [Fact]
         public void OneToOne()
         {
-            var population = new Population();
+            var population = new DynamicPopulation(v => v
+                .AddRelation("Owner", "Property")
+             );
 
             dynamic acme = population.NewObject();
             dynamic gizmo = population.NewObject();
@@ -18,19 +20,21 @@ namespace Allors.Dynamic.Tests
             acme.Owner = jane;
 
             Assert.Equal(jane, acme.Owner);
-            Assert.Equal(acme, jane.WhereOwner);
+            Assert.Equal(acme, jane.Property);
 
             Assert.Equal(jane, acme["Owner"]);
-            Assert.Equal(acme, jane["WhereOwner"]);
+            Assert.Equal(acme, jane["Property"]);
 
             Assert.Null(gizmo["Owner"]);
-            Assert.Null(john["WhereOwner"]);
+            Assert.Null(john["Property"]);
         }
 
         [Fact]
         public void OneToOneWithIndex()
         {
-            var population = new Population();
+            var population = new DynamicPopulation(v => v
+                .AddRelation("Owner", "Property")
+             );
 
             dynamic acme = population.NewObject();
             dynamic gizmo = population.NewObject();
@@ -40,19 +44,26 @@ namespace Allors.Dynamic.Tests
             acme["Owner"] = jane;
 
             Assert.Equal(jane, acme.Owner);
-            Assert.Equal(acme, jane.WhereOwner);
+            Assert.Equal(acme, jane.Property);
 
             Assert.Equal(jane, acme["Owner"]);
-            Assert.Equal(acme, jane["WhereOwner"]);
+            Assert.Equal(acme, jane["Property"]);
 
             Assert.Null(gizmo["Owner"]);
-            Assert.Null(john["WhereOwner"]);
+            Assert.Null(john["Property"]);
         }
 
         [Fact]
         public void OneToOneDynamicRelations()
         {
-            var population = new Population();
+            var population = new DynamicPopulation(v =>
+            {
+                foreach (var run in Enumerable.Range(0, 10))
+                {
+                    v.AddRelation($"Owner{run}", $"Property{run}");
+                }
+            }
+          );
 
             foreach (var run in Enumerable.Range(0, 10))
             {
@@ -62,7 +73,7 @@ namespace Allors.Dynamic.Tests
                 dynamic john = population.NewObject();
 
                 var role = $"Owner{run}";
-                var association = $"WhereOwner{run}";
+                var association = $"Property{run}";
 
                 acme[role] = jane;
 

@@ -7,7 +7,9 @@ namespace Allors.Dynamic.Tests
         [Fact]
         public void StringRelation()
         {
-            var population = new Population();
+            var population = new DynamicPopulation(v => v
+                 .AddRelation("FirstName")
+              );
 
             dynamic jubayer = population.NewObject();
             dynamic walter = population.NewObject();
