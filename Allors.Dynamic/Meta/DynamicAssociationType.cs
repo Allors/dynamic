@@ -1,18 +1,21 @@
-﻿namespace Allors.Dynamic.Meta
+﻿using System.Threading;
+
+namespace Allors.Dynamic.Meta
 {
     public class DynamicAssociationType
     {
         public DynamicRoleType RoleType { get; }
 
-        public string Name { get; set; }
+        public string Name { get; internal set; }
 
-        public bool IsMany { get; set; }
+        public bool IsOne => !this.IsMany;
 
-        internal DynamicAssociationType(DynamicRoleType roleType)
+        public bool IsMany { get; internal set; }
+
+        public DynamicAssociationType(DynamicRoleType roleType)
         {
             roleType.AssociationType = this;
             RoleType = roleType;
-            this.IsMany = true;
         }
     }
 }

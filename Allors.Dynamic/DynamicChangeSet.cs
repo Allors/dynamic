@@ -1,5 +1,5 @@
 ﻿using Allors.Dynamic.Meta;
-using System.Collections.Concurrent;
+using System.Collections.Generic;
 using System.Linq;
 
 namespace Allors.Dynamic
@@ -8,10 +8,10 @@ namespace Allors.Dynamic
     {
         public DynamicMeta Meta { get; }
 
-        private readonly ConcurrentDictionary<DynamicRoleType, ConcurrentDictionary<DynamicObject, object>> changedRoleByAssociationByType;
-        private readonly ConcurrentDictionary<DynamicAssociationType, ConcurrentDictionary<object, object>> changedAssociationByRoleByType;
+        private readonly Dictionary<DynamicRoleType, Dictionary<DynamicObject, object>> changedRoleByAssociationByType;
+        private readonly Dictionary<DynamicAssociationType, Dictionary<DynamicObject, object>> changedAssociationByRoleByType;
 
-        public DynamicChangeSet(DynamicMeta meta, ConcurrentDictionary<DynamicRoleType, ConcurrentDictionary<DynamicObject, object>> changedRoleByAssociationByType, ConcurrentDictionary<DynamicAssociationType, ConcurrentDictionary<object, object>> changedAssociationByRoleByType)
+        public DynamicChangeSet(DynamicMeta meta, Dictionary<DynamicRoleType, Dictionary<DynamicObject, object>> changedRoleByAssociationByType, Dictionary<DynamicAssociationType, Dictionary<DynamicObject, object>> changedAssociationByRoleByType)
         {
             this.Meta = meta;
             this.changedRoleByAssociationByType = changedRoleByAssociationByType;
@@ -22,13 +22,13 @@ namespace Allors.Dynamic
             this.changedRoleByAssociationByType.Any(v => v.Value.Count > 0) ||
             this.changedAssociationByRoleByType.Any(v => v.Value.Count > 0);
 
-        public ConcurrentDictionary<DynamicObject, object> ChangedRoles(string roleName)
+        public Dictionary<DynamicObject, object> ChangedRoles(string roleName)
         {
             var roleType = this.Meta.RoleTypeByName[roleName];
             return this.ChangedRoles(roleType);
         }
 
-        public ConcurrentDictionary<DynamicObject, object> ChangedRoles(DynamicRoleType roleType)
+        public Dictionary<DynamicObject, object> ChangedRoles(DynamicRoleType roleType)
         {
             this.changedRoleByAssociationByType.TryGetValue(roleType, out var changedRelations);
             return changedRelations;

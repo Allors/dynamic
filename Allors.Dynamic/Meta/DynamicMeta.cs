@@ -1,48 +1,94 @@
-﻿using System.Collections.Concurrent;
+﻿using System;
+using System.Collections.Generic;
 using System.Globalization;
 
 namespace Allors.Dynamic.Meta
 {
     public class DynamicMeta
     {
-        private readonly ConcurrentDictionary<string, DynamicAssociationType> associationTypeByName;
-
-        private readonly ConcurrentDictionary<string, DynamicRoleType> roleTypeByName;
-
         private readonly Inflector.Inflector inflector;
 
         internal DynamicMeta()
         {
-            this.associationTypeByName = new ConcurrentDictionary<string, DynamicAssociationType>();
-            this.roleTypeByName = new ConcurrentDictionary<string, DynamicRoleType>();
+            this.AssociationTypeByName = new Dictionary<string, DynamicAssociationType>();
+            this.RoleTypeByName = new Dictionary<string, DynamicRoleType>();
 
             this.inflector = new Inflector.Inflector(new CultureInfo("en"));
         }
 
-        public ConcurrentDictionary<string, DynamicAssociationType> AssociationTypeByName => associationTypeByName;
+        public Dictionary<string, DynamicAssociationType> AssociationTypeByName { get; }
 
-        public ConcurrentDictionary<string, DynamicRoleType> RoleTypeByName => roleTypeByName;
+        public Dictionary<string, DynamicRoleType> RoleTypeByName { get; }
 
-        public DynamicMeta AddRelation(string roleName, string associationName = null)
+        public DynamicMeta AddUnitRelation(string roleName)
         {
             var roleType = new DynamicRoleType
             {
                 Name = roleName,
+                IsMany = false,
             };
 
-            this.RoleTypeByName[roleType.Name] = roleType;
+            this.AddRoleType(roleType);
+            
+            return this;
+        }
 
-            if (!string.IsNullOrWhiteSpace(associationName))
+        public DynamicMeta AddCompositeRelation(string associationName, bool associationIsMany, string roleName, bool roleIsMany)
+        {
+            var roleType = new DynamicRoleType
             {
-                var associationType = new DynamicAssociationType(roleType)
-                {
-                    Name = associationName
-                };
+                Name = roleName,
+                IsMany = roleIsMany,
+            };
 
-                this.AssociationTypeByName[associationType.Name] = associationType;
-            }
+            this.AddRoleType(roleType);
+
+            var associationType = new DynamicAssociationType(roleType)
+            {
+                Name = associationName,
+                IsMany = associationIsMany,
+            };
+
+            this.AddAssociationType(associationType);
 
             return this;
+        }
+
+        private void AddRoleType(DynamicRoleType roleType)
+        {
+            var singularName = roleType.Name;
+            var pluralName = inflector.Pluralize(singularName);
+            
+            this.CheckNames(singularName, pluralName);
+
+            this.RoleTypeByName.Add(singularName,  roleType);
+            this.RoleTypeByName.Add(pluralName, roleType);
+        }
+
+        private void AddAssociationType(DynamicAssociationType associationType)
+        {
+            var singularName = associationType.Name;
+            var pluralName = inflector.Pluralize(singularName);
+
+            this.CheckNames(singularName, pluralName);
+
+            this.AssociationTypeByName.Add(singularName, associationType);
+            this.AssociationTypeByName.Add(pluralName, associationType);
+        }
+
+        private void CheckNames(string singularName, string pluralName)
+        {
+            if (this.RoleTypeByName.ContainsKey(singularName) ||
+                this.AssociationTypeByName.ContainsKey(singularName))
+            {
+                throw new Exception($"{singularName} is not unique");
+            }
+
+            if (this.RoleTypeByName.ContainsKey(pluralName) ||
+               this.AssociationTypeByName.ContainsKey(pluralName))
+            {
+                throw new Exception($"{pluralName} is not unique");
+            }
         }
     }
 }

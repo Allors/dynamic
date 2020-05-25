@@ -8,8 +8,8 @@ namespace Allors.Dynamic.Tests
         public void Snapshot()
         {
             var population = new DynamicPopulation(v => v
-                .AddRelation("FirstName")
-                .AddRelation("LastName")
+                .AddUnitRelation("FirstName")
+                .AddUnitRelation("LastName")
              );
 
             dynamic john = population.NewObject();

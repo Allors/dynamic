@@ -4,19 +4,21 @@ using Xunit;
 
 namespace Allors.Dynamic.Tests
 {
-    public class PrimaryDerivationTests
+    public class DerivationOverrideTests
     {
         [Fact]
         public void Derivation()
         {
             var population = new DynamicPopulation(v => v
-             .AddRelation("FirstName")
-             .AddRelation("LastName")
-             .AddRelation("FullName")
-             .AddRelation("DerivedAt")
-          );
+                  .AddUnitRelation("FirstName")
+                  .AddUnitRelation("LastName")
+                  .AddUnitRelation("FullName")
+                  .AddUnitRelation("DerivedAt")
+                  .AddUnitRelation("Greeting")
+       );
 
             population.DerivationById["FullName"] = new FullNameDerivation();
+            population.DerivationById["Greeting"] = new GreetingDerivation();
 
             dynamic john = population.NewObject();
             john.FirstName = "John";
@@ -24,17 +26,7 @@ namespace Allors.Dynamic.Tests
 
             population.Derive();
 
-            Assert.Equal("John Doe", john.FullName);
-
-            population.DerivationById["FullName"] = new GreetingDerivation(population.DerivationById["FullName"]);
-
-            dynamic jane = population.NewObject();
-            jane.FirstName = "Jane";
-            jane.LastName = "Doe";
-
-            population.Derive();
-
-            Assert.Equal("Jane Doe Chained", jane.FullName);
+            Assert.Equal("Hello John Doe!", john.Greeting);
         }
 
         public class FullNameDerivation : IDynamicDerivation
@@ -64,27 +56,17 @@ namespace Allors.Dynamic.Tests
 
         public class GreetingDerivation : IDynamicDerivation
         {
-            private IDynamicDerivation derivation;
-
-            public GreetingDerivation(IDynamicDerivation derivation)
-            {
-                this.derivation = derivation;
-            }
-
             public void Derive(DynamicChangeSet changeSet)
             {
-                this.derivation.Derive(changeSet);
+                var fullNames = changeSet.ChangedRoles("FullName");
 
-                var firstNames = changeSet.ChangedRoles("FirstName");
-                var lastNames = changeSet.ChangedRoles("LastName");
-
-                if (firstNames?.Any() == true || lastNames?.Any() == true)
+                if (fullNames?.Any() == true)
                 {
-                    var people = firstNames.Union(lastNames).Select(v => v.Key).Distinct();
+                    var people = fullNames.Select(v => v.Key).Distinct();
 
                     foreach (dynamic person in people)
                     {
-                        person.FullName = $"{person.FullName} Chained";
+                        person.Greeting = $"Hello {person.FullName}!";
                     }
                 }
             }
