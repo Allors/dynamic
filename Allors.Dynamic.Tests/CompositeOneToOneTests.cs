@@ -2,7 +2,7 @@ using Xunit;
 
 namespace Allors.Dynamic.Tests
 {
-    public class CompositeMany2OneTests
+    public class CompositeManyToOneTests
     {
         [Fact]
         public void PropertySet()

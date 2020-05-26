@@ -33,22 +33,22 @@ namespace Allors.Dynamic.Meta
             return this;
         }
 
-        public DynamicMeta AddOne2OneRelation(string associationName, string roleName)
+        public DynamicMeta AddOneToOneRelation(string associationName, string roleName)
         {
             return this.AddCompositeRelation(associationName, false, roleName, false);
         }
 
-        public DynamicMeta AddOne2ManyRelation(string associationName, string roleName)
+        public DynamicMeta AddOneToManyRelation(string associationName, string roleName)
         {
             return this.AddCompositeRelation(associationName, false, roleName, true);
         }
 
-        public DynamicMeta AddMany2OneRelation(string associationName, string roleName)
+        public DynamicMeta AddManyToOneRelation(string associationName, string roleName)
         {
             return this.AddCompositeRelation(associationName, true, roleName, false);
         }
 
-        public DynamicMeta AddMany2ManyRelation(string associationName, string roleName)
+        public DynamicMeta AddManyToManyRelation(string associationName, string roleName)
         {
             return this.AddCompositeRelation(associationName, true, roleName, true);
         }
