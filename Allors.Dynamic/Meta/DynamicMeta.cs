@@ -53,7 +53,7 @@ namespace Allors.Dynamic.Meta
             return this.AddCompositeRelation(associationName, true, roleName, true);
         }
 
-        private DynamicMeta AddCompositeRelation(string associationName, bool associationIsMany, string roleName, bool roleIsMany)
+        public DynamicMeta AddCompositeRelation(string associationName, bool associationIsMany, string roleName, bool roleIsMany)
         {
             var roleType = new DynamicRoleType
             {
