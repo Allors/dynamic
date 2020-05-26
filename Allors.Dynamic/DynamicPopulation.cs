@@ -11,15 +11,9 @@ namespace Allors.Dynamic
     {
         public DynamicMeta Meta { get; }
 
-        private readonly HashSet<DynamicObject> objects;
-
-        private readonly Dictionary<DynamicRoleType, Dictionary<DynamicObject, object>> roleByAssociationByType;
-        private readonly Dictionary<DynamicAssociationType, Dictionary<DynamicObject, object>> associationByRoleByType;
-
-        private Dictionary<DynamicRoleType, Dictionary<DynamicObject, object>> changedRoleByAssociationByType;
-        private Dictionary<DynamicAssociationType, Dictionary<DynamicObject, object>> changedAssociationByRoleByType;
-
         public Dictionary<string, IDynamicDerivation> DerivationById { get; }
+              
+        private readonly DynamicDatabase database;
 
         public DynamicPopulation(Action<DynamicMeta> builder = null)
         {
@@ -27,13 +21,7 @@ namespace Allors.Dynamic
 
             this.DerivationById = new Dictionary<string, IDynamicDerivation>();
 
-            this.objects = new HashSet<DynamicObject>();
-
-            this.roleByAssociationByType = new Dictionary<DynamicRoleType, Dictionary<DynamicObject, object>>();
-            this.associationByRoleByType = new Dictionary<DynamicAssociationType, Dictionary<DynamicObject, object>>();
-
-            this.changedRoleByAssociationByType = new Dictionary<DynamicRoleType, Dictionary<DynamicObject, object>>();
-            this.changedAssociationByRoleByType = new Dictionary<DynamicAssociationType, Dictionary<DynamicObject, object>>();
+            this.database = new DynamicDatabase(this.Meta);
 
             builder?.Invoke(this.Meta);
         }
@@ -57,289 +45,76 @@ namespace Allors.Dynamic
         public DynamicObject NewObject()
         {
             var newObject = new DynamicObject(this);
-            this.objects.Add(newObject);
+            this.database.AddObject(newObject);
             return newObject;
         }
 
         public DynamicChangeSet Snapshot()
         {
-            foreach (var roleType in this.changedRoleByAssociationByType.Keys.ToArray())
-            {
-                var changedRoleByAssociation = this.changedRoleByAssociationByType[roleType];
-
-                var roleByAssociation = GetRoleByAssociation(roleType);
-                foreach (var association in changedRoleByAssociation.Keys.ToArray())
-                {
-                    var changedRole = changedRoleByAssociation[association];
-                    roleByAssociation.TryGetValue(association, out var originalRole);
-
-                    var areEqual = ReferenceEquals(originalRole, changedRole) ||
-                        (roleType.IsOne && Equals(originalRole, changedRole)) ||
-                        (roleType.IsMany && ((IStructuralEquatable)originalRole)?.Equals((IStructuralEquatable)changedRole) == true);
-
-                    if (areEqual)
-                    {
-                        changedRoleByAssociation.Remove(association);
-                        continue;
-                    }
-
-                    roleByAssociation[association] = changedRole;
-                }
-
-                if (roleByAssociation.Count == 0)
-                {
-                    this.changedRoleByAssociationByType.Remove(roleType);
-                }
-            }
-
-            foreach (var associationType in this.changedAssociationByRoleByType.Keys.ToArray())
-            {
-                var changedAssociationByRole = this.changedAssociationByRoleByType[associationType];
-
-                var associationByRole = GetAssociationByRole(associationType);
-                foreach (var role in changedAssociationByRole.Keys.ToArray())
-                {
-                    var changedAssociation = changedAssociationByRole[role];
-                    associationByRole.TryGetValue(role, out var originalAssociation);
-
-                    var areEqual = ReferenceEquals(originalAssociation, changedAssociation) ||
-                      (associationType.IsOne && Equals(originalAssociation, changedAssociation)) ||
-                      (associationType.IsMany && ((IStructuralEquatable)originalAssociation)?.Equals((IStructuralEquatable)changedAssociation) == true);
-
-                    if (areEqual)
-                    {
-                        changedAssociationByRole.Remove(role);
-                        continue;
-                    }
-
-                    associationByRole[role] = changedAssociation;
-                }
-
-                if (associationByRole.Count == 0)
-                {
-                    this.changedAssociationByRoleByType.Remove(associationType);
-                }
-            }
-
-            var snapshot = new DynamicChangeSet(this.Meta, this.changedRoleByAssociationByType, this.changedAssociationByRoleByType);
-
-            this.changedRoleByAssociationByType = new Dictionary<DynamicRoleType, Dictionary<DynamicObject, object>>();
-            this.changedAssociationByRoleByType = new Dictionary<DynamicAssociationType, Dictionary<DynamicObject, object>>();
-
-            return snapshot;
+            return this.database.Snapshot();
         }
 
-        internal bool TryGetIndex(DynamicObject obj, GetIndexBinder binder, object[] indexes, out object result)
-        {
-            var name = indexes[0] as string;
-            if (name != null)
-            {
-                this.Get(obj, name, out result);
-            }
-            else
-            {
-                result = null;
-            }
+        internal bool TryGetIndex(DynamicObject obj, GetIndexBinder binder, object[] indexes, out object result) => this.TryGet(obj, indexes[0] as string, out result);
 
-            return true;
-        }
+        internal bool TrySetIndex(DynamicObject obj, SetIndexBinder binder, object[] indexes, object value) => this.Set(obj, indexes[0] as string, value);
 
-        internal bool TrySetIndex(DynamicObject obj, SetIndexBinder binder, object[] indexes, object value)
-        {
-            var name = indexes[0] as string;
-            if (name != null)
-            {
-                this.Set(obj, name, value);
-            }
+        internal bool TryGetMember(DynamicObject obj, GetMemberBinder binder, out object result) => this.TryGet(obj, binder.Name, out result);
 
-            return true;
-        }
-
-        internal bool TryGetMember(DynamicObject obj, GetMemberBinder binder, out object result)
-        {
-            string name = binder.Name;
-            this.Get(obj, name, out result);
-            return true;
-        }
-
-        internal bool TrySetMember(dynamic obj, SetMemberBinder binder, object value)
-        {
-            this.Set(obj, binder.Name, value);
-            return true;
-        }
+        internal bool TrySetMember(dynamic obj, SetMemberBinder binder, object value) => this.Set(obj, binder.Name, value);
 
         internal bool TryInvokeMember(dynamic obj, InvokeMemberBinder binder, object[] args, out object result)
         {
             var name = binder.Name;
 
-            if (name.StartsWith("Add"))
-            {
-                var roleName = name.Substring(3);
-                this.AddRole(obj, roleName, (DynamicObject)args[0]);
+            result = null;
 
-                result = null;
+            if (name.StartsWith("Add") && this.Meta.RoleTypeByName.TryGetValue(name.Substring(3), out var roleType))
+            {
+                this.database.AddRole(obj, roleType, (DynamicObject)args[0]);
                 return true;
             }
 
-            if (name.StartsWith("Remove"))
+            if (name.StartsWith("Remove") && this.Meta.RoleTypeByName.TryGetValue(name.Substring(6), out roleType))
             {
-                var roleName = name.Substring(6);
-                this.RemoveRole(obj, roleName, (DynamicObject)args[0]);
-
-                result = null;
+                this.database.RemoveRole(obj, roleType, (DynamicObject)args[0]);
                 return true;
+            }
+
+            return false;
+        }
+
+        private bool TryGet(DynamicObject obj, string name, out object result)
+        {
+            if (name != null)
+            {
+                if (this.Meta.RoleTypeByName.TryGetValue(name, out var roleType))
+                {
+                    this.database.GetRole(obj, roleType, out result);
+                    return true;
+                }
+                else if (this.Meta.AssociationTypeByName.TryGetValue(name, out var associationType))
+                {
+                    this.database.GetAssociation(obj, associationType, out result);
+                    return true;
+                }
             }
 
             result = null;
             return false;
         }
 
-        internal void AddRole(DynamicObject obj, string roleName, DynamicObject objectToAdd)
+        private bool Set(dynamic obj, string name, object value)
         {
-            this.Get(obj, roleName, out var role);
-
-            if (role == null)
+            if (name != null)
             {
-                this.Set(obj, roleName, new DynamicObject[] { objectToAdd });
-            }
-            else
-            {
-                var array = role as DynamicObject[];
-                if (!array.Contains(objectToAdd))
+                if (this.Meta.RoleTypeByName.TryGetValue(name, out var roleType))
                 {
-                    Array.Resize(ref array, array.Length + 1);
-                    array[array.Length - 1] = objectToAdd;
-                    this.Set(obj, roleName, array);
+                    this.database.SetRole(obj, roleType, value);
+                    return true;
                 }
             }
-        }
 
-        internal void RemoveRole(DynamicObject obj, string roleName, DynamicObject objectToRemove)
-        {
-            this.Get(obj, roleName, out var role);
-
-            if (role != null)
-            {
-                var array = role as DynamicObject[];
-                var index = Array.IndexOf(array, objectToRemove);
-                if (index > -1)
-                {
-                    array[index] = array[array.Length - 1];
-                    Array.Resize(ref array, array.Length - 1);
-                    this.Set(obj, roleName, array);
-                }
-            }
-        }
-
-        private void Get(DynamicObject obj, string name, out object result)
-        {
-            this.Meta.RoleTypeByName.TryGetValue(name, out var roleType);
-
-            // Role
-            if (roleType != null)
-            {
-                if (this.changedRoleByAssociationByType.TryGetValue(roleType, out var changeRoleByAssociation) &&
-                    changeRoleByAssociation.TryGetValue(obj, out result))
-                {
-                    return;
-                }
-
-                var roleByAssociation = GetRoleByAssociation(roleType);
-                roleByAssociation.TryGetValue(obj, out result);
-            }
-            // Association
-            else
-            {
-                if (!this.Meta.AssociationTypeByName.TryGetValue(name, out var associationType))
-                {
-                    throw new Exception($"Unknown property {name}");
-                }
-
-                if (this.changedAssociationByRoleByType.TryGetValue(associationType, out var changedAssociationByRole) &&
-                    changedAssociationByRole.TryGetValue(obj, out result))
-                {
-                    return;
-                }
-
-                var associationByRole = GetAssociationByRole(associationType);
-                associationByRole.TryGetValue(obj, out result);
-            }
-        }
-
-        private void Set(dynamic obj, string name, object value)
-        {
-            if (!this.Meta.RoleTypeByName.TryGetValue(name, out var roleType))
-            {
-                throw new Exception($"Unknown property {name}");
-            }
-
-            // Association -> Role
-            {
-                var changedRoleByAssociation = GetChangedRoleByAssociation(roleType);
-                changedRoleByAssociation[obj] = value;
-            }
-
-            // Role -> Association
-            if (value is DynamicObject role)
-            {
-                if (roleType.IsUnit)
-                {
-                    throw new Exception($"{roleType.Name} requires a Unit");
-                }
-
-                var associationType = roleType.AssociationType;
-
-                var changedAssociationByRole = GetChangedAssociationByRole(associationType);
-                changedAssociationByRole[role] = obj;
-            }
-        }
-
-        private Dictionary<DynamicObject, object> GetAssociationByRole(DynamicAssociationType associationType)
-        {
-            // Lazy create associationByRole
-            if (!this.associationByRoleByType.TryGetValue(associationType, out var associationByRole))
-            {
-                associationByRole = new Dictionary<DynamicObject, object>();
-                this.associationByRoleByType[associationType] = associationByRole;
-            }
-
-            return associationByRole;
-        }
-
-        private Dictionary<DynamicObject, object> GetRoleByAssociation(DynamicRoleType roleType)
-        {
-            // Lazy create roleByAssociation
-            if (!this.roleByAssociationByType.TryGetValue(roleType, out var roleByAssociation))
-            {
-                roleByAssociation = new Dictionary<DynamicObject, object>();
-                this.roleByAssociationByType[roleType] = roleByAssociation;
-            }
-
-            return roleByAssociation;
-        }
-
-        private Dictionary<DynamicObject, object> GetChangedAssociationByRole(DynamicAssociationType associationType)
-        {
-            // Lazy create associationByRole
-            if (!this.changedAssociationByRoleByType.TryGetValue(associationType, out var changedAssociationByRole))
-            {
-                changedAssociationByRole = new Dictionary<DynamicObject, object>();
-                this.changedAssociationByRoleByType[associationType] = changedAssociationByRole;
-            }
-
-            return changedAssociationByRole;
-        }
-
-        private Dictionary<DynamicObject, object> GetChangedRoleByAssociation(DynamicRoleType roleType)
-        {
-            // Lazy create roleByAssociation
-            if (!this.changedRoleByAssociationByType.TryGetValue(roleType, out var changedRoleByAssociation))
-            {
-                changedRoleByAssociation = new Dictionary<DynamicObject, object>();
-                this.changedRoleByAssociationByType[roleType] = changedRoleByAssociation;
-            }
-
-            return changedRoleByAssociation;
+            return false;
         }
     }
 }
