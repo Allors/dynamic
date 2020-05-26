@@ -29,11 +29,31 @@ namespace Allors.Dynamic.Meta
             };
 
             this.AddRoleType(roleType);
-            
+
             return this;
         }
 
-        public DynamicMeta AddCompositeRelation(string associationName, bool associationIsMany, string roleName, bool roleIsMany)
+        public DynamicMeta AddOne2OneRelation(string associationName, string roleName)
+        {
+            return this.AddCompositeRelation(associationName, false, roleName, false);
+        }
+
+        public DynamicMeta AddOne2ManyRelation(string associationName, string roleName)
+        {
+            return this.AddCompositeRelation(associationName, false, roleName, true);
+        }
+
+        public DynamicMeta AddMany2OneRelation(string associationName, string roleName)
+        {
+            return this.AddCompositeRelation(associationName, true, roleName, false);
+        }
+
+        public DynamicMeta AddMany2ManyRelation(string associationName, string roleName)
+        {
+            return this.AddCompositeRelation(associationName, true, roleName, true);
+        }
+
+        private DynamicMeta AddCompositeRelation(string associationName, bool associationIsMany, string roleName, bool roleIsMany)
         {
             var roleType = new DynamicRoleType
             {
@@ -58,10 +78,10 @@ namespace Allors.Dynamic.Meta
         {
             var singularName = roleType.Name;
             var pluralName = inflector.Pluralize(singularName);
-            
+
             this.CheckNames(singularName, pluralName);
 
-            this.RoleTypeByName.Add(singularName,  roleType);
+            this.RoleTypeByName.Add(singularName, roleType);
             this.RoleTypeByName.Add(pluralName, roleType);
         }
 

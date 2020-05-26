@@ -3,18 +3,18 @@
   <Class Name="Allors.Dynamic.Meta.DynamicMeta">
     <Position X="1" Y="0.5" Width="1.5" />
     <TypeIdentifier>
-      <HashCode>QAQEAAAAAAAAAAAAAAAAAAAAAAIAAAAAAAAAAEAEAAA=</HashCode>
+      <HashCode>QAQAAAAAAAAAAADAAEAAABAAAAIAAAAAAAAAAAAQAAA=</HashCode>
       <FileName>Meta\DynamicMeta.cs</FileName>
     </TypeIdentifier>
     <ShowAsCollectionAssociation>
-      <Field Name="associationTypeByName" />
-      <Field Name="roleTypeByName" />
+      <Property Name="AssociationTypeByName" />
+      <Property Name="RoleTypeByName" />
     </ShowAsCollectionAssociation>
   </Class>
   <Class Name="Allors.Dynamic.Meta.DynamicAssociationType">
     <Position X="3.75" Y="3.25" Width="2" />
     <TypeIdentifier>
-      <HashCode>AAIACAAAAAAAAAAAAAAAAAQAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <HashCode>AAIAiAAAAAAAAAAAAAAAAAQAAAAAAAAAAAAAAAAAAAA=</HashCode>
       <FileName>Meta\DynamicAssociationType.cs</FileName>
     </TypeIdentifier>
     <ShowAsAssociation>
@@ -24,7 +24,7 @@
   <Class Name="Allors.Dynamic.Meta.DynamicRoleType">
     <Position X="6.75" Y="0.5" Width="1.75" />
     <TypeIdentifier>
-      <HashCode>AAAACAAAAAAAAAAAAAAAAAQAgCCAAAAAAAAAAAAAAAA=</HashCode>
+      <HashCode>AAAAiAAAAAAAAAAAAAAAAAQAgCCAAAAAAAAAAAAAAAA=</HashCode>
       <FileName>Meta\DynamicRoleType.cs</FileName>
     </TypeIdentifier>
     <ShowAsAssociation>

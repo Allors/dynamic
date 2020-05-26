@@ -204,12 +204,12 @@ namespace Allors.Dynamic
             }
             else
             {
-                var list = role as DynamicObject[];
-                if (!list.Contains(objectToAdd))
+                var array = role as DynamicObject[];
+                if (!array.Contains(objectToAdd))
                 {
-                    Array.Resize(ref list, list.Length + 1);
-                    list[list.Length - 1] = objectToAdd;
-                    this.Set(obj, roleName, list);
+                    Array.Resize(ref array, array.Length + 1);
+                    array[array.Length - 1] = objectToAdd;
+                    this.Set(obj, roleName, array);
                 }
             }
         }
@@ -220,13 +220,13 @@ namespace Allors.Dynamic
 
             if (role != null)
             {
-                var list = role as DynamicObject[];
-                var index = Array.IndexOf(list, objectToRemove);
+                var array = role as DynamicObject[];
+                var index = Array.IndexOf(array, objectToRemove);
                 if (index > -1)
                 {
-                    list[index] = list[list.Length - 1];
-                    Array.Resize(ref list, list.Length - 1);
-                    this.Set(obj, roleName, list);
+                    array[index] = array[array.Length - 1];
+                    Array.Resize(ref array, array.Length - 1);
+                    this.Set(obj, roleName, array);
                 }
             }
         }
