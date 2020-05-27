@@ -11,12 +11,12 @@ namespace Allors.Dynamic.Tests
                  .AddOneToManyRelation("Employer", "Employee")
               );
 
-            dynamic acme = population.NewObject();
-            dynamic hooli = population.NewObject();
+            dynamic acme = population.Create();
+            dynamic hooli = population.Create();
 
-            dynamic jane = population.NewObject();
-            dynamic john = population.NewObject();
-            dynamic jenny = population.NewObject();
+            dynamic jane = population.Create();
+            dynamic john = population.Create();
+            dynamic jenny = population.Create();
 
             acme.AddEmployee(jane);
             acme.AddEmployee(john);

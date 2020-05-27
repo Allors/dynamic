@@ -11,8 +11,8 @@ namespace Allors.Dynamic.Tests
                  .AddUnitRelation("FirstName")
               );
 
-            dynamic jubayer = population.NewObject();
-            dynamic walter = population.NewObject();
+            dynamic jubayer = population.Create();
+            dynamic walter = population.Create();
 
             jubayer.FirstName = "Jubayer";
             walter.FirstName = "Walter";
@@ -29,8 +29,8 @@ namespace Allors.Dynamic.Tests
                  .AddUnitRelation("FirstName")
               );
 
-            dynamic jubayer = population.NewObject();
-            dynamic walter = population.NewObject();
+            dynamic jubayer = population.Create();
+            dynamic walter = population.Create();
 
             jubayer.FirstName = "Jubayer";
             walter.FirstName = "Walter";

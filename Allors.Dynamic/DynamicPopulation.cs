@@ -40,7 +40,7 @@ namespace Allors.Dynamic
             }
         }
 
-        public DynamicObject NewObject(params Action<dynamic>[] builders)
+        public DynamicObject Create(params Action<dynamic>[] builders)
         {
             var newObject = new DynamicObject(this);
             this.database.AddObject(newObject);
@@ -57,6 +57,8 @@ namespace Allors.Dynamic
         {
             return this.database.Snapshot();
         }
+
+        public IEnumerable<dynamic> Objects => this.database.Objects;
 
         internal bool TryGetIndex(DynamicObject obj, GetIndexBinder binder, object[] indexes, out object result) => this.TryGet(obj, indexes[0] as string, out result);
 

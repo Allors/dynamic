@@ -3,6 +3,7 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
+using System.Runtime.CompilerServices;
 
 namespace Allors.Dynamic
 {
@@ -10,19 +11,17 @@ namespace Allors.Dynamic
     {
         private readonly DynamicMeta meta;
 
-        private readonly HashSet<DynamicObject> objects;
-
         private readonly Dictionary<DynamicRoleType, Dictionary<DynamicObject, object>> roleByAssociationByRoleType;
         private readonly Dictionary<DynamicAssociationType, Dictionary<DynamicObject, object>> associationByRoleByAssociationType;
 
         private Dictionary<DynamicRoleType, Dictionary<DynamicObject, object>> changedRoleByAssociationByRoleType;
         private Dictionary<DynamicAssociationType, Dictionary<DynamicObject, object>> changedAssociationByRoleByRoleType;
 
+        private DynamicObject[] objects;
+
         internal DynamicDatabase(DynamicMeta meta)
         {
             this.meta = meta;
-
-            this.objects = new HashSet<DynamicObject>();
 
             this.roleByAssociationByRoleType = new Dictionary<DynamicRoleType, Dictionary<DynamicObject, object>>();
             this.associationByRoleByAssociationType = new Dictionary<DynamicAssociationType, Dictionary<DynamicObject, object>>();
@@ -31,9 +30,11 @@ namespace Allors.Dynamic
             this.changedAssociationByRoleByRoleType = new Dictionary<DynamicAssociationType, Dictionary<DynamicObject, object>>();
         }
 
+        internal DynamicObject[] Objects => this.objects;
+
         internal void AddObject(DynamicObject newObject)
         {
-            this.objects.Add(newObject);
+            this.objects = NullableArraySet.Add(this.objects, newObject);
         }
 
         internal void GetRole(DynamicObject obj, DynamicRoleType roleType, out object result)

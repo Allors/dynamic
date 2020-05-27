@@ -18,7 +18,7 @@ namespace Allors.Dynamic.Tests
 
             population.DerivationById["FullName"] = new FullNameDerivation();
 
-            dynamic john = population.NewObject();
+            dynamic john = population.Create();
             john.FirstName = "John";
             john.LastName = "Doe";
 
@@ -28,7 +28,7 @@ namespace Allors.Dynamic.Tests
 
             population.DerivationById["FullName"] = new GreetingDerivation(population.DerivationById["FullName"]);
 
-            dynamic jane = population.NewObject();
+            dynamic jane = population.Create();
             jane.FirstName = "Jane";
             jane.LastName = "Doe";
 

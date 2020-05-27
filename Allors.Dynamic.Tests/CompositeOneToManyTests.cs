@@ -12,10 +12,10 @@ namespace Allors.Dynamic.Tests
                     .AddOneToManyRelation("Employer", "Employee")
               );
 
-            dynamic acme = population.NewObject();
-            dynamic jane = population.NewObject();
-            dynamic john = population.NewObject();
-            dynamic jenny = population.NewObject();
+            dynamic acme = population.Create();
+            dynamic jane = population.Create();
+            dynamic john = population.Create();
+            dynamic jenny = population.Create();
 
             acme.AddEmployee(jane);
             acme.AddEmployee(john);
@@ -40,20 +40,20 @@ namespace Allors.Dynamic.Tests
                  .AddOneToManyRelation("Employer", "Employee")
               );
 
-            dynamic acme = population.NewObject();
+            dynamic acme = population.Create();
 
-            dynamic jane = population.NewObject();
+            dynamic jane = population.Create();
             jane.Name = "Jane";
-            dynamic john = population.NewObject();
+            dynamic john = population.Create();
             john.Name = "John";
-            dynamic jenny = population.NewObject();
+            dynamic jenny = population.Create();
             jenny.Name = "Jenny";
 
             acme.AddEmployee(jane);
             acme.AddEmployee(john);
             acme.AddEmployee(jenny);
 
-            dynamic hooli = population.NewObject();
+            dynamic hooli = population.Create();
 
             hooli.AddEmployee(jane);
 
@@ -81,10 +81,10 @@ namespace Allors.Dynamic.Tests
                  .AddOneToManyRelation("Employer", "Employee")
               );
 
-            dynamic acme = population.NewObject();
-            dynamic jane = population.NewObject();
-            dynamic john = population.NewObject();
-            dynamic jenny = population.NewObject();
+            dynamic acme = population.Create();
+            dynamic jane = population.Create();
+            dynamic john = population.Create();
+            dynamic jenny = population.Create();
 
             acme.AddEmployee(jane);
             acme.AddEmployee(john);

@@ -15,11 +15,11 @@ namespace Allors.Dynamic.Tests
 
             Action<dynamic> name(string name) => (obj) => obj.Name = name;
 
-            dynamic acme = population.NewObject(name("Acme"));
-            dynamic gizmo = population.NewObject(name("Gizmo"));
+            dynamic acme = population.Create(name("Acme"));
+            dynamic gizmo = population.Create(name("Gizmo"));
             
-            dynamic jane = population.NewObject(name("Jane"));
-            dynamic john = population.NewObject(name("John"));
+            dynamic jane = population.Create(name("Jane"));
+            dynamic john = population.Create(name("John"));
 
             acme.Owner = jane;
             gizmo.Owner = john;

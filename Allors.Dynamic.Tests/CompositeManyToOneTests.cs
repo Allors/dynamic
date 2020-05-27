@@ -11,10 +11,10 @@ namespace Allors.Dynamic.Tests
                 .AddOneToOneRelation("Property", "Owner")
              );
 
-            dynamic acme = population.NewObject();
-            dynamic gizmo = population.NewObject();
-            dynamic jane = population.NewObject();
-            dynamic john = population.NewObject();
+            dynamic acme = population.Create();
+            dynamic gizmo = population.Create();
+            dynamic jane = population.Create();
+            dynamic john = population.Create();
 
             acme.Owner = jane;
 
@@ -35,10 +35,10 @@ namespace Allors.Dynamic.Tests
                 .AddOneToOneRelation("Property", "Owner")
              );
 
-            dynamic acme = population.NewObject();
-            dynamic gizmo = population.NewObject();
-            dynamic jane = population.NewObject();
-            dynamic john = population.NewObject();
+            dynamic acme = population.Create();
+            dynamic gizmo = population.Create();
+            dynamic jane = population.Create();
+            dynamic john = population.Create();
 
             acme["Owner"] = jane;
 
