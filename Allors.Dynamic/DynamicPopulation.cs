@@ -12,7 +12,7 @@ namespace Allors.Dynamic
         public DynamicMeta Meta { get; }
 
         public Dictionary<string, IDynamicDerivation> DerivationById { get; }
-              
+
         private readonly DynamicDatabase database;
 
         public DynamicPopulation(Action<DynamicMeta> builder = null)
@@ -90,11 +90,23 @@ namespace Allors.Dynamic
                 if (this.Meta.RoleTypeByName.TryGetValue(name, out var roleType))
                 {
                     this.database.GetRole(obj, roleType, out result);
+
+                    if (roleType.IsMany)
+                    {
+                        result ??= Array.Empty<DynamicObject>();
+                    }
+
                     return true;
                 }
                 else if (this.Meta.AssociationTypeByName.TryGetValue(name, out var associationType))
                 {
                     this.database.GetAssociation(obj, associationType, out result);
+
+                    if (associationType.IsMany)
+                    {
+                        result ??= Array.Empty<DynamicObject>();
+                    }
+
                     return true;
                 }
             }

@@ -233,7 +233,6 @@ namespace Allors.Dynamic
                 if (roleType.IsOne)
                 {
                     var role = (DynamicObject)value;
-
                     this.GetAssociation(role, associationType, out object previousAssociation);
 
                     // Role
@@ -248,7 +247,7 @@ namespace Allors.Dynamic
                         var previousAssociationObject = (DynamicObject)previousAssociation;
                         if (previousAssociationObject != null)
                         {
-                            changedRoleByAssociation.Remove(previousAssociationObject);
+                            changedRoleByAssociation[previousAssociationObject] = null;
                         }
 
                         changedAssociationByRole[role] = association;
@@ -256,12 +255,32 @@ namespace Allors.Dynamic
                     else
                     {
                         // Many to One
+                        var previousAssociationArray = (DynamicObject[])previousAssociation;
+                        var index = Array.IndexOf(previousAssociationArray, role);
+                        previousAssociationArray[index] = previousAssociationArray[previousAssociationArray.Length - 1];
+                        Array.Resize(ref previousAssociationArray, previousAssociationArray.Length - 1);
+                        changedAssociationByRole[role] = previousAssociationArray;
                     }
                 }
                 else
                 {
-                    var roleArray = (IEnumerable<DynamicObject>)value;
+                    var roleArray = ((IEnumerable<DynamicObject>)value).ToArray() ?? Array.Empty<DynamicObject>();
+                    this.GetRole(association, roleType, out object previousRole);
+                    var previousRoleArray = (DynamicObject[])previousRole ?? Array.Empty<DynamicObject>();
+
                     // Use Diff (Add/Remove)
+                    var toAdd = roleArray.Except(previousRoleArray);
+                    var toRemove = previousRoleArray.Except(roleArray);
+
+                    foreach(var role in toAdd)
+                    {
+                        this.AddRole(association, roleType, role);
+                    }
+
+                    foreach (var role in toRemove)
+                    {
+                        this.RemoveRole(association, roleType, role);
+                    }
                 }
             }
         }
