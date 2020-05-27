@@ -1,5 +1,6 @@
-﻿using System;
+﻿using System.Collections.Generic;
 using System.Dynamic;
+using System.Linq;
 
 namespace Allors.Dynamic
 {
@@ -35,6 +36,19 @@ namespace Allors.Dynamic
         public override bool TryInvokeMember(InvokeMemberBinder binder, object[] args, out object result)
         {
             return this.population.TryInvokeMember(this, binder, args, out result);
+        }
+
+        public override IEnumerable<string> GetDynamicMemberNames()
+        {
+            foreach(var roleType in this.population.Meta.RoleTypeByName.Values.ToArray().Distinct())
+            {
+                yield return roleType.Name;
+            }
+
+            foreach (var associationType in this.population.Meta.AssociationTypeByName.Values.ToArray().Distinct())
+            {
+                yield return associationType.Name;
+            }
         }
     }
 }

@@ -24,7 +24,8 @@ namespace Allors.Dynamic.Meta
         {
             var roleType = new DynamicRoleType
             {
-                Name = roleName,
+                SingularName = roleName,
+                PluralName = inflector.Pluralize(roleName),
                 IsMany = false,
             };
 
@@ -53,11 +54,12 @@ namespace Allors.Dynamic.Meta
             return this.AddCompositeRelation(associationName, true, roleName, true);
         }
 
-        public DynamicMeta AddCompositeRelation(string associationName, bool associationIsMany, string roleName, bool roleIsMany)
+        internal DynamicMeta AddCompositeRelation(string associationName, bool associationIsMany, string roleName, bool roleIsMany)
         {
             var roleType = new DynamicRoleType
             {
-                Name = roleName,
+                SingularName = roleName,
+                PluralName = inflector.Pluralize(roleName),
                 IsMany = roleIsMany,
             };
 
@@ -65,7 +67,8 @@ namespace Allors.Dynamic.Meta
 
             var associationType = new DynamicAssociationType(roleType)
             {
-                Name = associationName,
+                SingularName = associationName,
+                PluralName = inflector.Pluralize(associationName),
                 IsMany = associationIsMany,
             };
 
@@ -76,24 +79,18 @@ namespace Allors.Dynamic.Meta
 
         private void AddRoleType(DynamicRoleType roleType)
         {
-            var singularName = roleType.Name;
-            var pluralName = inflector.Pluralize(singularName);
+            this.CheckNames(roleType.SingularName, roleType.PluralName);
 
-            this.CheckNames(singularName, pluralName);
-
-            this.RoleTypeByName.Add(singularName, roleType);
-            this.RoleTypeByName.Add(pluralName, roleType);
+            this.RoleTypeByName.Add(roleType.SingularName, roleType);
+            this.RoleTypeByName.Add(roleType.PluralName, roleType);
         }
 
         private void AddAssociationType(DynamicAssociationType associationType)
         {
-            var singularName = associationType.Name;
-            var pluralName = inflector.Pluralize(singularName);
+            this.CheckNames(associationType.SingularName, associationType.PluralName);
 
-            this.CheckNames(singularName, pluralName);
-
-            this.AssociationTypeByName.Add(singularName, associationType);
-            this.AssociationTypeByName.Add(pluralName, associationType);
+            this.AssociationTypeByName.Add(associationType.SingularName, associationType);
+            this.AssociationTypeByName.Add(associationType.PluralName, associationType);
         }
 
         private void CheckNames(string singularName, string pluralName)

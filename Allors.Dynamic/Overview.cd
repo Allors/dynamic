@@ -1,11 +1,57 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <ClassDiagram MajorVersion="1" MinorVersion="1">
   <Class Name="Allors.Dynamic.DynamicObject">
-    <Position X="8.25" Y="1.25" Width="1.75" />
+    <Position X="1.5" Y="1" Width="1.75" />
     <TypeIdentifier>
       <HashCode>AAAAAAAAAAgAAAAABEAAAIBACAAAAAAAAAAAAAAAAAA=</HashCode>
       <FileName>DynamicObject.cs</FileName>
     </TypeIdentifier>
+    <ShowAsAssociation>
+      <Field Name="population" />
+    </ShowAsAssociation>
+  </Class>
+  <Class Name="Allors.Dynamic.DynamicPopulation">
+    <Position X="4.75" Y="1" Width="1.75" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAgBABABEAAAIBACAAAAIAAQAQBAAAAAAE=</HashCode>
+      <FileName>DynamicPopulation.cs</FileName>
+    </TypeIdentifier>
+    <ShowAsAssociation>
+      <Field Name="database" />
+    </ShowAsAssociation>
+  </Class>
+  <Class Name="Allors.Dynamic.DynamicDatabase">
+    <Position X="8" Y="1" Width="2.5" />
+    <TypeIdentifier>
+      <HashCode>ABAAAMEAAAAgAAAAgAEAAAACpQAiAAAAQACQAAABAAA=</HashCode>
+      <FileName>DynamicDatabase.cs</FileName>
+    </TypeIdentifier>
+    <ShowAsCollectionAssociation>
+      <Field Name="objects" />
+      <Field Name="associationByRoleByType" />
+      <Field Name="changedAssociationByRoleByType" />
+      <Field Name="changedRoleByAssociationByType" />
+      <Field Name="roleByAssociationByType" />
+    </ShowAsCollectionAssociation>
+  </Class>
+  <Class Name="System.Collections.Generic.Dictionary&lt;TKey, TValue&gt;">
+    <Position X="13.25" Y="2" Width="1.5" />
+    <NestedTypes>
+      <Class Name="System.Collections.Generic.Dictionary&lt;TKey, TValue&gt;.Enumerator" Collapsed="true">
+        <TypeIdentifier />
+        <Lollipop Position="0.2" />
+      </Class>
+      <Class Name="System.Collections.Generic.Dictionary&lt;TKey, TValue&gt;.KeyCollection" Collapsed="true">
+        <TypeIdentifier />
+        <Lollipop Position="0.2" />
+      </Class>
+      <Class Name="System.Collections.Generic.Dictionary&lt;TKey, TValue&gt;.ValueCollection" Collapsed="true">
+        <TypeIdentifier />
+        <Lollipop Position="0.2" />
+      </Class>
+    </NestedTypes>
+    <TypeIdentifier />
+    <Lollipop Position="0.2" />
   </Class>
   <Font Name="Segoe UI" Size="9" />
 </ClassDiagram>

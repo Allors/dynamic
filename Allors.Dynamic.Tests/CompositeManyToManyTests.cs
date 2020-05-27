@@ -8,7 +8,7 @@ namespace Allors.Dynamic.Tests
         public void Add()
         {
             var population = new DynamicPopulation(v => v
-                 .AddCompositeRelation("Employer", false, "Employee", true)
+                 .AddOneToManyRelation("Employer", "Employee")
               );
 
             dynamic acme = population.NewObject();

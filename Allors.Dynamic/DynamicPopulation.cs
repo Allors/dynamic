@@ -1,9 +1,8 @@
 ﻿using Allors.Dynamic.Meta;
 using System;
-using System.Collections;
 using System.Collections.Generic;
+using System.ComponentModel;
 using System.Dynamic;
-using System.Linq;
 
 namespace Allors.Dynamic
 {
@@ -42,10 +41,16 @@ namespace Allors.Dynamic
             }
         }
 
-        public DynamicObject NewObject()
+        public DynamicObject NewObject(params Action<dynamic>[] builders)
         {
             var newObject = new DynamicObject(this);
             this.database.AddObject(newObject);
+
+            foreach (var builder in builders)
+            {
+                builder(newObject);
+            }
+
             return newObject;
         }
 
@@ -76,6 +81,7 @@ namespace Allors.Dynamic
 
             if (name.StartsWith("Remove") && this.Meta.RoleTypeByName.TryGetValue(name.Substring(6), out roleType))
             {
+                // TODO: RemovePlural
                 this.database.RemoveRole(obj, roleType, (DynamicObject)args[0]);
                 return true;
             }

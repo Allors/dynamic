@@ -6,7 +6,11 @@ namespace Allors.Dynamic.Meta
     {
         public DynamicRoleType RoleType { get; }
 
-        public string Name { get; internal set; }
+        public string Name => this.IsOne ? this.SingularName : this.PluralName;
+
+        public string SingularName { get; internal set; }
+
+        public string PluralName { get; internal set; }
 
         public bool IsOne => !this.IsMany;
 
@@ -17,5 +21,7 @@ namespace Allors.Dynamic.Meta
             roleType.AssociationType = this;
             RoleType = roleType;
         }
+
+        public override string ToString() => this.Name;
     }
 }

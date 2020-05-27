@@ -8,7 +8,7 @@ namespace Allors.Dynamic.Tests
         public void PropertySet()
         {
             var population = new DynamicPopulation(v => v
-                .AddCompositeRelation("Property", false, "Owner", false)
+                .AddOneToOneRelation("Property", "Owner")
              );
 
             dynamic acme = population.NewObject();
@@ -32,7 +32,7 @@ namespace Allors.Dynamic.Tests
         public void IndexSet()
         {
             var population = new DynamicPopulation(v => v
-                .AddCompositeRelation("Property", false, "Owner", false)
+                .AddOneToOneRelation("Property", "Owner")
              );
 
             dynamic acme = population.NewObject();

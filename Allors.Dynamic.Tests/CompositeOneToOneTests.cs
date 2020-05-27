@@ -1,3 +1,4 @@
+using System;
 using Xunit;
 
 namespace Allors.Dynamic.Tests
@@ -8,14 +9,17 @@ namespace Allors.Dynamic.Tests
         public void Set()
         {
             var population = new DynamicPopulation(v => v
-                .AddCompositeRelation("Property", false, "Owner", false)
+                .AddUnitRelation("Name")
+                .AddOneToOneRelation("Property", "Owner")
              );
 
-            dynamic acme = population.NewObject();
-            dynamic gizmo = population.NewObject();
+            Action<dynamic> name(string name) => (obj) => obj.Name = name;
 
-            dynamic jane = population.NewObject();
-            dynamic john = population.NewObject();
+            dynamic acme = population.NewObject(name("Acme"));
+            dynamic gizmo = population.NewObject(name("Gizmo"));
+            
+            dynamic jane = population.NewObject(name("Jane"));
+            dynamic john = population.NewObject(name("John"));
 
             acme.Owner = jane;
             gizmo.Owner = john;
