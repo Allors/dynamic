@@ -160,12 +160,7 @@ namespace Allors.Dynamic
                     }
                     else
                     {
-                        // Many to One
-                        var previousAssociationArray = (DynamicObject[])previousAssociation;
-                        var index = Array.IndexOf(previousAssociationArray, role);
-                        previousAssociationArray[index] = previousAssociationArray[previousAssociationArray.Length - 1];
-                        Array.Resize(ref previousAssociationArray, previousAssociationArray.Length - 1);
-                        changedAssociationByRole[role] = previousAssociationArray;
+                        changedAssociationByRole[role] = NullableArraySet.Remove(previousAssociation, role);
                     }
                 }
                 else
@@ -205,11 +200,7 @@ namespace Allors.Dynamic
             }
             else
             {
-                if (!roleArray.Contains(role))
-                {
-                    Array.Resize(ref roleArray, roleArray.Length + 1);
-                    roleArray[roleArray.Length - 1] = role;
-                }
+                roleArray = NullableArraySet.Add(roleArray, role);
             }
 
             var changedRoleByAssociation = GetChangedRoleByAssociation(roleType);
@@ -222,12 +213,8 @@ namespace Allors.Dynamic
                 var previousAssociationObject = (DynamicObject)previousAssociation;
                 if (previousAssociationObject != null)
                 {
-                    this.GetRole(previousAssociationObject, roleType, out var x);
-                    var array = x as DynamicObject[];
-                    var index = Array.IndexOf(array, role);
-                    array[index] = array[array.Length - 1];
-                    Array.Resize(ref array, array.Length - 1);
-                    changedRoleByAssociation[previousAssociationObject] = array;
+                    this.GetRole(previousAssociationObject, roleType, out var previousAssociationRole);
+                    changedRoleByAssociation[previousAssociationObject] = NullableArraySet.Remove(previousAssociationRole, role);
                 }
 
                 var changedAssociationByRole = GetChangedAssociationByRole(associationType);
@@ -243,11 +230,7 @@ namespace Allors.Dynamic
                 }
                 else
                 {
-                    if (!associationArray.Contains(association))
-                    {
-                        Array.Resize(ref associationArray, associationArray.Length + 1);
-                        associationArray[associationArray.Length - 1] = association;
-                    }
+                    associationArray = NullableArraySet.Add(associationArray, association);
                 }
 
                 var changedAssociationByRole = GetChangedAssociationByRole(associationType);
@@ -265,15 +248,7 @@ namespace Allors.Dynamic
             if (previousRole != null)
             {
                 var changedRoleByAssociation = GetChangedRoleByAssociation(roleType);
-
-                var previousRoleArray = previousRole as DynamicObject[];
-                var index = Array.IndexOf(previousRoleArray, role);
-                if (index > -1)
-                {
-                    previousRoleArray[index] = previousRoleArray[previousRoleArray.Length - 1];
-                    Array.Resize(ref previousRoleArray, previousRoleArray.Length - 1);
-                    changedRoleByAssociation[association] = previousRoleArray;
-                }
+                changedRoleByAssociation[association] = NullableArraySet.Remove(previousRole, role);
 
                 // Association
                 var changedAssociationByRole = GetChangedAssociationByRole(associationType);
@@ -285,10 +260,7 @@ namespace Allors.Dynamic
                 else
                 {
                     // Many to Many
-                    var associationArray = (DynamicObject[])previousAssociation;
-                    Array.Resize(ref associationArray, associationArray.Length + 1);
-                    associationArray[associationArray.Length - 1] = association;
-                    changedAssociationByRole[role] = associationArray;
+                    changedAssociationByRole[role] = NullableArraySet.Add(previousAssociation, association);
                 }
             }
         }
@@ -351,40 +323,6 @@ namespace Allors.Dynamic
             }
 
             return changedRoleByAssociation;
-        }
-
-        private static DynamicObject[] AddToNullableArraySet(object set, DynamicObject item)
-        {
-            var typedSet = (DynamicObject[])set;
-
-            if (typedSet == null)
-            {
-                return new DynamicObject[] { item };
-            }
-
-            Array.Resize(ref typedSet, typedSet.Length + 1);
-            typedSet[typedSet.Length - 1] = item;
-            return typedSet;
-        }
-
-        private static DynamicObject[] RemoveFromNullableArraySet(object set, DynamicObject item)
-        {
-            var typedSet = (DynamicObject[])set;
-
-            if (typedSet?.Contains(item) == true)
-            {
-                if (typedSet.Length == 1)
-                {
-                    return null;
-                }
-
-                var index = Array.IndexOf(typedSet, item);
-                typedSet[index] = typedSet[typedSet.Length - 1];
-                Array.Resize(ref typedSet, typedSet.Length - 1);
-                return typedSet;
-            }
-
-            return null;
         }
     }
 }
