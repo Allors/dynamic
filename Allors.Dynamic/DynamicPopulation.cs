@@ -13,7 +13,7 @@ namespace Allors.Dynamic
 
         private readonly DynamicDatabase database;
 
-        public DynamicPopulation(Action<DynamicMeta> builder = null)
+        public DynamicPopulation(params Action<DynamicMeta>[] builders)
         {
             this.Meta = new DynamicMeta();
 
@@ -21,7 +21,10 @@ namespace Allors.Dynamic
 
             this.database = new DynamicDatabase(this.Meta);
 
-            builder?.Invoke(this.Meta);
+            foreach (var builder in builders)
+            {
+                builder?.Invoke(this.Meta);
+            }
         }
 
         public void Derive()
@@ -74,16 +77,16 @@ namespace Allors.Dynamic
 
             result = null;
 
-            if (name.StartsWith("Add") && this.Meta.RoleTypeByName.TryGetValue(name.Substring(3), out var roleType))
+            if (name.StartsWith("Add") && this.Meta.LinkedTypeByName.TryGetValue(name.Substring(3), out var roleType))
             {
-                this.database.AddRole(obj, roleType, (DynamicObject)args[0]);
+                this.database.AddLinked(obj, roleType, (DynamicObject)args[0]);
                 return true;
             }
 
-            if (name.StartsWith("Remove") && this.Meta.RoleTypeByName.TryGetValue(name.Substring(6), out roleType))
+            if (name.StartsWith("Remove") && this.Meta.LinkedTypeByName.TryGetValue(name.Substring(6), out roleType))
             {
-                // TODO: RemovePlural
-                this.database.RemoveRole(obj, roleType, (DynamicObject)args[0]);
+                // TODO: RemoveAll
+                this.database.RemoveLinked(obj, roleType, (DynamicObject)args[0]);
                 return true;
             }
 
@@ -94,22 +97,23 @@ namespace Allors.Dynamic
         {
             if (name != null)
             {
-                if (this.Meta.RoleTypeByName.TryGetValue(name, out var roleType))
+                if (this.Meta.LinkedTypeByName.TryGetValue(name, out var linkedType))
                 {
-                    this.database.GetRole(obj, roleType, out result);
+                    this.database.GetLinked(obj, linkedType, out result);
 
-                    if (roleType.IsMany)
+                    if (linkedType.IsMany)
                     {
                         result ??= Array.Empty<DynamicObject>();
                     }
 
                     return true;
                 }
-                else if (this.Meta.AssociationTypeByName.TryGetValue(name, out var associationType))
-                {
-                    this.database.GetAssociation(obj, associationType, out result);
 
-                    if (associationType.IsMany)
+                if (this.Meta.LinkerTypeByName.TryGetValue(name, out var linkerType))
+                {
+                    this.database.GetLinker(obj, linkerType, out result);
+
+                    if (linkerType.IsMany)
                     {
                         result ??= Array.Empty<DynamicObject>();
                     }
@@ -126,9 +130,9 @@ namespace Allors.Dynamic
         {
             if (name != null)
             {
-                if (this.Meta.RoleTypeByName.TryGetValue(name, out var roleType))
+                if (this.Meta.LinkedTypeByName.TryGetValue(name, out var linkedType))
                 {
-                    this.database.SetRole(obj, roleType, value);
+                    this.database.SetLinked(obj, linkedType, value);
                     return true;
                 }
             }

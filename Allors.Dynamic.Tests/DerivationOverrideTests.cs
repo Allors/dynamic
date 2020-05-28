@@ -10,11 +10,11 @@ namespace Allors.Dynamic.Tests
         public void Derivation()
         {
             var population = new DynamicPopulation(v => v
-                  .AddUnitRelation("FirstName")
-                  .AddUnitRelation("LastName")
-                  .AddUnitRelation("FullName")
-                  .AddUnitRelation("DerivedAt")
-                  .AddUnitRelation("Greeting")
+                  .AddDataAssociation("FirstName")
+                  .AddDataAssociation("LastName")
+                  .AddDataAssociation("FullName")
+                  .AddDataAssociation("DerivedAt")
+                  .AddDataAssociation("Greeting")
        );
 
             population.DerivationById["FullName"] = new FullNameDerivation();
@@ -33,8 +33,8 @@ namespace Allors.Dynamic.Tests
         {
             public void Derive(DynamicChangeSet changeSet)
             {
-                var firstNames = changeSet.ChangedRoles("FirstName");
-                var lastNames = changeSet.ChangedRoles("LastName");
+                var firstNames = changeSet.ChangedLinked("FirstName");
+                var lastNames = changeSet.ChangedLinked("LastName");
 
                 if (firstNames?.Any() == true || lastNames?.Any() == true)
                 {
@@ -58,7 +58,7 @@ namespace Allors.Dynamic.Tests
         {
             public void Derive(DynamicChangeSet changeSet)
             {
-                var fullNames = changeSet.ChangedRoles("FullName");
+                var fullNames = changeSet.ChangedLinked("FullName");
 
                 if (fullNames?.Any() == true)
                 {

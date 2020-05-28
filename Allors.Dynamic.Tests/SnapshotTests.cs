@@ -8,8 +8,8 @@ namespace Allors.Dynamic.Tests
         public void Snapshot()
         {
             var population = new DynamicPopulation(v => v
-                .AddUnitRelation("FirstName")
-                .AddUnitRelation("LastName")
+                .AddDataAssociation("FirstName")
+                .AddDataAssociation("LastName")
              );
 
             dynamic john = population.Create();
@@ -23,8 +23,8 @@ namespace Allors.Dynamic.Tests
             jane.FirstName = "Jane";
             jane.LastName = "Doe";
 
-            var changedFirstNames = snapshot1.ChangedRoles("FirstName");
-            var changedLastNames = snapshot1.ChangedRoles("LastName");
+            var changedFirstNames = snapshot1.ChangedLinked("FirstName");
+            var changedLastNames = snapshot1.ChangedLinked("LastName");
 
             Assert.Single(changedFirstNames.Keys);
             Assert.Single(changedLastNames.Keys);
@@ -33,8 +33,8 @@ namespace Allors.Dynamic.Tests
 
             var snapshot2 = population.Snapshot();
 
-            changedFirstNames = snapshot2.ChangedRoles("FirstName");
-            changedLastNames = snapshot2.ChangedRoles("LastName");
+            changedFirstNames = snapshot2.ChangedLinked("FirstName");
+            changedLastNames = snapshot2.ChangedLinked("LastName");
 
             Assert.Single(changedFirstNames.Keys);
             Assert.Single(changedLastNames.Keys);

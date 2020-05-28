@@ -10,8 +10,8 @@ namespace Allors.Dynamic.Tests
         public void Filter()
         {
             var population = new DynamicPopulation(v => v
-                         .AddUnitRelation("FirstName")
-                         .AddUnitRelation("LastName")
+                         .AddDataAssociation("FirstName")
+                         .AddDataAssociation("LastName")
                       );
 
             dynamic Create(params Action<dynamic>[] builders) => population.Create(builders);

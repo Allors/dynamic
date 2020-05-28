@@ -40,12 +40,13 @@ namespace Allors.Dynamic
 
         public override IEnumerable<string> GetDynamicMemberNames()
         {
-            foreach(var roleType in this.population.Meta.RoleTypeByName.Values.ToArray().Distinct())
+            foreach (var roleType in this.population.Meta.LinkedTypeByName.Values.ToArray().Distinct())
             {
                 yield return roleType.Name;
             }
 
-            foreach (var associationType in this.population.Meta.AssociationTypeByName.Values.ToArray().Distinct())
+            foreach (var associationType in this.population.Meta.LinkerTypeByName.Values.ToArray().Distinct()
+            )
             {
                 yield return associationType.Name;
             }

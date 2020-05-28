@@ -2,13 +2,13 @@ using Xunit;
 
 namespace Allors.Dynamic.Tests
 {
-    public class CompositeManyToManyTests
+    public class ManyToManyTests
     {
         [Fact]
         public void Add()
         {
             var population = new DynamicPopulation(v => v
-                 .AddOneToManyRelation("Employer", "Employee")
+                 .AddOneToManyAssociation("Employer", "Employee")
               );
 
             dynamic acme = population.Create();

@@ -3,14 +3,14 @@ using Xunit;
 
 namespace Allors.Dynamic.Tests
 {
-    public class CompositeOneToOneTests
+    public class OneToOneTests
     {
         [Fact]
         public void Set()
         {
             var population = new DynamicPopulation(v => v
-                .AddUnitRelation("Name")
-                .AddOneToOneRelation("Property", "Owner")
+                .AddDataAssociation("Name")
+                .AddOneToOneAssociation("Property", "Owner")
              );
 
             Action<dynamic> name(string name) => (obj) => obj.Name = name;

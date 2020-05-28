@@ -1,10 +1,8 @@
-﻿using System.Threading;
-
-namespace Allors.Dynamic.Meta
+﻿namespace Allors.Dynamic.Meta
 {
-    public class DynamicAssociationType
+    public class DynamicLinkerType
     {
-        public DynamicRoleType RoleType { get; }
+        public DynamicLinkedType LinkedType { get; }
 
         public string Name => this.IsOne ? this.SingularName : this.PluralName;
 
@@ -16,10 +14,10 @@ namespace Allors.Dynamic.Meta
 
         public bool IsMany { get; internal set; }
 
-        public DynamicAssociationType(DynamicRoleType roleType)
+        public DynamicLinkerType(DynamicLinkedType linkedType)
         {
-            roleType.AssociationType = this;
-            RoleType = roleType;
+            linkedType.LinkerType = this;
+            this.LinkedType = linkedType;
         }
 
         public override string ToString() => this.Name;

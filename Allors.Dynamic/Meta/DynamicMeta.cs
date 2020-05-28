@@ -1,108 +1,108 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Globalization;
-
-namespace Allors.Dynamic.Meta
+﻿namespace Allors.Dynamic.Meta
 {
+    using System;
+    using System.Collections.Generic;
+    using System.Globalization;
+
     public class DynamicMeta
     {
         private readonly Inflector.Inflector inflector;
 
         internal DynamicMeta()
         {
-            this.AssociationTypeByName = new Dictionary<string, DynamicAssociationType>();
-            this.RoleTypeByName = new Dictionary<string, DynamicRoleType>();
+            this.LinkerTypeByName = new Dictionary<string, DynamicLinkerType>();
+            this.LinkedTypeByName = new Dictionary<string, DynamicLinkedType>();
 
             this.inflector = new Inflector.Inflector(new CultureInfo("en"));
         }
 
-        public Dictionary<string, DynamicAssociationType> AssociationTypeByName { get; }
+        public Dictionary<string, DynamicLinkerType> LinkerTypeByName { get; }
 
-        public Dictionary<string, DynamicRoleType> RoleTypeByName { get; }
+        public Dictionary<string, DynamicLinkedType> LinkedTypeByName { get; }
 
-        public DynamicMeta AddUnitRelation(string roleName)
+        public DynamicMeta AddDataAssociation(string name)
         {
-            var roleType = new DynamicRoleType
+            var linkedAssociationEnd = new DynamicLinkedType
             {
-                SingularName = roleName,
-                PluralName = inflector.Pluralize(roleName),
+                SingularName = name,
+                PluralName = inflector.Pluralize(name),
                 IsMany = false,
             };
 
-            this.AddRoleType(roleType);
+            this.AddLinkedType(linkedAssociationEnd);
 
             return this;
         }
 
-        public DynamicMeta AddOneToOneRelation(string associationName, string roleName)
+        public DynamicMeta AddOneToOneAssociation(string linkingName, string linkedName)
         {
-            return this.AddCompositeRelation(associationName, false, roleName, false);
+            return this.AddAssociation(linkingName, false, linkedName, false);
         }
 
-        public DynamicMeta AddOneToManyRelation(string associationName, string roleName)
+        public DynamicMeta AddOneToManyAssociation(string linkingName, string linkedName)
         {
-            return this.AddCompositeRelation(associationName, false, roleName, true);
+            return this.AddAssociation(linkingName, false, linkedName, true);
         }
 
-        public DynamicMeta AddManyToOneRelation(string associationName, string roleName)
+        public DynamicMeta AddManyToOneAssociation(string linkingName, string linkedName)
         {
-            return this.AddCompositeRelation(associationName, true, roleName, false);
+            return this.AddAssociation(linkingName, true, linkedName, false);
         }
 
-        public DynamicMeta AddManyToManyRelation(string associationName, string roleName)
+        public DynamicMeta AddManyToManyAssociation(string linkingName, string linkedName)
         {
-            return this.AddCompositeRelation(associationName, true, roleName, true);
+            return this.AddAssociation(linkingName, true, linkedName, true);
         }
 
-        internal DynamicMeta AddCompositeRelation(string associationName, bool associationIsMany, string roleName, bool roleIsMany)
+        private DynamicMeta AddAssociation(string linkerName, bool linkerIsMany, string linkedName, bool linkedIsMany)
         {
-            var roleType = new DynamicRoleType
+            var linkedAssociationEnd = new DynamicLinkedType
             {
-                SingularName = roleName,
-                PluralName = inflector.Pluralize(roleName),
-                IsMany = roleIsMany,
+                SingularName = linkedName,
+                PluralName = this.inflector.Pluralize(linkedName),
+                IsMany = linkedIsMany,
             };
 
-            this.AddRoleType(roleType);
+            this.AddLinkedType(linkedAssociationEnd);
 
-            var associationType = new DynamicAssociationType(roleType)
+            var linkingAssociationEnd = new DynamicLinkerType(linkedAssociationEnd)
             {
-                SingularName = associationName,
-                PluralName = inflector.Pluralize(associationName),
-                IsMany = associationIsMany,
+                SingularName = linkerName,
+                PluralName = this.inflector.Pluralize(linkerName),
+                IsMany = linkerIsMany,
             };
 
-            this.AddAssociationType(associationType);
+            this.AddLinkerType(linkingAssociationEnd);
 
             return this;
         }
 
-        private void AddRoleType(DynamicRoleType roleType)
+        private void AddLinkerType(DynamicLinkerType linkerType)
         {
-            this.CheckNames(roleType.SingularName, roleType.PluralName);
+            this.CheckNames(linkerType.SingularName, linkerType.PluralName);
 
-            this.RoleTypeByName.Add(roleType.SingularName, roleType);
-            this.RoleTypeByName.Add(roleType.PluralName, roleType);
+            this.LinkerTypeByName.Add(linkerType.SingularName, linkerType);
+            this.LinkerTypeByName.Add(linkerType.PluralName, linkerType);
         }
 
-        private void AddAssociationType(DynamicAssociationType associationType)
+        private void AddLinkedType(DynamicLinkedType linkedType)
         {
-            this.CheckNames(associationType.SingularName, associationType.PluralName);
+            this.CheckNames(linkedType.SingularName, linkedType.PluralName);
 
-            this.AssociationTypeByName.Add(associationType.SingularName, associationType);
-            this.AssociationTypeByName.Add(associationType.PluralName, associationType);
+            this.LinkedTypeByName.Add(linkedType.SingularName, linkedType);
+            this.LinkedTypeByName.Add(linkedType.PluralName, linkedType);
         }
 
         private void CheckNames(string singularName, string pluralName)
         {
-            if (this.RoleTypeByName.ContainsKey(singularName) ||
-                this.AssociationTypeByName.ContainsKey(singularName))
+            if (this.LinkedTypeByName.ContainsKey(singularName) ||
+                this.LinkerTypeByName.ContainsKey(singularName))
             {
                 throw new Exception($"{singularName} is not unique");
             }
 
-            if (this.RoleTypeByName.ContainsKey(pluralName) ||
-               this.AssociationTypeByName.ContainsKey(pluralName))
+            if (this.LinkedTypeByName.ContainsKey(pluralName) ||
+                this.LinkerTypeByName.ContainsKey(pluralName))
             {
                 throw new Exception($"{pluralName} is not unique");
             }

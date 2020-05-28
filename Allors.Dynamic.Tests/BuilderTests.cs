@@ -9,8 +9,8 @@ namespace Allors.Dynamic.Tests
         public void Set()
         {
             var population = new DynamicPopulation(v => v
-                .AddUnitRelation("Name")
-                .AddOneToOneRelation("Property", "Owner")
+                .AddDataAssociation("Name")
+                .AddOneToOneAssociation("Property", "Owner")
              );
 
             dynamic Create(params Action<dynamic>[] builders) => population.Create(builders);

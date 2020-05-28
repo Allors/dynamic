@@ -8,29 +8,29 @@ namespace Allors.Dynamic
     {
         public DynamicMeta Meta { get; }
 
-        private readonly Dictionary<DynamicRoleType, Dictionary<DynamicObject, object>> changedRoleByAssociationByType;
-        private readonly Dictionary<DynamicAssociationType, Dictionary<DynamicObject, object>> changedAssociationByRoleByType;
+        private readonly Dictionary<DynamicLinkedType, Dictionary<DynamicObject, object>> linkedByLinkerByLinkedType;
+        private readonly Dictionary<DynamicLinkerType, Dictionary<DynamicObject, object>> linkerByLinkedByLinkerType;
 
-        public DynamicChangeSet(DynamicMeta meta, Dictionary<DynamicRoleType, Dictionary<DynamicObject, object>> changedRoleByAssociationByType, Dictionary<DynamicAssociationType, Dictionary<DynamicObject, object>> changedAssociationByRoleByType)
+        public DynamicChangeSet(DynamicMeta meta, Dictionary<DynamicLinkedType, Dictionary<DynamicObject, object>> linkedByLinkerByLinkedType, Dictionary<DynamicLinkerType, Dictionary<DynamicObject, object>> linkerByLinkedByLinkerType)
         {
             this.Meta = meta;
-            this.changedRoleByAssociationByType = changedRoleByAssociationByType;
-            this.changedAssociationByRoleByType = changedAssociationByRoleByType;
+            this.linkedByLinkerByLinkedType = linkedByLinkerByLinkedType;
+            this.linkerByLinkedByLinkerType = linkerByLinkedByLinkerType;
         }
 
         public bool HasChanges =>
-            this.changedRoleByAssociationByType.Any(v => v.Value.Count > 0) ||
-            this.changedAssociationByRoleByType.Any(v => v.Value.Count > 0);
+            this.linkedByLinkerByLinkedType.Any(v => v.Value.Count > 0) ||
+            this.linkerByLinkedByLinkerType.Any(v => v.Value.Count > 0);
 
-        public Dictionary<DynamicObject, object> ChangedRoles(string roleName)
+        public Dictionary<DynamicObject, object> ChangedLinked(string name)
         {
-            var roleType = this.Meta.RoleTypeByName[roleName];
-            return this.ChangedRoles(roleType);
+            var linked = this.Meta.LinkedTypeByName[name];
+            return this.ChangedLinked(linked);
         }
 
-        public Dictionary<DynamicObject, object> ChangedRoles(DynamicRoleType roleType)
+        public Dictionary<DynamicObject, object> ChangedLinked(DynamicLinkedType linkedType)
         {
-            this.changedRoleByAssociationByType.TryGetValue(roleType, out var changedRelations);
+            this.linkedByLinkerByLinkedType.TryGetValue(linkedType, out var changedRelations);
             return changedRelations;
         }
     }

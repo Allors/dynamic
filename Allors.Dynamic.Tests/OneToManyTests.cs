@@ -3,13 +3,13 @@ using Xunit;
 
 namespace Allors.Dynamic.Tests
 {
-    public class CompositeOneToManyTests
+    public class OneToManyTests
     {
         [Fact]
         public void AddSameAssociation()
         {
             var population = new DynamicPopulation(v => v
-                    .AddOneToManyRelation("Employer", "Employee")
+                    .AddOneToManyAssociation("Employer", "Employee")
               );
 
             dynamic acme = population.Create();
@@ -36,8 +36,8 @@ namespace Allors.Dynamic.Tests
         {
 
             var population = new DynamicPopulation(v => v
-                 .AddUnitRelation("Name")
-                 .AddOneToManyRelation("Employer", "Employee")
+                 .AddDataAssociation("Name")
+                 .AddOneToManyAssociation("Employer", "Employee")
               );
 
             dynamic acme = population.Create();
@@ -78,7 +78,7 @@ namespace Allors.Dynamic.Tests
         public void Remove()
         {
             var population = new DynamicPopulation(v => v
-                 .AddOneToManyRelation("Employer", "Employee")
+                 .AddOneToManyAssociation("Employer", "Employee")
               );
 
             dynamic acme = population.Create();
