@@ -6,11 +6,11 @@ namespace Allors.Dynamic
     {
         internal static DynamicObject[] Add(object set, DynamicObject item)
         {
-            var typedSet = (DynamicObject[]) set;
+            var typedSet = (DynamicObject[])set;
 
             if (typedSet == null)
             {
-                return new[] {item};
+                return new[] { item };
             }
 
             Array.Resize(ref typedSet, typedSet.Length + 1);
@@ -20,7 +20,7 @@ namespace Allors.Dynamic
 
         internal static DynamicObject[] Remove(object set, DynamicObject item)
         {
-            var typedSet = (DynamicObject[]) set;
+            var typedSet = (DynamicObject[])set;
 
             if (typedSet != null && Array.IndexOf(typedSet, item) > -1)
             {

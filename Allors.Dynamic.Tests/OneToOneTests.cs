@@ -17,7 +17,7 @@ namespace Allors.Dynamic.Tests
 
             dynamic acme = population.Create(name("Acme"));
             dynamic gizmo = population.Create(name("Gizmo"));
-            
+
             dynamic jane = population.Create(name("Jane"));
             dynamic john = population.Create(name("John"));
 

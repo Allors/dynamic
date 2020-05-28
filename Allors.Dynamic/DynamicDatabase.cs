@@ -3,7 +3,6 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
-using System.Runtime.CompilerServices;
 
 namespace Allors.Dynamic
 {
@@ -66,7 +65,7 @@ namespace Allors.Dynamic
                     var areEqual = ReferenceEquals(originalLinked, linked) ||
                                    (linkedType.IsOne && Equals(originalLinked, linked)) ||
                                    (linkedType.IsMany &&
-                                    ((IStructuralEquatable) originalLinked)?.Equals((IStructuralEquatable) linked) ==
+                                    ((IStructuralEquatable)originalLinked)?.Equals((IStructuralEquatable)linked) ==
                                     true);
 
                     if (areEqual)
@@ -97,8 +96,8 @@ namespace Allors.Dynamic
                     var areEqual = ReferenceEquals(originalLinker, changedLinker) ||
                                    (linkerType.IsOne && Equals(originalLinker, changedLinker)) ||
                                    (linkerType.IsMany &&
-                                    ((IStructuralEquatable) originalLinker)?.Equals(
-                                        (IStructuralEquatable) changedLinker) == true);
+                                    ((IStructuralEquatable)originalLinker)?.Equals(
+                                        (IStructuralEquatable)changedLinker) == true);
 
                     if (areEqual)
                     {
@@ -142,7 +141,7 @@ namespace Allors.Dynamic
 
                 if (linkedType.IsOne)
                 {
-                    var linkedObject = (DynamicObject) linked;
+                    var linkedObject = (DynamicObject)linked;
                     this.GetLinker(linkedObject, linkerType, out object previousLinker);
 
                     // Linked
@@ -154,7 +153,7 @@ namespace Allors.Dynamic
                     if (linkerType.IsOne)
                     {
                         // One to One
-                        var previousLinkerObject = (DynamicObject) previousLinker;
+                        var previousLinkerObject = (DynamicObject)previousLinker;
                         if (previousLinkerObject != null)
                         {
                             changedLinkedByLinker[previousLinkerObject] = null;
@@ -162,7 +161,7 @@ namespace Allors.Dynamic
 
                         if (previousLinked != null)
                         {
-                            var previousLinkedObject = (DynamicObject) previousLinked;
+                            var previousLinkedObject = (DynamicObject)previousLinked;
                             changedLinkerByLinked[previousLinkedObject] = null;
                         }
 
@@ -175,9 +174,9 @@ namespace Allors.Dynamic
                 }
                 else
                 {
-                    var linkedArray = ((IEnumerable<DynamicObject>) linked)?.ToArray() ?? Array.Empty<DynamicObject>();
+                    var linkedArray = ((IEnumerable<DynamicObject>)linked)?.ToArray() ?? Array.Empty<DynamicObject>();
 
-                    var previousLinkedArray = (DynamicObject[]) previousLinked ?? Array.Empty<DynamicObject>();
+                    var previousLinkedArray = (DynamicObject[])previousLinked ?? Array.Empty<DynamicObject>();
 
                     // Use Diff (Add/Remove)
                     var addLinkedArray = linkedArray.Except(previousLinkedArray);
@@ -203,7 +202,7 @@ namespace Allors.Dynamic
 
             // Linked
             this.GetLinked(linker, linkedType, out var previousLinked);
-            var linkedArray = (DynamicObject[]) previousLinked;
+            var linkedArray = (DynamicObject[])previousLinked;
             linkedArray = NullableArraySet.Add(linkedArray, linked);
 
             var changedLinkedByLinker = GetChangedLinkedByLinker(linkedType);
@@ -213,7 +212,7 @@ namespace Allors.Dynamic
             if (linkerType.IsOne)
             {
                 // One to Many
-                var previousLinkerObject = (DynamicObject) previousLinker;
+                var previousLinkerObject = (DynamicObject)previousLinker;
                 if (previousLinkerObject != null)
                 {
                     this.GetLinked(previousLinkerObject, linkedType, out var previousLinkerLinked);

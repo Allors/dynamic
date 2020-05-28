@@ -1,8 +1,8 @@
-using System;
-using Xunit;
-
 namespace Allors.Dynamic.Tests
 {
+    using System;
+    using Xunit;
+
     public class BuilderTests
     {
         [Fact]
