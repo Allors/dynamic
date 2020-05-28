@@ -30,7 +30,6 @@ namespace Allors.Dynamic.Tests
             Assert.Equal(acme, jenny.Employer);
         }
 
-
         [Fact]
         public void AddDifferentAssociation()
         {
@@ -57,9 +56,9 @@ namespace Allors.Dynamic.Tests
 
             hooli.AddEmployee(jane);
 
-            var people = new[] { jane, john, jenny};
+            var people = new[] { jane, john, jenny };
 
-            var x = people.Where(v=>"Jane".Equals(v.FirstName));
+            var x = people.Where(v => "Jane".Equals(v.FirstName));
 
             Assert.Contains(jane, hooli.Employees);
 
