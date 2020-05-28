@@ -5,7 +5,7 @@ namespace Allors.Dynamic.Tests
     public class ManyToManyTests
     {
         [Fact]
-        public void AddSameAssociation()
+        public void SingleActiveLink()
         {
             var population = new DynamicPopulation(v => v
                  .AddManyToManyAssociation("Employer", "Employee"));
@@ -21,29 +21,33 @@ namespace Allors.Dynamic.Tests
             acme.AddEmployee(john);
             acme.AddEmployee(jenny);
 
+            Assert.Single(jane.Employers);
+            Assert.Contains(acme, jane.Employers);
+
+            Assert.Single(john.Employers);
+            Assert.Contains(acme, john.Employers);
+
+            Assert.Single(jenny.Employers);
+            Assert.Contains(acme, jenny.Employers);
+
+            Assert.Equal(3, acme.Employees.Length);
             Assert.Contains(jane, acme.Employees);
             Assert.Contains(john, acme.Employees);
             Assert.Contains(jenny, acme.Employees);
 
-            Assert.DoesNotContain(jane, hooli.Employees);
-            Assert.DoesNotContain(john, hooli.Employees);
-            Assert.DoesNotContain(jenny, hooli.Employees);
+            Assert.Empty(hooli.Employees);
         }
 
         [Fact]
-        public void AddDifferentAssociation()
+        public void MultipeleActiveLinks()
         {
             var population = new DynamicPopulation(v => v
-                 .AddDataAssociation("FirstName")
-                 .AddDataAssociation("LastName")
                  .AddManyToManyAssociation("Employer", "Employee"));
 
             dynamic acme = population.Create();
             dynamic hooli = population.Create();
 
             dynamic jane = population.Create();
-            jane.FirstName = "Jane";
-            jane.LastName = "Doe";
             dynamic john = population.Create();
             dynamic jenny = population.Create();
 
@@ -51,16 +55,71 @@ namespace Allors.Dynamic.Tests
             acme.AddEmployee(john);
             acme.AddEmployee(jenny);
 
+            hooli.AddEmployee(jane);
+
+            Assert.Equal(2, jane.Employers.Length);
+            Assert.Contains(acme, jane.Employers);
+            Assert.Contains(hooli, jane.Employers);
+
+            Assert.Single(john.Employers);
+            Assert.Contains(acme, john.Employers);
+
+            Assert.Single(jenny.Employers);
+            Assert.Contains(acme, jenny.Employers);
+
+            Assert.Equal(3, acme.Employees.Length);
             Assert.Contains(jane, acme.Employees);
             Assert.Contains(john, acme.Employees);
             Assert.Contains(jenny, acme.Employees);
 
-            Assert.DoesNotContain(jane, hooli.Employees);
-            Assert.DoesNotContain(john, hooli.Employees);
-            Assert.DoesNotContain(jenny, hooli.Employees);
+            Assert.Single(hooli.Employees);
+            Assert.Contains(jane, hooli.Employees);
 
-            Assert.Equal(jane.FirstName, "Jane");
-            Assert.Equal(jane.LastName, "Doe");
+            hooli.AddEmployee(john);
+
+            Assert.Equal(2, jane.Employers.Length);
+            Assert.Contains(acme, jane.Employers);
+            Assert.Contains(hooli, jane.Employers);
+
+            Assert.Equal(2, john.Employers.Length);
+            Assert.Contains(acme, john.Employers);
+            Assert.Contains(hooli, john.Employers);
+
+            Assert.Single(jenny.Employers);
+            Assert.Contains(acme, jenny.Employers);
+
+            Assert.Equal(3, acme.Employees.Length);
+            Assert.Contains(jane, acme.Employees);
+            Assert.Contains(john, acme.Employees);
+            Assert.Contains(jenny, acme.Employees);
+
+            Assert.Equal(2, hooli.Employees.Length);
+            Assert.Contains(jane, hooli.Employees);
+            Assert.Contains(john, hooli.Employees);
+
+            hooli.AddEmployee(jenny);
+
+            Assert.Equal(2, jane.Employers.Length);
+            Assert.Contains(acme, jane.Employers);
+            Assert.Contains(hooli, jane.Employers);
+
+            Assert.Equal(2, john.Employers.Length);
+            Assert.Contains(acme, john.Employers);
+            Assert.Contains(hooli, john.Employers);
+
+            Assert.Equal(2, jenny.Employers.Length);
+            Assert.Contains(acme, jenny.Employers);
+            Assert.Contains(hooli, jenny.Employers);
+
+            Assert.Equal(3, acme.Employees.Length);
+            Assert.Contains(jane, acme.Employees);
+            Assert.Contains(john, acme.Employees);
+            Assert.Contains(jenny, acme.Employees);
+
+            Assert.Equal(3, hooli.Employees.Length);
+            Assert.Contains(jane, hooli.Employees);
+            Assert.Contains(john, hooli.Employees);
+            Assert.Contains(jenny, hooli.Employees);
         }
     }
 }
