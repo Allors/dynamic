@@ -30,7 +30,6 @@ namespace Allors.Dynamic.Tests
             Assert.Equal(acme, jenny.Employer);
         }
 
-
         [Fact]
         public void AddDifferentAssociation()
         {
