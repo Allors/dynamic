@@ -1,317 +1,299 @@
-﻿using Allors.Dynamic.Meta;
-using System;
-using System.Collections;
-using System.Collections.Generic;
-using System.Linq;
-
-namespace Allors.Dynamic
+﻿namespace Allors.Dynamic
 {
+    using System;
+    using System.Collections;
+    using System.Collections.Generic;
+    using System.Linq;
+    using Allors.Dynamic.Meta;
+
     internal class DynamicDatabase
     {
         private readonly DynamicMeta meta;
 
-        private readonly Dictionary<DynamicLinkedType, Dictionary<DynamicObject, object>> linkedByLinkerByLinkedType;
-        private readonly Dictionary<DynamicLinkerType, Dictionary<DynamicObject, object>> linkingByLinkerByLinkingType;
+        private readonly Dictionary<DynamicRoleType, Dictionary<DynamicObject, object>> roleByAssociationByRoleType;
+        private readonly Dictionary<DynamicAssociationType, Dictionary<DynamicObject, object>> associationByRoleByAssociationType;
 
-        private Dictionary<DynamicLinkedType, Dictionary<DynamicObject, object>> changedLinkedByLinkerByLinkedType;
-        private Dictionary<DynamicLinkerType, Dictionary<DynamicObject, object>> changedLinkerByLinkedByLinkerType;
-
-        private DynamicObject[] objects;
+        private Dictionary<DynamicRoleType, Dictionary<DynamicObject, object>> changedRoleByAssociationByRoleType;
+        private Dictionary<DynamicAssociationType, Dictionary<DynamicObject, object>> changedAssociationByRoleByAssociationType;
 
         internal DynamicDatabase(DynamicMeta meta)
         {
             this.meta = meta;
 
-            this.linkedByLinkerByLinkedType = new Dictionary<DynamicLinkedType, Dictionary<DynamicObject, object>>();
-            this.linkingByLinkerByLinkingType = new Dictionary<DynamicLinkerType, Dictionary<DynamicObject, object>>();
+            this.roleByAssociationByRoleType = new Dictionary<DynamicRoleType, Dictionary<DynamicObject, object>>();
+            this.associationByRoleByAssociationType = new Dictionary<DynamicAssociationType, Dictionary<DynamicObject, object>>();
 
-            this.changedLinkedByLinkerByLinkedType =
-                new Dictionary<DynamicLinkedType, Dictionary<DynamicObject, object>>();
-            this.changedLinkerByLinkedByLinkerType =
-                new Dictionary<DynamicLinkerType, Dictionary<DynamicObject, object>>();
+            this.changedRoleByAssociationByRoleType =
+                new Dictionary<DynamicRoleType, Dictionary<DynamicObject, object>>();
+            this.changedAssociationByRoleByAssociationType =
+                new Dictionary<DynamicAssociationType, Dictionary<DynamicObject, object>>();
         }
 
-        internal DynamicObject[] Objects => this.objects;
-
-        internal void AddObject(DynamicObject newObject)
-        {
-            this.objects = NullableArraySet.Add(this.objects, newObject);
-        }
-
-        internal void GetLinked(DynamicObject obj, DynamicLinkedType linkedType, out object result)
-        {
-            if (this.changedLinkedByLinkerByLinkedType.TryGetValue(linkedType, out var changeLinkedByLinking) &&
-                changeLinkedByLinking.TryGetValue(obj, out result))
-            {
-                return;
-            }
-
-            var linkedByLinking = GetlinkedByLinker(linkedType);
-            linkedByLinking.TryGetValue(obj, out result);
-        }
+        internal DynamicObject[] Objects { get; private set; }
 
         internal DynamicChangeSet Snapshot()
         {
-            foreach (var linkedType in this.changedLinkedByLinkerByLinkedType.Keys.ToArray())
+            foreach (DynamicRoleType roleType in this.changedRoleByAssociationByRoleType.Keys.ToArray())
             {
-                var changedLinkedByLinker = this.changedLinkedByLinkerByLinkedType[linkedType];
+                Dictionary<DynamicObject, object> changedRoleByAssociation = this.changedRoleByAssociationByRoleType[roleType];
+                Dictionary<DynamicObject, object> roleByAssociation = this.RoleByAssociation(roleType);
 
-                var linkedByLinker = GetlinkedByLinker(linkedType);
-                foreach (var linker in changedLinkedByLinker.Keys.ToArray())
+                foreach (DynamicObject association in changedRoleByAssociation.Keys.ToArray())
                 {
-                    var linked = changedLinkedByLinker[linker];
-                    linkedByLinker.TryGetValue(linker, out var originalLinked);
+                    object role = changedRoleByAssociation[association];
+                    roleByAssociation.TryGetValue(association, out object originalRole);
 
-                    var areEqual = ReferenceEquals(originalLinked, linked) ||
-                                   (linkedType.IsOne && Equals(originalLinked, linked)) ||
-                                   (linkedType.IsMany &&
-                                    ((IStructuralEquatable)originalLinked)?.Equals((IStructuralEquatable)linked) ==
-                                    true);
+                    bool areEqual = ReferenceEquals(originalRole, role) ||
+                                   (roleType.IsOne && Equals(originalRole, role)) ||
+                                   (roleType.IsMany && ((IStructuralEquatable)originalRole)?.Equals((IStructuralEquatable)role) == true);
 
                     if (areEqual)
                     {
-                        changedLinkedByLinker.Remove(linker);
+                        changedRoleByAssociation.Remove(association);
                         continue;
                     }
 
-                    linkedByLinker[linker] = linked;
+                    roleByAssociation[association] = role;
                 }
 
-                if (linkedByLinker.Count == 0)
+                if (roleByAssociation.Count == 0)
                 {
-                    this.changedLinkedByLinkerByLinkedType.Remove(linkedType);
+                    this.changedRoleByAssociationByRoleType.Remove(roleType);
                 }
             }
 
-            foreach (var linkerType in this.changedLinkerByLinkedByLinkerType.Keys.ToArray())
+            foreach (DynamicAssociationType associationType in this.changedAssociationByRoleByAssociationType.Keys.ToArray())
             {
-                var changedLinkerByLinked = this.changedLinkerByLinkedByLinkerType[linkerType];
+                Dictionary<DynamicObject, object> changedAssociationByRole = this.changedAssociationByRoleByAssociationType[associationType];
+                Dictionary<DynamicObject, object> associationByRole = this.AssociationByRole(associationType);
 
-                var linkerByLinked = GetLinkerByLinked(linkerType);
-                foreach (var role in changedLinkerByLinked.Keys.ToArray())
+                foreach (DynamicObject role in changedAssociationByRole.Keys.ToArray())
                 {
-                    var changedLinker = changedLinkerByLinked[role];
-                    linkerByLinked.TryGetValue(role, out var originalLinker);
+                    object changedAssociation = changedAssociationByRole[role];
+                    associationByRole.TryGetValue(role, out object originalRole);
 
-                    var areEqual = ReferenceEquals(originalLinker, changedLinker) ||
-                                   (linkerType.IsOne && Equals(originalLinker, changedLinker)) ||
-                                   (linkerType.IsMany &&
-                                    ((IStructuralEquatable)originalLinker)?.Equals(
-                                        (IStructuralEquatable)changedLinker) == true);
+                    bool areEqual = ReferenceEquals(originalRole, changedAssociation) ||
+                                   (associationType.IsOne && Equals(originalRole, changedAssociation)) ||
+                                   (associationType.IsMany && ((IStructuralEquatable)originalRole)?.Equals((IStructuralEquatable)changedAssociation) == true);
 
                     if (areEqual)
                     {
-                        changedLinkerByLinked.Remove(role);
+                        changedAssociationByRole.Remove(role);
                         continue;
                     }
 
-                    linkerByLinked[role] = changedLinker;
+                    associationByRole[role] = changedAssociation;
                 }
 
-                if (linkerByLinked.Count == 0)
+                if (associationByRole.Count == 0)
                 {
-                    this.changedLinkerByLinkedByLinkerType.Remove(linkerType);
+                    this.changedAssociationByRoleByAssociationType.Remove(associationType);
                 }
             }
 
-            var snapshot = new DynamicChangeSet(this.meta, this.changedLinkedByLinkerByLinkedType,
-                this.changedLinkerByLinkedByLinkerType);
+            DynamicChangeSet snapshot = new DynamicChangeSet(this.meta, this.changedRoleByAssociationByRoleType, this.changedAssociationByRoleByAssociationType);
 
-            this.changedLinkedByLinkerByLinkedType =
-                new Dictionary<DynamicLinkedType, Dictionary<DynamicObject, object>>();
-            this.changedLinkerByLinkedByLinkerType =
-                new Dictionary<DynamicLinkerType, Dictionary<DynamicObject, object>>();
+            this.changedRoleByAssociationByRoleType = new Dictionary<DynamicRoleType, Dictionary<DynamicObject, object>>();
+            this.changedAssociationByRoleByAssociationType = new Dictionary<DynamicAssociationType, Dictionary<DynamicObject, object>>();
 
             return snapshot;
         }
 
-        internal void SetLinked(dynamic linker, DynamicLinkedType linkedType, object linked)
+        internal void AddObject(DynamicObject newObject)
         {
-            if (linkedType.IsData)
-            {
-                // Linked
-                var changedRoleByAssociation = GetChangedLinkedByLinker(linkedType);
-                changedRoleByAssociation[linker] = linked;
-            }
-            else
-            {
-                var linkerType = linkedType.LinkerType;
-
-                this.GetLinked(linker, linkedType, out object previousLinked);
-
-                if (linkedType.IsOne)
-                {
-                    var linkedObject = (DynamicObject)linked;
-                    this.GetLinker(linkedObject, linkerType, out object previousLinker);
-
-                    // Linked
-                    var changedLinkedByLinker = GetChangedLinkedByLinker(linkedType);
-                    changedLinkedByLinker[linker] = linkedObject;
-
-                    // Linker
-                    var changedLinkerByLinked = GetChangedLinkerByLinked(linkerType);
-                    if (linkerType.IsOne)
-                    {
-                        // One to One
-                        var previousLinkerObject = (DynamicObject)previousLinker;
-                        if (previousLinkerObject != null)
-                        {
-                            changedLinkedByLinker[previousLinkerObject] = null;
-                        }
-
-                        if (previousLinked != null)
-                        {
-                            var previousLinkedObject = (DynamicObject)previousLinked;
-                            changedLinkerByLinked[previousLinkedObject] = null;
-                        }
-
-                        changedLinkerByLinked[linkedObject] = linker;
-                    }
-                    else
-                    {
-                        changedLinkerByLinked[linkedObject] = NullableArraySet.Remove(previousLinker, linkedObject);
-                    }
-                }
-                else
-                {
-                    var linkedArray = ((IEnumerable<DynamicObject>)linked)?.ToArray() ?? Array.Empty<DynamicObject>();
-
-                    var previousLinkedArray = (DynamicObject[])previousLinked ?? Array.Empty<DynamicObject>();
-
-                    // Use Diff (Add/Remove)
-                    var addLinkedArray = linkedArray.Except(previousLinkedArray);
-                    var removeLinkedArray = previousLinkedArray.Except(linkedArray);
-
-                    foreach (var addLinked in addLinkedArray)
-                    {
-                        this.AddLinked(linker, linkedType, addLinked);
-                    }
-
-                    foreach (var removeLinked in removeLinkedArray)
-                    {
-                        this.RemoveLinked(linker, linkedType, removeLinked);
-                    }
-                }
-            }
+            this.Objects = NullableArraySet.Add(this.Objects, newObject);
         }
 
-        internal void AddLinked(DynamicObject linker, DynamicLinkedType linkedType, DynamicObject linked)
+        internal void GetRole(DynamicObject association, DynamicRoleType roleType, out object role)
         {
-            var linkerType = linkedType.LinkerType;
-            this.GetLinker(linked, linkerType, out object previousLinker);
-
-            // Linked
-            this.GetLinked(linker, linkedType, out var previousLinked);
-            var linkedArray = (DynamicObject[])previousLinked;
-            linkedArray = NullableArraySet.Add(linkedArray, linked);
-
-            var changedLinkedByLinker = GetChangedLinkedByLinker(linkedType);
-            changedLinkedByLinker[linker] = linkedArray;
-
-            // Linker
-            if (linkerType.IsOne)
-            {
-                // One to Many
-                var previousLinkerObject = (DynamicObject)previousLinker;
-                if (previousLinkerObject != null)
-                {
-                    this.GetLinked(previousLinkerObject, linkedType, out var previousLinkerLinked);
-                    changedLinkedByLinker[previousLinkerObject] = NullableArraySet.Remove(previousLinkerLinked, linked);
-                }
-
-                var changedLinkerByLinked = GetChangedLinkerByLinked(linkerType);
-                changedLinkerByLinked[linked] = linker;
-            }
-            else
-            {
-                // Many to Many
-                var linkerArray = NullableArraySet.Add(previousLinker, linker);
-                var changedLinkerByLinked = GetChangedLinkerByLinked(linkerType);
-                changedLinkerByLinked[linked] = linkerArray;
-            }
-        }
-
-        internal void RemoveLinked(DynamicObject linker, DynamicLinkedType linkedType, DynamicObject linked)
-        {
-            var linkerType = linkedType.LinkerType;
-            this.GetLinker(linked, linkerType, out object previousLinker);
-
-            // Linked
-            this.GetLinked(linker, linkedType, out var previousLinked);
-            if (previousLinked != null)
-            {
-                var changedLinkedByLinker = GetChangedLinkedByLinker(linkedType);
-                changedLinkedByLinker[linker] = NullableArraySet.Remove(previousLinked, linked);
-
-                // Linker
-                var changedLinkerByLinked = GetChangedLinkerByLinked(linkerType);
-                if (linkerType.IsOne)
-                {
-                    // One to Many
-                    changedLinkerByLinked[linked] = null;
-                }
-                else
-                {
-                    // Many to Many
-                    changedLinkerByLinked[linked] = NullableArraySet.Add(previousLinker, linker);
-                }
-            }
-        }
-
-        internal void GetLinker(DynamicObject linked, DynamicLinkerType linkerType, out object linker)
-        {
-            if (this.changedLinkerByLinkedByLinkerType.TryGetValue(linkerType, out var changedLinkerByLinked) &&
-                changedLinkerByLinked.TryGetValue(linked, out linker))
+            if (this.changedRoleByAssociationByRoleType.TryGetValue(roleType, out Dictionary<DynamicObject, object> changedRoleByAssociation) &&
+                changedRoleByAssociation.TryGetValue(association, out role))
             {
                 return;
             }
 
-            var linkerByLinked = GetLinkerByLinked(linkerType);
-            linkerByLinked.TryGetValue(linked, out linker);
+            this.RoleByAssociation(roleType).TryGetValue(association, out role);
         }
 
-        private Dictionary<DynamicObject, object> GetLinkerByLinked(DynamicLinkerType linkerType)
+        internal void SetRole(dynamic association, DynamicRoleType roleType, object role)
         {
-            if (!this.linkingByLinkerByLinkingType.TryGetValue(linkerType, out var linkerByLinked))
+            if (roleType.IsUnit)
             {
-                linkerByLinked = new Dictionary<DynamicObject, object>();
-                this.linkingByLinkerByLinkingType[linkerType] = linkerByLinked;
+                // Role
+                this.ChangedRoleByAssociation(roleType)[association] = role;
             }
+            else
+            {
+                var associationType = roleType.AssociationType;
+                this.GetRole(association, roleType, out object previousRole);
+                if (roleType.IsOne)
+                {
+                    var roleObject = (DynamicObject)role;
+                    this.GetAssociation(roleObject, associationType, out object previousAssociation);
 
-            return linkerByLinked;
+                    // Role
+                    var changedRoleByAssociation = this.ChangedRoleByAssociation(roleType);
+                    changedRoleByAssociation[association] = roleObject;
+
+                    // Association
+                    var changedAssociationByRole = this.ChangedAssociationByRole(associationType);
+                    if (associationType.IsOne)
+                    {
+                        // One to One
+                        var previousAssociationObject = (DynamicObject)previousAssociation;
+                        if (previousAssociationObject != null)
+                        {
+                            changedRoleByAssociation[previousAssociationObject] = null;
+                        }
+
+                        if (previousRole != null)
+                        {
+                            var previousRoleObject = (DynamicObject)previousRole;
+                            changedAssociationByRole[previousRoleObject] = null;
+                        }
+
+                        changedAssociationByRole[roleObject] = association;
+                    }
+                    else
+                    {
+                        changedAssociationByRole[roleObject] = NullableArraySet.Remove(previousAssociation, roleObject);
+                    }
+                }
+                else
+                {
+                    DynamicObject[] roles = ((IEnumerable<DynamicObject>)role)?.ToArray() ?? Array.Empty<DynamicObject>();
+                    DynamicObject[] previousRoles = (DynamicObject[])previousRole ?? Array.Empty<DynamicObject>();
+
+                    // Use Diff (Add/Remove)
+                    IEnumerable<DynamicObject> addedRoles = roles.Except(previousRoles);
+                    IEnumerable<DynamicObject> removedRoles = previousRoles.Except(roles);
+
+                    foreach (DynamicObject addedRole in addedRoles)
+                    {
+                        this.AddRole(association, roleType, addedRole);
+                    }
+
+                    foreach (DynamicObject removeRole in removedRoles)
+                    {
+                        this.RemoveRole(association, roleType, removeRole);
+                    }
+                }
+            }
         }
 
-        private Dictionary<DynamicObject, object> GetlinkedByLinker(DynamicLinkedType linkedType)
+        internal void AddRole(DynamicObject association, DynamicRoleType roleType, DynamicObject role)
         {
-            if (!this.linkedByLinkerByLinkedType.TryGetValue(linkedType, out var linkedByLinker))
-            {
-                linkedByLinker = new Dictionary<DynamicObject, object>();
-                this.linkedByLinkerByLinkedType[linkedType] = linkedByLinker;
-            }
+            DynamicAssociationType associationType = roleType.AssociationType;
+            this.GetAssociation(role, associationType, out object previousAssociation);
 
-            return linkedByLinker;
+            // Role
+            var changedRoleByAssociation = this.ChangedRoleByAssociation(roleType);
+            this.GetRole(association, roleType, out object previousRole);
+            DynamicObject[] roleArray = (DynamicObject[])previousRole;
+            roleArray = NullableArraySet.Add(roleArray, role);
+            changedRoleByAssociation[association] = roleArray;
+
+            // Association
+            var changedAssociationByRole = this.ChangedAssociationByRole(associationType);
+            if (associationType.IsOne)
+            {
+                // One to Many
+                DynamicObject previousAssociationObject = (DynamicObject)previousAssociation;
+                if (previousAssociationObject != null)
+                {
+                    this.GetRole(previousAssociationObject, roleType, out object previousAssociationRole);
+                    changedRoleByAssociation[previousAssociationObject] = NullableArraySet.Remove(previousAssociationRole, role);
+                }
+
+                changedAssociationByRole[role] = association;
+            }
+            else
+            {
+                // Many to Many
+                changedAssociationByRole[role] = NullableArraySet.Add(previousAssociation, association);
+            }
         }
 
-        private Dictionary<DynamicObject, object> GetChangedLinkerByLinked(DynamicLinkerType linkerType)
+        internal void RemoveRole(DynamicObject association, DynamicRoleType roleType, DynamicObject role)
         {
-            if (!this.changedLinkerByLinkedByLinkerType.TryGetValue(linkerType, out var changedLinkerByLinked))
-            {
-                changedLinkerByLinked = new Dictionary<DynamicObject, object>();
-                this.changedLinkerByLinkedByLinkerType[linkerType] = changedLinkerByLinked;
-            }
+            DynamicAssociationType associationType = roleType.AssociationType;
+            this.GetAssociation(role, associationType, out object previousAssociation);
 
-            return changedLinkerByLinked;
+            this.GetRole(association, roleType, out object previousRole);
+            if (previousRole != null)
+            {
+                // Role
+                var changedRoleByAssociation = this.ChangedRoleByAssociation(roleType);
+                changedRoleByAssociation[association] = NullableArraySet.Remove(previousRole, role);
+
+                // Association
+                var changedAssociationByRole = this.ChangedAssociationByRole(associationType);
+                if (associationType.IsOne)
+                {
+                    // One to Many
+                    changedAssociationByRole[role] = null;
+                }
+                else
+                {
+                    // Many to Many
+                    changedAssociationByRole[role] = NullableArraySet.Add(previousAssociation, association);
+                }
+            }
         }
 
-        private Dictionary<DynamicObject, object> GetChangedLinkedByLinker(DynamicLinkedType linkedType)
+        internal void GetAssociation(DynamicObject role, DynamicAssociationType associationType, out object association)
         {
-            if (!this.changedLinkedByLinkerByLinkedType.TryGetValue(linkedType, out var changedLinkedByLinker))
+            if (this.changedAssociationByRoleByAssociationType.TryGetValue(associationType, out var changedAssociationByRole) &&
+                changedAssociationByRole.TryGetValue(role, out association))
             {
-                changedLinkedByLinker = new Dictionary<DynamicObject, object>();
-                this.changedLinkedByLinkerByLinkedType[linkedType] = changedLinkedByLinker;
+                return;
             }
 
-            return changedLinkedByLinker;
+            this.AssociationByRole(associationType).TryGetValue(role, out association);
+        }
+
+        private Dictionary<DynamicObject, object> AssociationByRole(DynamicAssociationType asscociationType)
+        {
+            if (!this.associationByRoleByAssociationType.TryGetValue(asscociationType, out Dictionary<DynamicObject, object> associationByRole))
+            {
+                associationByRole = new Dictionary<DynamicObject, object>();
+                this.associationByRoleByAssociationType[asscociationType] = associationByRole;
+            }
+
+            return associationByRole;
+        }
+
+        private Dictionary<DynamicObject, object> RoleByAssociation(DynamicRoleType roleType)
+        {
+            if (!this.roleByAssociationByRoleType.TryGetValue(roleType, out Dictionary<DynamicObject, object> roleByAssociation))
+            {
+                roleByAssociation = new Dictionary<DynamicObject, object>();
+                this.roleByAssociationByRoleType[roleType] = roleByAssociation;
+            }
+
+            return roleByAssociation;
+        }
+
+        private Dictionary<DynamicObject, object> ChangedAssociationByRole(DynamicAssociationType associationType)
+        {
+            if (!this.changedAssociationByRoleByAssociationType.TryGetValue(associationType, out Dictionary<DynamicObject, object> changedAssociationByRole))
+            {
+                changedAssociationByRole = new Dictionary<DynamicObject, object>();
+                this.changedAssociationByRoleByAssociationType[associationType] = changedAssociationByRole;
+            }
+
+            return changedAssociationByRole;
+        }
+
+        private Dictionary<DynamicObject, object> ChangedRoleByAssociation(DynamicRoleType roleType)
+        {
+            if (!this.changedRoleByAssociationByRoleType.TryGetValue(roleType, out Dictionary<DynamicObject, object> changedRoleByAssociation))
+            {
+                changedRoleByAssociation = new Dictionary<DynamicObject, object>();
+                this.changedRoleByAssociationByRoleType[roleType] = changedRoleByAssociation;
+            }
+
+            return changedRoleByAssociation;
         }
     }
 }

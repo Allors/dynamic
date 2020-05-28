@@ -1,12 +1,12 @@
-﻿using System;
-
-namespace Allors.Dynamic
+﻿namespace Allors.Dynamic
 {
+    using System;
+
     internal static class NullableArraySet
     {
         internal static DynamicObject[] Add(object set, DynamicObject item)
         {
-            var typedSet = (DynamicObject[])set;
+            DynamicObject[] typedSet = (DynamicObject[])set;
 
             if (typedSet == null)
             {
@@ -20,7 +20,7 @@ namespace Allors.Dynamic
 
         internal static DynamicObject[] Remove(object set, DynamicObject item)
         {
-            var typedSet = (DynamicObject[])set;
+            DynamicObject[] typedSet = (DynamicObject[])set;
 
             if (typedSet != null && Array.IndexOf(typedSet, item) > -1)
             {
@@ -29,7 +29,7 @@ namespace Allors.Dynamic
                     return null;
                 }
 
-                var index = Array.IndexOf(typedSet, item);
+                int index = Array.IndexOf(typedSet, item);
                 typedSet[index] = typedSet[typedSet.Length - 1];
                 Array.Resize(ref typedSet, typedSet.Length - 1);
                 return typedSet;

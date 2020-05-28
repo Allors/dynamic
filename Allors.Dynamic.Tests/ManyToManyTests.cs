@@ -1,14 +1,14 @@
-using Xunit;
-
 namespace Allors.Dynamic.Tests
 {
+    using Xunit;
+
     public class ManyToManyTests
     {
         [Fact]
         public void SingleActiveLink()
         {
-            var population = new DynamicPopulation(v => v
-                 .AddManyToManyAssociation("Employer", "Employee"));
+            DynamicPopulation population = new DynamicPopulation(v => v
+                 .AddManyToManyRelationType("Employer", "Employee"));
 
             dynamic acme = population.Create();
             dynamic hooli = population.Create();
@@ -41,8 +41,8 @@ namespace Allors.Dynamic.Tests
         [Fact]
         public void MultipeleActiveLinks()
         {
-            var population = new DynamicPopulation(v => v
-                 .AddManyToManyAssociation("Employer", "Employee"));
+            DynamicPopulation population = new DynamicPopulation(v => v
+                 .AddManyToManyRelationType("Employer", "Employee"));
 
             dynamic acme = population.Create();
             dynamic hooli = population.Create();

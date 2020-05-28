@@ -1,15 +1,15 @@
-using System.Linq;
-using Xunit;
-
 namespace Allors.Dynamic.Tests
 {
+    using System.Linq;
+    using Xunit;
+
     public class OneToManyTests
     {
         [Fact]
         public void AddSameAssociation()
         {
-            var population = new DynamicPopulation(v => v
-                    .AddOneToManyAssociation("Employer", "Employee")
+            DynamicPopulation population = new DynamicPopulation(v => v
+                    .AddOneToManyRelationType("Employer", "Employee")
               );
 
             dynamic acme = population.Create();
@@ -34,9 +34,9 @@ namespace Allors.Dynamic.Tests
         public void AddDifferentAssociation()
         {
 
-            var population = new DynamicPopulation(v => v
-                 .AddDataAssociation("Name")
-                 .AddOneToManyAssociation("Employer", "Employee")
+            DynamicPopulation population = new DynamicPopulation(v => v
+                 .AddUnitRelationType("Name")
+                 .AddOneToManyRelationType("Employer", "Employee")
               );
 
             dynamic acme = population.Create();
@@ -56,9 +56,9 @@ namespace Allors.Dynamic.Tests
 
             hooli.AddEmployee(jane);
 
-            var people = new[] { jane, john, jenny };
+            dynamic[] people = new[] { jane, john, jenny };
 
-            var x = people.Where(v => "Jane".Equals(v.FirstName));
+            System.Collections.Generic.IEnumerable<dynamic> x = people.Where(v => "Jane".Equals(v.FirstName));
 
             Assert.Contains(jane, hooli.Employees);
 
@@ -76,8 +76,8 @@ namespace Allors.Dynamic.Tests
         [Fact]
         public void Remove()
         {
-            var population = new DynamicPopulation(v => v
-                 .AddOneToManyAssociation("Employer", "Employee")
+            DynamicPopulation population = new DynamicPopulation(v => v
+                 .AddOneToManyRelationType("Employer", "Employee")
               );
 
             dynamic acme = population.Create();

@@ -1,8 +1,8 @@
 ﻿namespace Allors.Dynamic.Meta
 {
-    public class DynamicLinkerType
+    public class DynamicRoleType
     {
-        public DynamicLinkedType LinkedType { get; }
+        public DynamicAssociationType AssociationType { get; internal set; }
 
         public string Name => this.IsOne ? this.SingularName : this.PluralName;
 
@@ -14,12 +14,12 @@
 
         public bool IsMany { get; internal set; }
 
-        public DynamicLinkerType(DynamicLinkedType linkedType)
-        {
-            linkedType.LinkerType = this;
-            this.LinkedType = linkedType;
-        }
+        public bool IsUnit => this.AssociationType == null;
 
-        public override string ToString() => this.Name;
+        /// <inheritdoc/>
+        public override string ToString()
+        {
+            return this.Name;
+        }
     }
 }

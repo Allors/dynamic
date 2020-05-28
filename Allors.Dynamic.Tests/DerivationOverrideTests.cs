@@ -1,20 +1,20 @@
-using System;
-using System.Linq;
-using Xunit;
-
 namespace Allors.Dynamic.Tests
 {
+    using System;
+    using System.Linq;
+    using Xunit;
+
     public class DerivationOverrideTests
     {
         [Fact]
         public void Derivation()
         {
-            var population = new DynamicPopulation(v => v
-                  .AddDataAssociation("FirstName")
-                  .AddDataAssociation("LastName")
-                  .AddDataAssociation("FullName")
-                  .AddDataAssociation("DerivedAt")
-                  .AddDataAssociation("Greeting")
+            DynamicPopulation population = new DynamicPopulation(v => v
+                  .AddUnitRelationType("FirstName")
+                  .AddUnitRelationType("LastName")
+                  .AddUnitRelationType("FullName")
+                  .AddUnitRelationType("DerivedAt")
+                  .AddUnitRelationType("Greeting")
        );
 
             population.DerivationById["FullName"] = new FullNameDerivation();
@@ -33,12 +33,12 @@ namespace Allors.Dynamic.Tests
         {
             public void Derive(DynamicChangeSet changeSet)
             {
-                var firstNames = changeSet.ChangedLinked("FirstName");
-                var lastNames = changeSet.ChangedLinked("LastName");
+                System.Collections.Generic.Dictionary<DynamicObject, object> firstNames = changeSet.ChangedRoles("FirstName");
+                System.Collections.Generic.Dictionary<DynamicObject, object> lastNames = changeSet.ChangedRoles("LastName");
 
                 if (firstNames?.Any() == true || lastNames?.Any() == true)
                 {
-                    var people = firstNames.Union(lastNames).Select(v => v.Key).Distinct();
+                    System.Collections.Generic.IEnumerable<DynamicObject> people = firstNames.Union(lastNames).Select(v => v.Key).Distinct();
 
                     foreach (dynamic person in people)
                     {
@@ -58,11 +58,11 @@ namespace Allors.Dynamic.Tests
         {
             public void Derive(DynamicChangeSet changeSet)
             {
-                var fullNames = changeSet.ChangedLinked("FullName");
+                System.Collections.Generic.Dictionary<DynamicObject, object> fullNames = changeSet.ChangedRoles("FullName");
 
                 if (fullNames?.Any() == true)
                 {
-                    var people = fullNames.Select(v => v.Key).Distinct();
+                    System.Collections.Generic.IEnumerable<DynamicObject> people = fullNames.Select(v => v.Key).Distinct();
 
                     foreach (dynamic person in people)
                     {

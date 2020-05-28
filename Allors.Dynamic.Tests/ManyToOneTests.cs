@@ -1,14 +1,14 @@
-using Xunit;
-
 namespace Allors.Dynamic.Tests
 {
+    using Xunit;
+
     public class ManyToOneTests
     {
         [Fact]
         public void PropertySet()
         {
-            var population = new DynamicPopulation(v => v
-                .AddOneToOneAssociation("Property", "Owner")
+            DynamicPopulation population = new DynamicPopulation(v => v
+                .AddOneToOneRelationType("Property", "Owner")
              );
 
             dynamic acme = population.Create();
@@ -31,8 +31,8 @@ namespace Allors.Dynamic.Tests
         [Fact]
         public void IndexSet()
         {
-            var population = new DynamicPopulation(v => v
-                .AddOneToOneAssociation("Property", "Owner")
+            DynamicPopulation population = new DynamicPopulation(v => v
+                .AddOneToOneRelationType("Property", "Owner")
              );
 
             dynamic acme = population.Create();

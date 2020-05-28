@@ -5,7 +5,7 @@ VisualStudioVersion = 16.0.30011.22
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Allors.Dynamic", "Allors.Dynamic\Allors.Dynamic.csproj", "{251F0C86-A91A-49EB-B658-2C0FA8BEFDB3}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Allors.Dynamic.Tests", "Allors.Dynamic.Tests\Allors.Dynamic.Tests.csproj", "{40904FC9-AF76-41BD-8382-CAA02DA80162}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Allors.Dynamic.Tests", "Allors.Dynamic.Tests\Allors.Dynamic.Tests.csproj", "{40904FC9-AF76-41BD-8382-CAA02DA80162}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

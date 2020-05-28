@@ -1,15 +1,15 @@
-using Xunit;
-
 namespace Allors.Dynamic.Tests
 {
+    using Xunit;
+
     public class SnapshotTests
     {
         [Fact]
         public void Snapshot()
         {
-            var population = new DynamicPopulation(v => v
-                .AddDataAssociation("FirstName")
-                .AddDataAssociation("LastName")
+            DynamicPopulation population = new DynamicPopulation(v => v
+                .AddUnitRelationType("FirstName")
+                .AddUnitRelationType("LastName")
              );
 
             dynamic john = population.Create();
@@ -18,23 +18,23 @@ namespace Allors.Dynamic.Tests
             john.FirstName = "John";
             john.LastName = "Doe";
 
-            var snapshot1 = population.Snapshot();
+            DynamicChangeSet snapshot1 = population.Snapshot();
 
             jane.FirstName = "Jane";
             jane.LastName = "Doe";
 
-            var changedFirstNames = snapshot1.ChangedLinked("FirstName");
-            var changedLastNames = snapshot1.ChangedLinked("LastName");
+            System.Collections.Generic.Dictionary<DynamicObject, object> changedFirstNames = snapshot1.ChangedRoles("FirstName");
+            System.Collections.Generic.Dictionary<DynamicObject, object> changedLastNames = snapshot1.ChangedRoles("LastName");
 
             Assert.Single(changedFirstNames.Keys);
             Assert.Single(changedLastNames.Keys);
             Assert.Contains(john, changedFirstNames.Keys);
             Assert.Contains(john, changedLastNames.Keys);
 
-            var snapshot2 = population.Snapshot();
+            DynamicChangeSet snapshot2 = population.Snapshot();
 
-            changedFirstNames = snapshot2.ChangedLinked("FirstName");
-            changedLastNames = snapshot2.ChangedLinked("LastName");
+            changedFirstNames = snapshot2.ChangedRoles("FirstName");
+            changedLastNames = snapshot2.ChangedRoles("LastName");
 
             Assert.Single(changedFirstNames.Keys);
             Assert.Single(changedLastNames.Keys);

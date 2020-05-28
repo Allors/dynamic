@@ -1,9 +1,9 @@
-﻿using System.Collections.Generic;
-using System.Dynamic;
-using System.Linq;
-
-namespace Allors.Dynamic
+﻿namespace Allors.Dynamic
 {
+    using System.Collections.Generic;
+    using System.Dynamic;
+    using System.Linq;
+
     public class DynamicObject : System.Dynamic.DynamicObject
     {
         private readonly DynamicPopulation population;
@@ -40,12 +40,12 @@ namespace Allors.Dynamic
 
         public override IEnumerable<string> GetDynamicMemberNames()
         {
-            foreach (var roleType in this.population.Meta.LinkedTypeByName.Values.ToArray().Distinct())
+            foreach (Meta.DynamicRoleType roleType in this.population.Meta.RoleTypeByName.Values.ToArray().Distinct())
             {
                 yield return roleType.Name;
             }
 
-            foreach (var associationType in this.population.Meta.LinkerTypeByName.Values.ToArray().Distinct()
+            foreach (Meta.DynamicAssociationType associationType in this.population.Meta.AssociationTypeByName.Values.ToArray().Distinct()
             )
             {
                 yield return associationType.Name;

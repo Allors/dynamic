@@ -1,19 +1,22 @@
-using System;
-using Xunit;
-
 namespace Allors.Dynamic.Tests
 {
+    using System;
+    using Xunit;
+
     public class OneToOneTests
     {
         [Fact]
         public void Set()
         {
-            var population = new DynamicPopulation(v => v
-                .AddDataAssociation("Name")
-                .AddOneToOneAssociation("Property", "Owner")
+            DynamicPopulation population = new DynamicPopulation(v => v
+                .AddUnitRelationType("Name")
+                .AddOneToOneRelationType("Property", "Owner")
              );
 
-            Action<dynamic> name(string name) => (obj) => obj.Name = name;
+            Action<dynamic> name(string name)
+            {
+                return (obj) => obj.Name = name;
+            }
 
             dynamic acme = population.Create(name("Acme"));
             dynamic gizmo = population.Create(name("Gizmo"));

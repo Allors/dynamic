@@ -1,14 +1,14 @@
-using Xunit;
-
 namespace Allors.Dynamic.Tests
 {
+    using Xunit;
+
     public class DataTests
     {
         [Fact]
         public void PropertySet()
         {
-            var population = new DynamicPopulation(v => v
-                 .AddDataAssociation("FirstName")
+            DynamicPopulation population = new DynamicPopulation(v => v
+                 .AddUnitRelationType("FirstName")
               );
 
             dynamic jubayer = population.Create();
@@ -25,8 +25,8 @@ namespace Allors.Dynamic.Tests
         [Fact]
         public void IndexSet()
         {
-            var population = new DynamicPopulation(v => v
-                 .AddDataAssociation("FirstName")
+            DynamicPopulation population = new DynamicPopulation(v => v
+                 .AddUnitRelationType("FirstName")
               );
 
             dynamic jubayer = population.Create();

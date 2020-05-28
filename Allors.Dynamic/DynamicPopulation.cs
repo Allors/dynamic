@@ -1,10 +1,10 @@
-﻿using Allors.Dynamic.Meta;
-using System;
-using System.Collections.Generic;
-using System.Dynamic;
-
-namespace Allors.Dynamic
+﻿namespace Allors.Dynamic
 {
+    using System;
+    using System.Collections.Generic;
+    using System.Dynamic;
+    using Allors.Dynamic.Meta;
+
     public class DynamicPopulation
     {
         public DynamicMeta Meta { get; }
@@ -21,7 +21,7 @@ namespace Allors.Dynamic
 
             this.database = new DynamicDatabase(this.Meta);
 
-            foreach (var builder in builders)
+            foreach (Action<DynamicMeta> builder in builders)
             {
                 builder?.Invoke(this.Meta);
             }
@@ -29,13 +29,13 @@ namespace Allors.Dynamic
 
         public void Derive()
         {
-            var changeSet = this.Snapshot();
+            DynamicChangeSet changeSet = this.Snapshot();
 
             while (changeSet.HasChanges)
             {
-                foreach (var kvp in this.DerivationById)
+                foreach (KeyValuePair<string, IDynamicDerivation> kvp in this.DerivationById)
                 {
-                    var derivation = kvp.Value;
+                    IDynamicDerivation derivation = kvp.Value;
                     derivation.Derive(changeSet);
                 }
 
@@ -45,10 +45,10 @@ namespace Allors.Dynamic
 
         public DynamicObject Create(params Action<dynamic>[] builders)
         {
-            var newObject = new DynamicObject(this);
+            DynamicObject newObject = new DynamicObject(this);
             this.database.AddObject(newObject);
 
-            foreach (var builder in builders)
+            foreach (Action<dynamic> builder in builders)
             {
                 builder(newObject);
             }
@@ -63,30 +63,42 @@ namespace Allors.Dynamic
 
         public IEnumerable<dynamic> Objects => this.database.Objects;
 
-        internal bool TryGetIndex(DynamicObject obj, GetIndexBinder binder, object[] indexes, out object result) => this.TryGet(obj, indexes[0] as string, out result);
+        internal bool TryGetIndex(DynamicObject obj, GetIndexBinder binder, object[] indexes, out object result)
+        {
+            return this.TryGet(obj, indexes[0] as string, out result);
+        }
 
-        internal bool TrySetIndex(DynamicObject obj, SetIndexBinder binder, object[] indexes, object value) => this.Set(obj, indexes[0] as string, value);
+        internal bool TrySetIndex(DynamicObject obj, SetIndexBinder binder, object[] indexes, object value)
+        {
+            return this.Set(obj, indexes[0] as string, value);
+        }
 
-        internal bool TryGetMember(DynamicObject obj, GetMemberBinder binder, out object result) => this.TryGet(obj, binder.Name, out result);
+        internal bool TryGetMember(DynamicObject obj, GetMemberBinder binder, out object result)
+        {
+            return this.TryGet(obj, binder.Name, out result);
+        }
 
-        internal bool TrySetMember(dynamic obj, SetMemberBinder binder, object value) => this.Set(obj, binder.Name, value);
+        internal bool TrySetMember(dynamic obj, SetMemberBinder binder, object value)
+        {
+            return this.Set(obj, binder.Name, value);
+        }
 
         internal bool TryInvokeMember(dynamic obj, InvokeMemberBinder binder, object[] args, out object result)
         {
-            var name = binder.Name;
+            string name = binder.Name;
 
             result = null;
 
-            if (name.StartsWith("Add") && this.Meta.LinkedTypeByName.TryGetValue(name.Substring(3), out var roleType))
+            if (name.StartsWith("Add") && this.Meta.RoleTypeByName.TryGetValue(name.Substring(3), out DynamicRoleType roleType))
             {
-                this.database.AddLinked(obj, roleType, (DynamicObject)args[0]);
+                this.database.AddRole(obj, roleType, (DynamicObject)args[0]);
                 return true;
             }
 
-            if (name.StartsWith("Remove") && this.Meta.LinkedTypeByName.TryGetValue(name.Substring(6), out roleType))
+            if (name.StartsWith("Remove") && this.Meta.RoleTypeByName.TryGetValue(name.Substring(6), out roleType))
             {
                 // TODO: RemoveAll
-                this.database.RemoveLinked(obj, roleType, (DynamicObject)args[0]);
+                this.database.RemoveRole(obj, roleType, (DynamicObject)args[0]);
                 return true;
             }
 
@@ -97,11 +109,11 @@ namespace Allors.Dynamic
         {
             if (name != null)
             {
-                if (this.Meta.LinkedTypeByName.TryGetValue(name, out var linkedType))
+                if (this.Meta.RoleTypeByName.TryGetValue(name, out DynamicRoleType roleType))
                 {
-                    this.database.GetLinked(obj, linkedType, out result);
+                    this.database.GetRole(obj, roleType, out result);
 
-                    if (linkedType.IsMany)
+                    if (roleType.IsMany)
                     {
                         result ??= Array.Empty<DynamicObject>();
                     }
@@ -109,11 +121,11 @@ namespace Allors.Dynamic
                     return true;
                 }
 
-                if (this.Meta.LinkerTypeByName.TryGetValue(name, out var linkerType))
+                if (this.Meta.AssociationTypeByName.TryGetValue(name, out DynamicAssociationType associationType))
                 {
-                    this.database.GetLinker(obj, linkerType, out result);
+                    this.database.GetAssociation(obj, associationType, out result);
 
-                    if (linkerType.IsMany)
+                    if (associationType.IsMany)
                     {
                         result ??= Array.Empty<DynamicObject>();
                     }
@@ -130,9 +142,9 @@ namespace Allors.Dynamic
         {
             if (name != null)
             {
-                if (this.Meta.LinkedTypeByName.TryGetValue(name, out var linkedType))
+                if (this.Meta.RoleTypeByName.TryGetValue(name, out DynamicRoleType roleType))
                 {
-                    this.database.SetLinked(obj, linkedType, value);
+                    this.database.SetRole(obj, roleType, value);
                     return true;
                 }
             }
