@@ -26,7 +26,7 @@ class Build : NukeBuild
 
     [Parameter("Coverage threshold. Default is 80%")] readonly int Threshold = 80;
 
-    [Solution("src/Documents.sln")] readonly Solution Solution;
+    [Solution("src/Dynamic.sln")] readonly Solution Solution;
     [GitRepository] readonly GitRepository GitRepository;
     [GitVersion] readonly GitVersion GitVersion;
 
