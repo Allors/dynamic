@@ -6,8 +6,6 @@
 
     public class DynamicChangeSet
     {
-        public DynamicMeta Meta { get; }
-
         private readonly Dictionary<DynamicRoleType, Dictionary<DynamicObject, object>> roleByAssociationByRoleType;
         private readonly Dictionary<DynamicAssociationType, Dictionary<DynamicObject, object>> associationByRoleByRoleType;
 
@@ -17,6 +15,8 @@
             this.roleByAssociationByRoleType = roleByAssociationByRoleType;
             this.associationByRoleByRoleType = associationByRoleByAssociationType;
         }
+
+        public DynamicMeta Meta { get; }
 
         public bool HasChanges =>
             this.roleByAssociationByRoleType.Any(v => v.Value.Count > 0) ||
