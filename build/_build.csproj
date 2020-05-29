@@ -11,10 +11,7 @@
 
   <ItemGroup>
     <PackageReference Include="Nuke.Common" Version="0.24.11" />
-    <PackageReference Include="GitVersion.CommandLine" Version="5.1.2">
-      <PrivateAssets>all</PrivateAssets>
-      <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
-    </PackageReference>
+    <PackageDownload Include="GitVersion.Tool" Version="[5.1.1]" />
   </ItemGroup>
 
 </Project>
