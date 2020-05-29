@@ -4,6 +4,7 @@ using Nuke.Common.Git;
 using Nuke.Common.IO;
 using Nuke.Common.ProjectModel;
 using Nuke.Common.Tooling;
+using Nuke.Common.Tools.Coverlet;
 using Nuke.Common.Tools.DotNet;
 using Nuke.Common.Tools.GitVersion;
 using Nuke.Common.Utilities.Collections;
@@ -22,7 +23,7 @@ class Build : NukeBuild
     [Parameter("Configuration to build - Default is 'Debug' (local) or 'Release' (server)")]
     readonly Configuration Configuration = IsLocalBuild ? Configuration.Debug : Configuration.Release;
 
-    [Parameter("Collect code coverage. Default is 'true'")] readonly bool? Cover = true;
+    [Parameter("Collect code coverage. Default is 'true'")] readonly bool Cover = true;
 
     [Parameter("Coverage threshold. Default is 80%")] readonly int Threshold = 80;
 
@@ -72,12 +73,15 @@ class Build : NukeBuild
                 .EnableNoRestore()
                 .SetLogger("trx")
                 .SetLogOutput(true)
-                .SetArgumentConfigurator(arguments => arguments.Add("/p:CollectCoverage={0}", Cover)
-                    .Add("/p:CoverletOutput={0}/", ArtifactsDirectory / "coverage")
-                    .Add("/p:Threshold={0}", Threshold)
-                    .Add("/p:UseSourceLink={0}", "true")
-                    .Add("/p:CoverletOutputFormat={0}", "cobertura"))
-                .SetResultsDirectory(ArtifactsDirectory / "tests"));
+                .SetResultsDirectory(ArtifactsDirectory / "tests")
+                .When(Cover, _ => _
+                    .EnableCollectCoverage()
+                    .SetCoverletOutputFormat(CoverletOutputFormat.cobertura)
+                    .SetCoverletOutput(ArtifactsDirectory / "coverage")
+                    .SetExcludeByFile("*.g.cs")
+                    .When(IsServerBuild, _ => _
+                        .EnableUseSourceLink()))
+               );
         });
 
     Target Pack => _ => _
