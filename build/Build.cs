@@ -33,6 +33,9 @@ class Build : NukeBuild
 
     AbsolutePath SourceDirectory => RootDirectory / "src";
     AbsolutePath ArtifactsDirectory => RootDirectory / "artifacts";
+    AbsolutePath TestsDirectory => ArtifactsDirectory / "tests";
+    AbsolutePath CoverageFile => ArtifactsDirectory / "coverage" / "coverage";
+    AbsolutePath NugetDirectory => ArtifactsDirectory / "nuget";
 
     Target Clean => _ => _
         .Before(Restore)
@@ -62,6 +65,7 @@ class Build : NukeBuild
                 .EnableNoRestore());
         });
 
+
     Target Test => _ => _
         .DependsOn(Compile)
         .Executes(() =>
@@ -73,11 +77,11 @@ class Build : NukeBuild
                 .EnableNoRestore()
                 .SetLogger("trx")
                 .SetLogOutput(true)
-                .SetResultsDirectory(ArtifactsDirectory / "tests")
+                .SetResultsDirectory(TestsDirectory)
                 .When(Cover, _ => _
                     .EnableCollectCoverage()
                     .SetCoverletOutputFormat(CoverletOutputFormat.cobertura)
-                    .SetCoverletOutput(ArtifactsDirectory / "coverage")
+                    .SetCoverletOutput(CoverageFile)
                     .SetExcludeByFile("*.g.cs")
                     .When(IsServerBuild, _ => _
                         .EnableUseSourceLink()))
@@ -94,7 +98,7 @@ class Build : NukeBuild
                 .EnableNoBuild()
                 .EnableNoRestore()
                 .SetVersion(GitVersion.NuGetVersionV2)
-                .SetOutputDirectory(ArtifactsDirectory / "nuget"));
+                .SetOutputDirectory(NugetDirectory));
         });
 
     Target CiNonWin => _ => _
