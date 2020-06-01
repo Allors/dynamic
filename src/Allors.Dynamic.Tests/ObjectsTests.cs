@@ -45,6 +45,10 @@ namespace Allors.Dynamic.Tests
             Assert.Contains(john, does);
             Assert.Contains(jenny, does);
 
+            dynamic[] lessThanFourLetterFirstNames = population.Objects.Where(v => v.FirstName.Length < 4).ToArray();
+
+            Assert.Empty(lessThanFourLetterFirstNames);
+
             dynamic[] fourLetterFirstNames = population.Objects.Where(v => v.FirstName.Length == 4).ToArray();
 
             Assert.Equal(2, fourLetterFirstNames.Length);
