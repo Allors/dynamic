@@ -50,6 +50,10 @@ namespace Allors.Dynamic.Tests
             Assert.Equal(2, fourLetterFirstNames.Length);
             Assert.Contains(jane, fourLetterFirstNames);
             Assert.Contains(john, fourLetterFirstNames);
+
+            dynamic[] fiveLetterFirstNames = population.Objects.Where(v => v.FirstName.Length == 5).ToArray();
+            Assert.Single(fiveLetterFirstNames);
+            Assert.Contains(jenny, fiveLetterFirstNames);
         }
     }
 }
