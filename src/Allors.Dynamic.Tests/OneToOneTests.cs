@@ -10,8 +10,7 @@ namespace Allors.Dynamic.Tests
         {
             DynamicPopulation population = new DynamicPopulation(v => v
                 .AddUnitRelationType("Name")
-                .AddOneToOneRelationType("Property", "Owner")
-             );
+                .AddOneToOneRelationType("Property", "Owner"));
 
             Action<dynamic> name(string name)
             {

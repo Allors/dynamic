@@ -9,8 +9,7 @@ namespace Allors.Dynamic.Tests
         public void AddSameAssociation()
         {
             DynamicPopulation population = new DynamicPopulation(v => v
-                    .AddOneToManyRelationType("Employer", "Employee")
-              );
+                    .AddOneToManyRelationType("Employer", "Employee"));
 
             dynamic acme = population.Create();
             dynamic jane = population.Create();
@@ -33,11 +32,9 @@ namespace Allors.Dynamic.Tests
         [Fact]
         public void AddDifferentAssociation()
         {
-
             DynamicPopulation population = new DynamicPopulation(v => v
                  .AddUnitRelationType("Name")
-                 .AddOneToManyRelationType("Employer", "Employee")
-              );
+                 .AddOneToManyRelationType("Employer", "Employee"));
 
             dynamic acme = population.Create();
 
@@ -77,8 +74,7 @@ namespace Allors.Dynamic.Tests
         public void Remove()
         {
             DynamicPopulation population = new DynamicPopulation(v => v
-                 .AddOneToManyRelationType("Employer", "Employee")
-              );
+                 .AddOneToManyRelationType("Employer", "Employee"));
 
             dynamic acme = population.Create();
             dynamic jane = population.Create();
