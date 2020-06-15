@@ -70,7 +70,7 @@ jobs:
       inputs:
         command: push
         packagesToPush: '$(Build.SourcesDirectory)/artifacts/nuget/**/*.nupkg;$(Build.SourcesDirectory)/artifacts/nuget/**/*.snupkg;!$(Build.SourcesDirectory)/artifacts/nuget/**/*.symbols.nupkg'
-        publishVstsFeed: 'Documents/Documents'
+        publishVstsFeed: 'Dynamic/Dynamic'
         allowPackageConflicts: true
 
 trigger:
