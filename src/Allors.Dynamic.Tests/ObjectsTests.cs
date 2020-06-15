@@ -38,18 +38,26 @@ namespace Allors.Dynamic.Tests
             dynamic john = person("John", "Doe");
             dynamic jenny = person("Jenny", "Doe");
 
-            dynamic[] does = population.Objects.Where(v => v.LastName == "Doe").ToArray();
+            dynamic[] lastNameDoe = population.Objects.Where(v => v.LastName == "Doe").ToArray();
 
-            Assert.Equal(3, does.Length);
-            Assert.Contains(jane, does);
-            Assert.Contains(john, does);
-            Assert.Contains(jenny, does);
+            Assert.Equal(3, lastNameDoe.Length);
+            Assert.Contains(jane, lastNameDoe);
+            Assert.Contains(john, lastNameDoe);
+            Assert.Contains(jenny, lastNameDoe);
+
+            dynamic[] lessThanFourLetterFirstNames = population.Objects.Where(v => v.FirstName.Length < 4).ToArray();
+
+            Assert.Empty(lessThanFourLetterFirstNames);
 
             dynamic[] fourLetterFirstNames = population.Objects.Where(v => v.FirstName.Length == 4).ToArray();
 
             Assert.Equal(2, fourLetterFirstNames.Length);
             Assert.Contains(jane, fourLetterFirstNames);
             Assert.Contains(john, fourLetterFirstNames);
+
+            dynamic[] fiveLetterFirstNames = population.Objects.Where(v => v.FirstName.Length == 5).ToArray();
+            Assert.Single(fiveLetterFirstNames);
+            Assert.Contains(jenny, fiveLetterFirstNames);
         }
     }
 }

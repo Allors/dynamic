@@ -8,8 +8,7 @@ namespace Allors.Dynamic.Tests
         public void PropertySet()
         {
             DynamicPopulation population = new DynamicPopulation(v => v
-                .AddOneToOneRelationType("Property", "Owner")
-             );
+                .AddOneToOneRelationType("Property", "Owner"));
 
             dynamic acme = population.Create();
             dynamic gizmo = population.Create();
@@ -32,8 +31,7 @@ namespace Allors.Dynamic.Tests
         public void IndexSet()
         {
             DynamicPopulation population = new DynamicPopulation(v => v
-                .AddOneToOneRelationType("Property", "Owner")
-             );
+                .AddOneToOneRelationType("Property", "Owner"));
 
             dynamic acme = population.Create();
             dynamic gizmo = population.Create();
