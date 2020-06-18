@@ -95,8 +95,8 @@ class Build : NukeBuild
             DotNetPack(s => s
                 .SetProject(Solution.GetProject(ProjectName))
                 .SetConfiguration(Configuration)
-                .EnableNoBuild()
-                .EnableNoRestore()
+                .EnableIncludeSource()
+                .EnableIncludeSymbols()
                 .SetVersion(GitVersion.NuGetVersionV2)
                 .SetOutputDirectory(NugetDirectory));
         });
