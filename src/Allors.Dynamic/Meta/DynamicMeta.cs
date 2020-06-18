@@ -20,7 +20,7 @@
 
         public Dictionary<string, DynamicRoleType> RoleTypeByName { get; }
 
-        public DynamicMeta AddUnitRelationType(string name)
+        public DynamicRoleType AddUnit(string name)
         {
             DynamicRoleType roleType = new DynamicRoleType
             {
@@ -31,30 +31,30 @@
 
             this.AddRoleType(roleType);
 
-            return this;
+            return roleType;
         }
 
-        public DynamicMeta AddOneToOneRelationType(string associationName, string roleName)
+        public DynamicRoleType AddOneToOne(string associationName, string roleName)
         {
             return this.AddRelationType(associationName, false, roleName, false);
         }
 
-        public DynamicMeta AddOneToManyRelationType(string associationName, string roleName)
+        public DynamicRoleType AddOneToMany(string associationName, string roleName)
         {
             return this.AddRelationType(associationName, false, roleName, true);
         }
 
-        public DynamicMeta AddManyToOneRelationType(string associationName, string roleName)
+        public DynamicRoleType AddManyToOne(string associationName, string roleName)
         {
             return this.AddRelationType(associationName, true, roleName, false);
         }
 
-        public DynamicMeta AddManyToManyRelationType(string associationName, string roleName)
+        public DynamicRoleType AddManyToMany(string associationName, string roleName)
         {
             return this.AddRelationType(associationName, true, roleName, true);
         }
 
-        private DynamicMeta AddRelationType(string associationName, bool associationIsMany, string roleName, bool roleIsMany)
+        private DynamicRoleType AddRelationType(string associationName, bool associationIsMany, string roleName, bool roleIsMany)
         {
             DynamicRoleType roleType = new DynamicRoleType
             {
@@ -74,7 +74,7 @@
 
             this.AddAssociationType(associationType);
 
-            return this;
+            return roleType;
         }
 
         private void AddAssociationType(DynamicAssociationType associationType)

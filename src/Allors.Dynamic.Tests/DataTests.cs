@@ -8,11 +8,11 @@ namespace Allors.Dynamic.Tests
         public void PropertySet()
         {
             DynamicPopulation population = new DynamicPopulation(v => v
-                 .AddUnitRelationType("FirstName")
+                 .AddUnit("FirstName")
               );
 
-            dynamic jubayer = population.Create();
-            dynamic walter = population.Create();
+            dynamic jubayer = population.New();
+            dynamic walter = population.New();
 
             jubayer.FirstName = "Jubayer";
             walter.FirstName = "Walter";
@@ -26,11 +26,11 @@ namespace Allors.Dynamic.Tests
         public void IndexSet()
         {
             DynamicPopulation population = new DynamicPopulation(v => v
-                 .AddUnitRelationType("FirstName")
+                 .AddUnit("FirstName")
               );
 
-            dynamic jubayer = population.Create();
-            dynamic walter = population.Create();
+            dynamic jubayer = population.New();
+            dynamic walter = population.New();
 
             jubayer.FirstName = "Jubayer";
             walter.FirstName = "Walter";

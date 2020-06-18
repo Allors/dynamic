@@ -9,14 +9,15 @@ namespace Allors.Dynamic.Tests
         [Fact]
         public void Filter()
         {
-            DynamicPopulation population = new DynamicPopulation(v => v
-                         .AddUnitRelationType("FirstName")
-                         .AddUnitRelationType("LastName")
-                      );
+            DynamicPopulation population = new DynamicPopulation(v =>
+            {
+                v.AddUnit("FirstName");
+                v.AddUnit("LastName");
+            });
 
             dynamic Create(params Action<dynamic>[] builders)
             {
-                return population.Create(builders);
+                return population.New(builders);
             }
 
             Action<dynamic> FirstName(string firstName)

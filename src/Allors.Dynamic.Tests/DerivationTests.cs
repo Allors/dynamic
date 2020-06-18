@@ -9,16 +9,17 @@ namespace Allors.Dynamic.Tests
         [Fact]
         public void Derivation()
         {
-            DynamicPopulation population = new DynamicPopulation(v => v
-             .AddUnitRelationType("FirstName")
-             .AddUnitRelationType("LastName")
-             .AddUnitRelationType("FullName")
-             .AddUnitRelationType("DerivedAt")
-          );
+            DynamicPopulation population = new DynamicPopulation(v =>
+            {
+                v.AddUnit("FirstName");
+                v.AddUnit("LastName");
+                v.AddUnit("FullName");
+                v.AddUnit("DerivedAt");
+            });
 
             population.DerivationById["FullName"] = new FullNameDerivation();
 
-            dynamic john = population.Create();
+            dynamic john = population.New();
             john.FirstName = "John";
             john.LastName = "Doe";
 
@@ -28,7 +29,7 @@ namespace Allors.Dynamic.Tests
 
             population.DerivationById["FullName"] = new GreetingDerivation(population.DerivationById["FullName"]);
 
-            dynamic jane = population.Create();
+            dynamic jane = population.New();
             jane.FirstName = "Jane";
             jane.LastName = "Doe";
 

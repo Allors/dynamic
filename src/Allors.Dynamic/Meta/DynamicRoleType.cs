@@ -16,6 +16,12 @@
 
         public bool IsUnit => this.AssociationType == null;
 
+        public void Deconstruct(out DynamicAssociationType associationType, out DynamicRoleType roleType)
+        {
+            associationType = this.AssociationType;
+            roleType = this;
+        }
+
         /// <inheritdoc/>
         public override string ToString()
         {

@@ -8,20 +8,22 @@ namespace Allors.Dynamic.Tests
         [Fact]
         public void Set()
         {
-            DynamicPopulation population = new DynamicPopulation(v => v
-                .AddUnitRelationType("Name")
-                .AddOneToOneRelationType("Property", "Owner"));
+            DynamicPopulation population = new DynamicPopulation(v =>
+            {
+                v.AddUnit("Name");
+                v.AddOneToOne("Property", "Owner");
+            });
 
             Action<dynamic> name(string name)
             {
                 return (obj) => obj.Name = name;
             }
 
-            dynamic acme = population.Create(name("Acme"));
-            dynamic gizmo = population.Create(name("Gizmo"));
+            dynamic acme = population.New(name("Acme"));
+            dynamic gizmo = population.New(name("Gizmo"));
 
-            dynamic jane = population.Create(name("Jane"));
-            dynamic john = population.Create(name("John"));
+            dynamic jane = population.New(name("Jane"));
+            dynamic john = population.New(name("John"));
 
             acme.Owner = jane;
             gizmo.Owner = john;

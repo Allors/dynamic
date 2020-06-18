@@ -8,14 +8,14 @@ namespace Allors.Dynamic.Tests
         public void SingleActiveLink()
         {
             DynamicPopulation population = new DynamicPopulation(v => v
-                 .AddManyToManyRelationType("Employer", "Employee"));
+                 .AddManyToMany("Employer", "Employee"));
 
-            dynamic acme = population.Create();
-            dynamic hooli = population.Create();
+            dynamic acme = population.New();
+            dynamic hooli = population.New();
 
-            dynamic jane = population.Create();
-            dynamic john = population.Create();
-            dynamic jenny = population.Create();
+            dynamic jane = population.New();
+            dynamic john = population.New();
+            dynamic jenny = population.New();
 
             acme.AddEmployee(jane);
             acme.AddEmployee(john);
@@ -42,14 +42,14 @@ namespace Allors.Dynamic.Tests
         public void MultipeleActiveLinks()
         {
             DynamicPopulation population = new DynamicPopulation(v => v
-                 .AddManyToManyRelationType("Employer", "Employee"));
+                 .AddManyToMany("Employer", "Employee"));
 
-            dynamic acme = population.Create();
-            dynamic hooli = population.Create();
+            dynamic acme = population.New();
+            dynamic hooli = population.New();
 
-            dynamic jane = population.Create();
-            dynamic john = population.Create();
-            dynamic jenny = population.Create();
+            dynamic jane = population.New();
+            dynamic john = population.New();
+            dynamic jenny = population.New();
 
             acme.AddEmployee(jane);
             acme.AddEmployee(john);
