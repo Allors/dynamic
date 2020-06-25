@@ -2,6 +2,13 @@
 {
     public class DynamicAssociationType
     {
+        public DynamicAssociationType(DynamicMeta meta)
+        {
+            this.Meta = meta;
+        }
+
+        public DynamicMeta Meta { get; }
+
         public DynamicRoleType RoleType { get; }
 
         public string Name => this.IsOne ? this.SingularName : this.PluralName;

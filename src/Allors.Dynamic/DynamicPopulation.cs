@@ -1,14 +1,20 @@
 ﻿namespace Allors.Dynamic
 {
     using System;
+    using System.Collections;
     using System.Collections.Generic;
     using System.Dynamic;
+    using System.Linq;
     using Allors.Dynamic.Meta;
 
     public delegate dynamic New(params Action<dynamic>[] builders);
 
+    public delegate DynamicReference<T> New<T>(params Action<DynamicReference<T>>[] builders);
+
     public class DynamicPopulation
     {
+        private readonly Interned interned;
+
         public DynamicMeta Meta { get; }
 
         public Dictionary<string, IDynamicDerivation> DerivationById { get; }
@@ -17,6 +23,7 @@
 
         public DynamicPopulation(params Action<DynamicMeta>[] builders)
         {
+            this.interned = new Interned();
             this.Meta = new DynamicMeta();
 
             this.DerivationById = new Dictionary<string, IDynamicDerivation>();
@@ -45,17 +52,39 @@
             }
         }
 
+        public New<T> Factory<T>(T type)
+        {
+            return (Action<DynamicReference<T>>[] builders) => this.New(type, builders);
+        }
+
         public dynamic New(params Action<dynamic>[] builders)
         {
-            DynamicObject newObject = new DynamicObject(this);
-            this.database.AddObject(newObject);
+            DynamicObject @new = new DynamicObject(this);
+            this.database.AddObject(@new);
 
-            foreach (Action<dynamic> builder in builders)
+            foreach (var builder in builders)
             {
-                builder(newObject);
+                builder(@new);
             }
 
-            return newObject;
+            return @new;
+        }
+
+        public DynamicReference<T> New<T>(T type)
+        {
+            var @object = this.New();
+            return new DynamicReference<T>(type, @object);
+        }
+
+        public DynamicReference<T> New<T>(T type, params Action<DynamicReference<T>>[] builders)
+        {
+            var @new = this.New(type);
+            foreach (var builder in builders)
+            {
+                builder(@new);
+            }
+
+            return @new;
         }
 
         public DynamicChangeSet Snapshot()

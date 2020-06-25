@@ -2,18 +2,18 @@ namespace Allors.Dynamic.Tests
 {
     using Xunit;
 
-    public class ExtensionsTests
+    public class DynamicPopulationTests
     {
         [Fact]
-        public void Set()
+        public void New()
         {
             var population = new DynamicPopulation();
             var name = population.Meta.AddUnit("Name");
             var (property, owner) = population.Meta.AddOneToOne("Property", "Owner");
 
             New @new = population.New;
-            var setName = population.Set<string>(name);
-            var setOwner = population.Set<dynamic>(owner);
+            var setName = name.Set<string>();
+            var setOwner = owner.Set<dynamic>();
 
             dynamic acme = @new(
                 setName("Acme"),

@@ -22,7 +22,7 @@
 
         public DynamicRoleType AddUnit(string name)
         {
-            DynamicRoleType roleType = new DynamicRoleType
+            DynamicRoleType roleType = new DynamicRoleType(this)
             {
                 SingularName = name,
                 PluralName = this.inflector.Pluralize(name),
@@ -56,7 +56,7 @@
 
         private DynamicRoleType AddRelationType(string associationName, bool associationIsMany, string roleName, bool roleIsMany)
         {
-            DynamicRoleType roleType = new DynamicRoleType
+            DynamicRoleType roleType = new DynamicRoleType(this)
             {
                 SingularName = roleName,
                 PluralName = this.inflector.Pluralize(roleName),

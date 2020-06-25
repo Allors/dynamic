@@ -1,7 +1,16 @@
-﻿namespace Allors.Dynamic.Meta
+﻿using System;
+
+namespace Allors.Dynamic.Meta
 {
     public class DynamicRoleType
     {
+        public DynamicRoleType(DynamicMeta meta)
+        {
+            this.Meta = meta;
+        }
+
+        public DynamicMeta Meta { get; }
+
         public DynamicAssociationType AssociationType { get; internal set; }
 
         public string Name => this.IsOne ? this.SingularName : this.PluralName;
