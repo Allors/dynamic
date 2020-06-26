@@ -337,7 +337,7 @@
                         case System.Dynamic.DynamicObject dynamicObject:
                             return dynamicObject;
 
-                        case IDynamicReference reference:
+                        case IDynamic reference:
                             return reference.Instance;
 
                         default:
@@ -369,7 +369,7 @@
                         yield return dynamicObject;
                         break;
 
-                    case IDynamicReference reference:
+                    case IDynamic reference:
                         yield return reference.Instance;
                         break;
 

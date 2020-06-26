@@ -1,6 +1,6 @@
 ﻿namespace Allors.Dynamic
 {
-    internal interface IDynamicReference
+    internal interface IDynamic
     {
         dynamic Instance { get; }
     }

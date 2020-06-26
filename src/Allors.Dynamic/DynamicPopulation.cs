@@ -9,7 +9,7 @@
 
     public delegate dynamic New(params Action<dynamic>[] builders);
 
-    public delegate DynamicReference<T> New<T>(params Action<DynamicReference<T>>[] builders);
+    public delegate Dynamic<T> New<T>(params Action<Dynamic<T>>[] builders);
 
     public class DynamicPopulation
     {
@@ -54,7 +54,7 @@
 
         public New<T> Factory<T>(T type)
         {
-            return (Action<DynamicReference<T>>[] builders) => this.New(type, builders);
+            return (Action<Dynamic<T>>[] builders) => this.New(type, builders);
         }
 
         public dynamic New(params Action<dynamic>[] builders)
@@ -70,13 +70,13 @@
             return @new;
         }
 
-        public DynamicReference<T> New<T>(T type)
+        public Dynamic<T> New<T>(T type)
         {
             var @object = this.New();
-            return new DynamicReference<T>(type, @object);
+            return new Dynamic<T>(type, @object);
         }
 
-        public DynamicReference<T> New<T>(T type, params Action<DynamicReference<T>>[] builders)
+        public Dynamic<T> New<T>(T type, params Action<Dynamic<T>>[] builders)
         {
             var @new = this.New(type);
             foreach (var builder in builders)

@@ -3,17 +3,17 @@
     using System;
     using Allors.Dynamic.Meta;
 
-    public struct DynamicReference<T> : IDynamicReference
+    public struct Dynamic<T> : IDynamic
     {
-        public DynamicReference(T type, dynamic instance)
+        public Dynamic(T type, dynamic instance)
         {
             this.Type = type;
             this.Instance = instance;
         }
 
-        public static implicit operator System.Dynamic.DynamicObject(DynamicReference<T> reference) => reference.Instance;
+        public static implicit operator System.Dynamic.DynamicObject(Dynamic<T> reference) => reference.Instance;
 
-        public static implicit operator DynamicObject(DynamicReference<T> reference) => reference.Instance;
+        public static implicit operator DynamicObject(Dynamic<T> reference) => reference.Instance;
 
         public dynamic this[DynamicRoleType roleType]
         {
