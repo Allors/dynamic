@@ -31,17 +31,21 @@
 
         public dynamic Instance { get; }
 
-        public void Apply(Func<T, Action<dynamic>> setter)
+        public Dynamic<T> Apply(Func<T, Action<dynamic>> setter)
         {
             setter(this.Type)(this.Instance);
+
+            return this;
         }
 
-        public void Apply(params Func<T, Action<dynamic>>[] setters)
+        public Dynamic<T> Apply(params Func<T, Action<dynamic>>[] setters)
         {
             foreach (var setter in setters)
             {
                 setter(this.Type)(this.Instance);
             }
+
+            return this;
         }
     }
 }

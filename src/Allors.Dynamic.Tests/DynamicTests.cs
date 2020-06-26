@@ -3,7 +3,7 @@ namespace Allors.Dynamic.Tests
     using System;
     using Xunit;
 
-    public class ReferenceTests
+    public class DynamicTests
     {
         public class Organisation
         {
@@ -35,14 +35,13 @@ namespace Allors.Dynamic.Tests
             var newOrganisation = population.Factory(organisation);
             var newPerson = population.Factory(person);
 
-            var jane = newPerson(
-                v => v.Apply(
-                    o => o.SetName("Jane")));
+            var jane = newPerson()
+                .Apply(o => o.SetName("Jane"));
 
-            var acme = newOrganisation(
-                v => v.Apply(
+            var acme = newOrganisation()
+                .Apply(
                     o => o.SetName("Acme"),
-                    o => o.SetOwner(jane)));
+                    o => o.SetOwner(jane));
 
             Assert.Equal("Acme", acme[name]);
             Assert.Equal("Jane", jane[name]);
