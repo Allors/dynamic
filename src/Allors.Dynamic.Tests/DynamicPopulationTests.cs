@@ -8,12 +8,12 @@ namespace Allors.Dynamic.Tests
         public void New()
         {
             var population = new DynamicPopulation();
-            var name = population.Meta.AddUnit("Name");
+            var name = population.Meta.AddUnit<string>("Name");
             var (property, owner) = population.Meta.AddOneToOne("Property", "Owner");
 
             New @new = population.New;
-            var setName = name.Set<string>();
-            var setOwner = owner.Set<dynamic>();
+            var setName = name.Set();
+            var setOwner = owner.Set();
 
             dynamic acme = @new(
                 setName("Acme"),

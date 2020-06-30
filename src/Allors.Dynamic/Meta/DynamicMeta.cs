@@ -20,13 +20,12 @@
 
         public Dictionary<string, DynamicRoleType> RoleTypeByName { get; }
 
-        public DynamicRoleType AddUnit(string name)
+        public DynamicUnitRoleType AddUnit(string name, Type type)
         {
-            DynamicRoleType roleType = new DynamicRoleType(this)
+            var roleType = new DynamicUnitRoleType(this, type)
             {
                 SingularName = name,
                 PluralName = this.inflector.Pluralize(name),
-                IsMany = false,
             };
 
             this.AddRoleType(roleType);
@@ -34,42 +33,96 @@
             return roleType;
         }
 
-        public DynamicRoleType AddOneToOne(string associationName, string roleName)
+        public DynamicUnitRoleType<T> AddUnit<T>(string name)
         {
-            return this.AddRelationType(associationName, false, roleName, false);
-        }
-
-        public DynamicRoleType AddOneToMany(string associationName, string roleName)
-        {
-            return this.AddRelationType(associationName, false, roleName, true);
-        }
-
-        public DynamicRoleType AddManyToOne(string associationName, string roleName)
-        {
-            return this.AddRelationType(associationName, true, roleName, false);
-        }
-
-        public DynamicRoleType AddManyToMany(string associationName, string roleName)
-        {
-            return this.AddRelationType(associationName, true, roleName, true);
-        }
-
-        private DynamicRoleType AddRelationType(string associationName, bool associationIsMany, string roleName, bool roleIsMany)
-        {
-            DynamicRoleType roleType = new DynamicRoleType(this)
+            var roleType = new DynamicUnitRoleType<T>(this)
             {
-                SingularName = roleName,
-                PluralName = this.inflector.Pluralize(roleName),
-                IsMany = roleIsMany,
+                SingularName = name,
+                PluralName = this.inflector.Pluralize(name),
             };
 
             this.AddRoleType(roleType);
 
-            DynamicAssociationType associationType = new DynamicAssociationType(roleType)
+            return roleType;
+        }
+
+        public DynamicOneToOneRoleType AddOneToOne(string associationName, string roleName)
+        {
+            var roleType = new DynamicOneToOneRoleType(this)
+            {
+                SingularName = roleName,
+                PluralName = this.inflector.Pluralize(roleName),
+            };
+
+            this.AddRoleType(roleType);
+
+            var associationType = new DynamicOneToOneAssociationType(roleType)
             {
                 SingularName = associationName,
                 PluralName = this.inflector.Pluralize(associationName),
-                IsMany = associationIsMany,
+            };
+
+            this.AddAssociationType(associationType);
+
+            return roleType;
+        }
+
+        public DynamicManyToOneRoleType AddManyToOne(string associationName, string roleName)
+        {
+            var roleType = new DynamicManyToOneRoleType(this)
+            {
+                SingularName = roleName,
+                PluralName = this.inflector.Pluralize(roleName),
+            };
+
+            this.AddRoleType(roleType);
+
+            var associationType = new DynamicManyToOneAssociationType(roleType)
+            {
+                SingularName = associationName,
+                PluralName = this.inflector.Pluralize(associationName),
+            };
+
+            this.AddAssociationType(associationType);
+
+            return roleType;
+        }
+
+        public DynamicOneToManyRoleType AddOneToMany(string associationName, string roleName)
+        {
+            var roleType = new DynamicOneToManyRoleType(this)
+            {
+                SingularName = roleName,
+                PluralName = this.inflector.Pluralize(roleName),
+            };
+
+            this.AddRoleType(roleType);
+
+            var associationType = new DynamicOneToManyAssociationType(roleType)
+            {
+                SingularName = associationName,
+                PluralName = this.inflector.Pluralize(associationName),
+            };
+
+            this.AddAssociationType(associationType);
+
+            return roleType;
+        }
+
+        public DynamicManyToManyRoleType AddManyToMany(string associationName, string roleName)
+        {
+            var roleType = new DynamicManyToManyRoleType(this)
+            {
+                SingularName = roleName,
+                PluralName = this.inflector.Pluralize(roleName),
+            };
+
+            this.AddRoleType(roleType);
+
+            var associationType = new DynamicManyToManyAssociationType(roleType)
+            {
+                SingularName = associationName,
+                PluralName = this.inflector.Pluralize(associationName),
             };
 
             this.AddAssociationType(associationType);

@@ -10,7 +10,7 @@ namespace Allors.Dynamic.Tests
         {
             DynamicPopulation population = new DynamicPopulation(v =>
             {
-                v.AddUnit("Name");
+                v.AddUnit<string>("Name");
                 v.AddOneToOne("Property", "Owner");
             });
 

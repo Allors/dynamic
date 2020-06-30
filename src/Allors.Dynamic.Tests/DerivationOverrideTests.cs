@@ -11,11 +11,11 @@ namespace Allors.Dynamic.Tests
         {
             DynamicPopulation population = new DynamicPopulation(v =>
             {
-                v.AddUnit("FirstName");
-                v.AddUnit("LastName");
-                v.AddUnit("FullName");
-                v.AddUnit("DerivedAt");
-                v.AddUnit("Greeting");
+                v.AddUnit<string>("FirstName");
+                v.AddUnit<string>("LastName");
+                v.AddUnit<string>("FullName");
+                v.AddUnit<DateTime>("DerivedAt");
+                v.AddUnit<string>("Greeting");
             });
 
             population.DerivationById["FullName"] = new FullNameDerivation();

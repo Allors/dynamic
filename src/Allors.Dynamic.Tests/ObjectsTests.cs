@@ -11,8 +11,8 @@ namespace Allors.Dynamic.Tests
         {
             DynamicPopulation population = new DynamicPopulation(v =>
             {
-                v.AddUnit("FirstName");
-                v.AddUnit("LastName");
+                v.AddUnit<string>("FirstName");
+                v.AddUnit<string>("LastName");
             });
 
             dynamic Create(params Action<dynamic>[] builders)

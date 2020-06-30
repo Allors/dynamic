@@ -3,11 +3,22 @@
     using System;
     using Allors.Dynamic.Meta;
 
-    public static class DynamicRoleTypeExtensions
+    public static class DynamicToManyRoleTypeExtensions
     {
-        public static Func<T, Action<dynamic>> Set<T>(this DynamicRoleType @this)
+        public static Func<dynamic, dynamic[]> Get(this DynamicToManyRoleType @this)
         {
-            Action<dynamic> action(T value)
+            dynamic[] function(dynamic obj)
+            {
+                ((DynamicObject)obj).Get(@this, out var result);
+                return (dynamic[])result;
+            }
+
+            return function;
+        }
+
+        public static Func<dynamic[], Action<dynamic>> Set(this DynamicToManyRoleType @this)
+        {
+            Action<dynamic> action(dynamic[] value)
             {
                 return (obj) => ((DynamicObject)obj).Set(@this, value);
             }
@@ -15,7 +26,7 @@
             return action;
         }
 
-        public static Func<dynamic, Action<dynamic>> Add(this DynamicRoleType @this)
+        public static Func<dynamic, Action<dynamic>> Add(this DynamicToManyRoleType @this)
         {
             var meta = @this.Meta;
 
@@ -27,7 +38,7 @@
             return action;
         }
 
-        public static Func<dynamic, Action<dynamic>> Remove(this DynamicRoleType @this)
+        public static Func<dynamic, Action<dynamic>> Remove(this DynamicToManyRoleType @this)
         {
             var meta = @this.Meta;
 

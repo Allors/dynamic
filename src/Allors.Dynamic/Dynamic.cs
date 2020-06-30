@@ -31,18 +31,23 @@
 
         public static implicit operator DynamicObject(Dynamic<T> reference) => reference.Instance;
 
-        public Dynamic<T> Apply(Func<T, Action<dynamic>> setter)
+        public U Apply<U>(Func<T, Func<dynamic, U>> getter)
         {
-            setter(this.Type)(this.Instance);
+            return getter(this.Type)(this.Instance);
+        }
+
+        public Dynamic<T> Apply(Func<T, Action<dynamic>> modifier)
+        {
+            modifier(this.Type)(this.Instance);
 
             return this;
         }
 
-        public Dynamic<T> Apply(params Func<T, Action<dynamic>>[] setters)
+        public Dynamic<T> Apply(params Func<T, Action<dynamic>>[] modifiers)
         {
-            foreach (var setter in setters)
+            foreach (var modifier in modifiers)
             {
-                setter(this.Type)(this.Instance);
+                modifier(this.Type)(this.Instance);
             }
 
             return this;
