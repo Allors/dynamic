@@ -1,5 +1,6 @@
 namespace Allors.Dynamic.Tests
 {
+    using Allors.Dynamic.Tests.Domain;
     using Xunit;
 
     public class DataTests
@@ -11,8 +12,8 @@ namespace Allors.Dynamic.Tests
                  .AddUnit<string>("FirstName")
               );
 
-            dynamic jubayer = population.New();
-            dynamic walter = population.New();
+            dynamic jubayer = population.New<Person>();
+            dynamic walter = population.New<Person>();
 
             jubayer.FirstName = "Jubayer";
             walter.FirstName = "Walter";
@@ -29,8 +30,8 @@ namespace Allors.Dynamic.Tests
                  .AddUnit<string>("FirstName")
               );
 
-            dynamic jubayer = population.New();
-            dynamic walter = population.New();
+            dynamic jubayer = population.New<Person>();
+            dynamic walter = population.New<Person>();
 
             jubayer.FirstName = "Jubayer";
             walter.FirstName = "Walter";

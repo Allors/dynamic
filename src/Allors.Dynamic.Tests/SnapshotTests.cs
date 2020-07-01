@@ -1,5 +1,6 @@
 namespace Allors.Dynamic.Tests
 {
+    using Allors.Dynamic.Tests.Domain;
     using Xunit;
 
     public class SnapshotTests
@@ -13,8 +14,8 @@ namespace Allors.Dynamic.Tests
                 v.AddUnit<string>("LastName");
             });
 
-            dynamic john = population.New();
-            dynamic jane = population.New();
+            dynamic john = population.New<Person>();
+            dynamic jane = population.New<Person>();
 
             john.FirstName = "John";
             john.LastName = "Doe";

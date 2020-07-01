@@ -1,5 +1,6 @@
 namespace Allors.Dynamic.Tests
 {
+    using Allors.Dynamic.Tests.Domain;
     using System;
     using Xunit;
 
@@ -11,7 +12,7 @@ namespace Allors.Dynamic.Tests
             DynamicPopulation population = new DynamicPopulation(v =>
             {
                 v.AddUnit<string>("Name");
-                v.AddOneToOne("Property", "Owner");
+                v.AddOneToOne<Organisation, Person>("Property", "Owner");
             });
 
             Action<dynamic> name(string name)
@@ -19,11 +20,11 @@ namespace Allors.Dynamic.Tests
                 return (obj) => obj.Name = name;
             }
 
-            dynamic acme = population.New(name("Acme"));
-            dynamic gizmo = population.New(name("Gizmo"));
+            dynamic acme = population.New<Organisation>(name("Acme"));
+            dynamic gizmo = population.New<Organisation>(name("Gizmo"));
 
-            dynamic jane = population.New(name("Jane"));
-            dynamic john = population.New(name("John"));
+            dynamic jane = population.New<Person>(name("Jane"));
+            dynamic john = population.New<Person>(name("John"));
 
             acme.Owner = jane;
             gizmo.Owner = john;

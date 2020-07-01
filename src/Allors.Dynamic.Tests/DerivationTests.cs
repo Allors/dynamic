@@ -1,5 +1,6 @@
 namespace Allors.Dynamic.Tests
 {
+    using Allors.Dynamic.Tests.Domain;
     using System;
     using System.Linq;
     using Xunit;
@@ -19,7 +20,7 @@ namespace Allors.Dynamic.Tests
 
             population.DerivationById["FullName"] = new FullNameDerivation();
 
-            dynamic john = population.New();
+            dynamic john = population.New<Person>();
             john.FirstName = "John";
             john.LastName = "Doe";
 
@@ -29,7 +30,7 @@ namespace Allors.Dynamic.Tests
 
             population.DerivationById["FullName"] = new GreetingDerivation(population.DerivationById["FullName"]);
 
-            dynamic jane = population.New();
+            dynamic jane = population.New<Person>();
             jane.FirstName = "Jane";
             jane.LastName = "Doe";
 

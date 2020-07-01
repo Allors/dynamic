@@ -1,5 +1,6 @@
 namespace Allors.Dynamic.Tests
 {
+    using Allors.Dynamic.Tests.Domain;
     using Xunit;
 
     public class ManyToOneTests
@@ -8,12 +9,13 @@ namespace Allors.Dynamic.Tests
         public void PropertySet()
         {
             DynamicPopulation population = new DynamicPopulation(v => v
-                .AddOneToOne("Property", "Owner"));
+                .AddOneToOne<Organisation, Person>("Property", "Owner"));
 
-            dynamic acme = population.New();
-            dynamic gizmo = population.New();
-            dynamic jane = population.New();
-            dynamic john = population.New();
+            dynamic acme = population.New<Organisation>();
+            dynamic gizmo = population.New<Organisation>();
+
+            dynamic jane = population.New<Person>();
+            dynamic john = population.New<Person>();
 
             acme.Owner = jane;
 
@@ -31,12 +33,12 @@ namespace Allors.Dynamic.Tests
         public void IndexSet()
         {
             DynamicPopulation population = new DynamicPopulation(v => v
-                .AddOneToOne("Property", "Owner"));
+                .AddOneToOne<Organisation, Person>("Property", "Owner"));
 
-            dynamic acme = population.New();
-            dynamic gizmo = population.New();
-            dynamic jane = population.New();
-            dynamic john = population.New();
+            dynamic acme = population.New<Organisation>();
+            dynamic gizmo = population.New<Organisation>();
+            dynamic jane = population.New<Person>();
+            dynamic john = population.New<Person>();
 
             acme["Owner"] = jane;
 

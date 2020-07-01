@@ -1,5 +1,6 @@
 namespace Allors.Dynamic.Tests
 {
+    using Allors.Dynamic.Tests.Domain;
     using Xunit;
 
     public class ManyToManyTests
@@ -8,14 +9,14 @@ namespace Allors.Dynamic.Tests
         public void SingleActiveLink()
         {
             DynamicPopulation population = new DynamicPopulation(v => v
-                 .AddManyToMany("Employer", "Employee"));
+                 .AddManyToMany<Organisation, Person>("Employer", "Employee"));
 
-            dynamic acme = population.New();
-            dynamic hooli = population.New();
+            dynamic acme = population.New<Organisation>();
+            dynamic hooli = population.New<Organisation>();
 
-            dynamic jane = population.New();
-            dynamic john = population.New();
-            dynamic jenny = population.New();
+            dynamic jane = population.New<Person>();
+            dynamic john = population.New<Person>();
+            dynamic jenny = population.New<Person>();
 
             acme.AddEmployee(jane);
             acme.AddEmployee(john);
@@ -42,14 +43,14 @@ namespace Allors.Dynamic.Tests
         public void MultipeleActiveLinks()
         {
             DynamicPopulation population = new DynamicPopulation(v => v
-                 .AddManyToMany("Employer", "Employee"));
+                 .AddManyToMany<Organisation, Person>("Employer", "Employee"));
 
-            dynamic acme = population.New();
-            dynamic hooli = population.New();
+            dynamic acme = population.New<Organisation>();
+            dynamic hooli = population.New<Organisation>();
 
-            dynamic jane = population.New();
-            dynamic john = population.New();
-            dynamic jenny = population.New();
+            dynamic jane = population.New<Person>();
+            dynamic john = population.New<Person>();
+            dynamic jenny = population.New<Person>();
 
             acme.AddEmployee(jane);
             acme.AddEmployee(john);

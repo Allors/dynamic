@@ -16,11 +16,21 @@
             this.inflector = new Inflector.Inflector(new CultureInfo("en"));
         }
 
+        public Dictionary<Type, DynamicObjectType> ObjectTypeByType { get; }
+
         public Dictionary<string, DynamicAssociationType> AssociationTypeByName { get; }
 
         public Dictionary<string, DynamicRoleType> RoleTypeByName { get; }
 
-        public DynamicUnitRoleType AddUnit(string name, Type type)
+        public DynamicObjectType Add<T>()
+            where T : DynamicObject
+        {
+            var dynamicObjectType = new DynamicObjectType(typeof(T));
+            this.ObjectTypeByType.Add(dynamicObjectType.Type, dynamicObjectType);
+            return dynamicObjectType;
+        }
+
+        public DynamicUnitRoleType AddUnit(Type type, string name)
         {
             var roleType = new DynamicUnitRoleType(this, type)
             {
@@ -33,20 +43,9 @@
             return roleType;
         }
 
-        public DynamicUnitRoleType<T> AddUnit<T>(string name)
-        {
-            var roleType = new DynamicUnitRoleType<T>(this)
-            {
-                SingularName = name,
-                PluralName = this.inflector.Pluralize(name),
-            };
+        public DynamicUnitRoleType AddUnit<TRole>(string name) => this.AddUnit(typeof(TRole), name);
 
-            this.AddRoleType(roleType);
-
-            return roleType;
-        }
-
-        public DynamicOneToOneRoleType AddOneToOne(string associationName, string roleName)
+        public DynamicOneToOneRoleType AddOneToOne<TAssociation, TRole>(string associationName, string roleName)
         {
             var roleType = new DynamicOneToOneRoleType(this)
             {
@@ -67,7 +66,7 @@
             return roleType;
         }
 
-        public DynamicManyToOneRoleType AddManyToOne(string associationName, string roleName)
+        public DynamicManyToOneRoleType AddManyToOne<TAssociation, TRole>(string associationName, string roleName)
         {
             var roleType = new DynamicManyToOneRoleType(this)
             {
@@ -88,7 +87,7 @@
             return roleType;
         }
 
-        public DynamicOneToManyRoleType AddOneToMany(string associationName, string roleName)
+        public DynamicOneToManyRoleType AddOneToMany<TAssociation, TRole>(string associationName, string roleName)
         {
             var roleType = new DynamicOneToManyRoleType(this)
             {
@@ -109,7 +108,7 @@
             return roleType;
         }
 
-        public DynamicManyToManyRoleType AddManyToMany(string associationName, string roleName)
+        public DynamicManyToManyRoleType AddManyToMany<TAssociation, TRole>(string associationName, string roleName)
         {
             var roleType = new DynamicManyToManyRoleType(this)
             {

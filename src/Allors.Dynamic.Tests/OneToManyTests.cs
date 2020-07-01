@@ -1,5 +1,6 @@
 namespace Allors.Dynamic.Tests
 {
+    using Allors.Dynamic.Tests.Domain;
     using System.Linq;
     using Xunit;
 
@@ -9,12 +10,12 @@ namespace Allors.Dynamic.Tests
         public void AddSameAssociation()
         {
             DynamicPopulation population = new DynamicPopulation(v => v
-                    .AddOneToMany("Employer", "Employee"));
+                    .AddOneToMany<Organisation, Person>("Employer", "Employee"));
 
-            dynamic acme = population.New();
-            dynamic jane = population.New();
-            dynamic john = population.New();
-            dynamic jenny = population.New();
+            dynamic acme = population.New<Organisation>();
+            dynamic jane = population.New<Person>();
+            dynamic john = population.New<Person>();
+            dynamic jenny = population.New<Person>();
 
             acme.AddEmployee(jane);
             acme.AddEmployee(john);
@@ -35,23 +36,23 @@ namespace Allors.Dynamic.Tests
             DynamicPopulation population = new DynamicPopulation(v =>
             {
                 v.AddUnit<string>("Name");
-                v.AddOneToMany("Employer", "Employee");
+                v.AddOneToMany<Organisation, Person>("Employer", "Employee");
             });
 
-            dynamic acme = population.New();
+            dynamic acme = population.New<Organisation>();
 
-            dynamic jane = population.New();
+            dynamic jane = population.New<Person>();
             jane.Name = "Jane";
-            dynamic john = population.New();
+            dynamic john = population.New<Person>();
             john.Name = "John";
-            dynamic jenny = population.New();
+            dynamic jenny = population.New<Person>();
             jenny.Name = "Jenny";
 
             acme.AddEmployee(jane);
             acme.AddEmployee(john);
             acme.AddEmployee(jenny);
 
-            dynamic hooli = population.New();
+            dynamic hooli = population.New<Organisation>();
 
             hooli.AddEmployee(jane);
 
@@ -76,12 +77,12 @@ namespace Allors.Dynamic.Tests
         public void Remove()
         {
             DynamicPopulation population = new DynamicPopulation(v => v
-                 .AddOneToMany("Employer", "Employee"));
+                 .AddOneToMany<Organisation, Person>("Employer", "Employee"));
 
-            dynamic acme = population.New();
-            dynamic jane = population.New();
-            dynamic john = population.New();
-            dynamic jenny = population.New();
+            dynamic acme = population.New<Organisation>();
+            dynamic jane = population.New<Person>();
+            dynamic john = population.New<Person>();
+            dynamic jenny = population.New<Person>();
 
             acme.AddEmployee(jane);
             acme.AddEmployee(john);

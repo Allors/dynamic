@@ -1,20 +1,14 @@
 ﻿namespace Allors.Dynamic
 {
     using System;
-    using System.Collections;
     using System.Collections.Generic;
     using System.Dynamic;
-    using System.Linq;
     using Allors.Dynamic.Meta;
 
-    public delegate dynamic New(params Action<dynamic>[] builders);
-
-    public delegate Dynamic<T> New<T>(params Action<Dynamic<T>>[] builders);
+    public delegate T New<T>(params Action<T>[] builders);
 
     public class DynamicPopulation
     {
-        private readonly Interned interned;
-
         public DynamicMeta Meta { get; }
 
         public Dictionary<string, IDynamicDerivation> DerivationById { get; }
@@ -23,7 +17,6 @@
 
         public DynamicPopulation(params Action<DynamicMeta>[] builders)
         {
-            this.interned = new Interned();
             this.Meta = new DynamicMeta();
 
             this.DerivationById = new Dictionary<string, IDynamicDerivation>();
@@ -52,14 +45,10 @@
             }
         }
 
-        public New<T> Factory<T>(T type)
+        public T New<T>(params Action<T>[] builders)
+            where T : DynamicObject
         {
-            return (Action<Dynamic<T>>[] builders) => this.New(type, builders);
-        }
-
-        public dynamic New(params Action<dynamic>[] builders)
-        {
-            DynamicObject @new = new DynamicObject(this);
+            T @new = (T)Activator.CreateInstance(typeof(T), new object[] { this });
             this.database.AddObject(@new);
 
             foreach (var builder in builders)
@@ -70,15 +59,11 @@
             return @new;
         }
 
-        public Dynamic<T> New<T>(T type)
+        public dynamic New(Type t, params Action<dynamic>[] builders)
         {
-            var @object = this.New();
-            return new Dynamic<T>(type, @object);
-        }
+            dynamic @new = Activator.CreateInstance(t, new object[] { this });
+            this.database.AddObject(@new);
 
-        public Dynamic<T> New<T>(T type, params Action<Dynamic<T>>[] builders)
-        {
-            var @new = this.New(type);
             foreach (var builder in builders)
             {
                 builder(@new);
@@ -134,6 +119,26 @@
             }
 
             return false;
+        }
+
+        internal T GetRole<T>(DynamicObject obj, string name)
+        {
+            var roleType = this.Meta.RoleTypeByName[name];
+            this.database.GetRole(obj, roleType, out var result);
+            return (T)result;
+        }
+
+        internal void SetRole<T>(DynamicObject obj, string name, T value)
+        {
+            var roleType = this.Meta.RoleTypeByName[name];
+            this.database.SetRole(obj, roleType, value);
+        }
+
+        internal T GetAssociation<T>(DynamicObject obj, string name)
+        {
+            var associationType = this.Meta.AssociationTypeByName[name];
+            this.database.GetAssociation(obj, associationType, out var result);
+            return (T)result;
         }
 
         internal void Get(DynamicObject obj, DynamicRoleType roleType, out object result)

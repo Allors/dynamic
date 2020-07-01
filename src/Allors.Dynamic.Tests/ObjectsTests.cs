@@ -1,5 +1,6 @@
 namespace Allors.Dynamic.Tests
 {
+    using Allors.Dynamic.Tests.Domain;
     using System;
     using System.Linq;
     using Xunit;
@@ -15,9 +16,10 @@ namespace Allors.Dynamic.Tests
                 v.AddUnit<string>("LastName");
             });
 
-            dynamic Create(params Action<dynamic>[] builders)
+            dynamic Create<T>(params Action<T>[] builders)
+                 where T : DynamicObject
             {
-                return population.New(builders);
+                return population.New<T>(builders);
             }
 
             Action<dynamic> FirstName(string firstName)
@@ -32,7 +34,7 @@ namespace Allors.Dynamic.Tests
 
             dynamic person(string firstName, string lastName)
             {
-                return Create(FirstName(firstName), LastName(lastName));
+                return Create<Person>(FirstName(firstName), LastName(lastName));
             }
 
             dynamic jane = person("Jane", "Doe");

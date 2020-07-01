@@ -5,11 +5,11 @@
     using System.Linq;
     using Allors.Dynamic.Meta;
 
-    public class DynamicObject : System.Dynamic.DynamicObject
+    public abstract class DynamicObject : System.Dynamic.DynamicObject
     {
         private readonly DynamicPopulation population;
 
-        internal DynamicObject(DynamicPopulation population)
+        protected DynamicObject(DynamicPopulation population)
         {
             this.population = population;
         }
@@ -47,13 +47,12 @@
         /// <inheritdoc/>
         public override IEnumerable<string> GetDynamicMemberNames()
         {
-            foreach (Meta.DynamicRoleType roleType in this.population.Meta.RoleTypeByName.Values.ToArray().Distinct())
+            foreach (DynamicRoleType roleType in this.population.Meta.RoleTypeByName.Values.ToArray().Distinct())
             {
                 yield return roleType.Name;
             }
 
-            foreach (Meta.DynamicAssociationType associationType in this.population.Meta.AssociationTypeByName.Values.ToArray().Distinct()
-            )
+            foreach (DynamicAssociationType associationType in this.population.Meta.AssociationTypeByName.Values.ToArray().Distinct())
             {
                 yield return associationType.Name;
             }
@@ -68,5 +67,11 @@
         public void Add(DynamicRoleType roleType, DynamicObject role) => this.population.Add(this, roleType, role);
 
         public void Remove(DynamicRoleType roleType, DynamicObject role) => this.population.Remove(this, roleType, role);
+
+        public T GetRole<T>(string name) => this.population.GetRole<T>(this, name);
+
+        public void SetRole<T>(string name, T value) => this.population.SetRole<T>(this, name, value);
+
+        public T GetAssociation<T>(string name) => this.population.GetAssociation<T>(this, name);
     }
 }

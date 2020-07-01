@@ -1,5 +1,6 @@
 namespace Allors.Dynamic.Tests
 {
+    using Allors.Dynamic.Tests.Domain;
     using Xunit;
 
     public class DynamicPopulationTests
@@ -9,22 +10,23 @@ namespace Allors.Dynamic.Tests
         {
             var population = new DynamicPopulation();
             var name = population.Meta.AddUnit<string>("Name");
-            var (property, owner) = population.Meta.AddOneToOne("Property", "Owner");
+            var (property, owner) = population.Meta.AddOneToOne<Organisation, Person>("Property", "Owner");
 
-            New @new = population.New;
-            var setName = name.Set();
-            var setOwner = owner.Set();
+            New<Organisation> newOrganisation = population.New;
+            New<Person> newPerson = population.New;
 
-            dynamic acme = @new(
-                setName("Acme"),
-                setOwner(@new(setName("Jane"))));
+            var acme = newOrganisation(v =>
+            {
+                v.Name("Acme");
+                v.Owner(newPerson(v => v.Name("Jane")));
+            });
 
-            dynamic jane = acme[owner];
+            var jane = acme.Owner();
 
-            Assert.Equal("Acme", acme[name]);
-            Assert.Equal("Jane", jane[name]);
+            Assert.Equal("Acme", acme.Name());
+            Assert.Equal("Jane", jane.Name());
 
-            Assert.Equal(acme, jane[property]);
+            Assert.Equal(acme, jane.Property());
         }
     }
 }
