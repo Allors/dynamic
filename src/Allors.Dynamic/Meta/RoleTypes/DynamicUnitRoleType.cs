@@ -1,7 +1,8 @@
-﻿using System;
-
-namespace Allors.Dynamic.Meta
+﻿namespace Allors.Dynamic.Meta
 {
+    using System;
+    using System.Collections;
+
     public class DynamicUnitRoleType : DynamicRoleType
     {
         public DynamicUnitRoleType(DynamicMeta meta, Type type)
@@ -11,6 +12,8 @@ namespace Allors.Dynamic.Meta
         }
 
         public Type Type { get; }
+
+        public TypeCode TypeCode { get; }
 
         public DynamicMeta Meta { get; }
 
@@ -34,6 +37,36 @@ namespace Allors.Dynamic.Meta
             return this.Name;
         }
 
+        public object Normalize(object value)
+        {
+            if (value == null)
+            {
+                return value;
+            }
 
+            if (value is DateTime dateTime && dateTime != DateTime.MinValue && dateTime != DateTime.MaxValue)
+            {
+                switch (dateTime.Kind)
+                {
+                    case DateTimeKind.Local:
+                        dateTime = dateTime.ToUniversalTime();
+                        break;
+                    case DateTimeKind.Unspecified:
+                        throw new ArgumentException(
+@"DateTime value is of DateTimeKind.Kind Unspecified.
+Unspecified is only allowed for DateTime.MaxValue and DateTime.MinValue. 
+Use DateTimeKind.Utc or DateTimeKind.Local.");
+                }
+
+                return new DateTime(dateTime.Year, dateTime.Month, dateTime.Day, dateTime.Hour, dateTime.Minute, dateTime.Second, dateTime.Millisecond, DateTimeKind.Utc);
+            }
+
+            if (value.GetType() != this.Type)
+            {
+                value = Convert.ChangeType(value, this.TypeCode);
+            }
+
+            return value;
+        }
     }
 }

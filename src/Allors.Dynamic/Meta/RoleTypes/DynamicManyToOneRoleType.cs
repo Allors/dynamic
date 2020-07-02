@@ -1,13 +1,23 @@
 ﻿namespace Allors.Dynamic.Meta
 {
+    using System;
+    using System.Collections;
+    using System.Collections.Generic;
+
     public class DynamicManyToOneRoleType : DynamicToOneRoleType
     {
-        public DynamicManyToOneRoleType(DynamicMeta meta)
+        public DynamicManyToOneRoleType(DynamicMeta meta, Type type)
         {
             this.Meta = meta;
+            this.Type = type;
+            this.TypeCode = System.Type.GetTypeCode(type);
         }
 
         public DynamicMeta Meta { get; }
+
+        public Type Type { get; }
+
+        public TypeCode TypeCode { get; }
 
         DynamicAssociationType DynamicRoleType.AssociationType => this.AssociationType;
 
@@ -36,5 +46,7 @@
             associationType = this.AssociationType;
             roleType = this;
         }
+
+        public object Normalize(object value) => this.NormalizeToOne(value);
     }
 }

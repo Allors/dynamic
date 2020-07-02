@@ -86,7 +86,7 @@
 
         internal bool TrySetIndex(DynamicObject obj, SetIndexBinder binder, object[] indexes, object value)
         {
-            return this.TrySet(obj, indexes[0] as string, value);
+            return this.TrySet(obj, indexes[0], value);
         }
 
         internal bool TryGetMember(DynamicObject obj, GetMemberBinder binder, out object result)

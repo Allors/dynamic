@@ -1,18 +1,21 @@
-﻿using System;
-
-namespace Allors.Dynamic.Meta
+﻿namespace Allors.Dynamic.Meta
 {
+    using System;
+
     public class DynamicManyToOneAssociationType : DynamicManyToAssociationType
     {
-        public DynamicManyToOneAssociationType(DynamicManyToOneRoleType roleType)
+        public DynamicManyToOneAssociationType(DynamicManyToOneRoleType roleType, Type type)
         {
             roleType.AssociationType = this;
             this.RoleType = roleType;
+            this.Type = type;
         }
 
         DynamicRoleType DynamicAssociationType.RoleType => this.RoleType;
 
         public DynamicManyToOneRoleType RoleType { get; }
+
+        public Type Type { get; }
 
         public string Name => this.PluralName;
 

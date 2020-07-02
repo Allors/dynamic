@@ -1,8 +1,12 @@
 ﻿namespace Allors.Dynamic.Meta
 {
+    using System;
+
     public interface DynamicAssociationType
     {
         DynamicRoleType RoleType { get; }
+
+        Type Type { get; }
 
         string Name { get; }
 

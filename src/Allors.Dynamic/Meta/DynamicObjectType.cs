@@ -1,7 +1,7 @@
-﻿using System;
-
-namespace Allors.Dynamic.Meta
+﻿namespace Allors.Dynamic.Meta
 {
+    using System;
+
     public class DynamicObjectType
     {
         internal DynamicObjectType(Type type)

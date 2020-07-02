@@ -117,7 +117,7 @@
 
         internal void SetRole(dynamic association, DynamicRoleType roleType, object role)
         {
-            var normalizedRole = Normalize(roleType, role);
+            var normalizedRole = roleType.Normalize(role);
 
             if (roleType.IsUnit)
             {
@@ -296,87 +296,6 @@
             }
 
             return changedRoleByAssociation;
-        }
-
-        private object Normalize(DynamicRoleType roleType, object role)
-        {
-            if (role == null)
-            {
-                return role;
-            }
-
-            if (roleType.IsUnit)
-            {
-                if (role is string || role.GetType().IsValueType)
-                {
-                    if (role is DateTime dateTime)
-                    {
-                        switch (dateTime.Kind)
-                        {
-                            case DateTimeKind.Local:
-                                dateTime = dateTime.ToUniversalTime();
-                                break;
-                            case DateTimeKind.Unspecified:
-                                throw new ArgumentException("DateTime value is of DateTimeKind.Kind Unspecified. \nUnspecified is only allowed for DateTime.MaxValue and DateTime.MinValue, use DateTimeKind.Utc or DateTimeKind.Local instead.");
-                        }
-
-                        return new DateTime(dateTime.Year, dateTime.Month, dateTime.Day, dateTime.Hour, dateTime.Minute, dateTime.Second, dateTime.Millisecond, DateTimeKind.Utc);
-                    }
-
-                    return role;
-                }
-
-                throw new ArgumentException($"{role.GetType()} is not a Value Type");
-            }
-            else
-            {
-                if (roleType.IsOne)
-                {
-                    switch (role)
-                    {
-                        case System.Dynamic.DynamicObject dynamicObject:
-                            return dynamicObject;
-
-                        case IDynamic reference:
-                            return reference.Instance;
-
-                        default:
-                            throw new ArgumentException($"{role.GetType()} is not a Dynamic Type");
-                    }
-                }
-                else
-                {
-                    if (role is ICollection collection)
-                    {
-                        return this.Normalize(collection).ToArray();
-                    }
-
-                    throw new ArgumentException($"{role.GetType()} is not a collection Type");
-                }
-            }
-        }
-
-        private IEnumerable<dynamic> Normalize(ICollection role)
-        {
-            foreach (var @object in role)
-            {
-                switch (@object)
-                {
-                    case null:
-                        break;
-
-                    case System.Dynamic.DynamicObject dynamicObject:
-                        yield return dynamicObject;
-                        break;
-
-                    case IDynamic reference:
-                        yield return reference.Instance;
-                        break;
-
-                    default:
-                        throw new ArgumentException($"{@object.GetType()} is not a Dynamic Type");
-                }
-            }
         }
     }
 }

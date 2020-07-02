@@ -1,47 +1,150 @@
 namespace Allors.Dynamic.Tests
 {
-    using Allors.Dynamic.Tests.Domain;
     using System;
+    using Allors.Dynamic.Tests.Domain;
     using Xunit;
 
     public class OneToOneTests
     {
         [Fact]
-        public void Set()
+        public void StaticPropertySet()
         {
             DynamicPopulation population = new DynamicPopulation(v =>
             {
-                v.AddUnit<string>("Name");
                 v.AddOneToOne<Organisation, Person>("Property", "Owner");
+                v.AddOneToOne<Organisation, Named>("By", "Named");
             });
 
-            Action<dynamic> name(string name)
-            {
-                return (obj) => obj.Name = name;
-            }
+            var acme = population.New<Organisation>();
+            var gizmo = population.New<Organisation>();
 
-            dynamic acme = population.New<Organisation>(name("Acme"));
-            dynamic gizmo = population.New<Organisation>(name("Gizmo"));
+            var jane = population.New<Person>();
+            var john = population.New<Person>();
 
-            dynamic jane = population.New<Person>(name("Jane"));
-            dynamic john = population.New<Person>(name("John"));
+            acme.Owner(jane);
+
+            Assert.Equal(jane, acme.Owner());
+            Assert.Equal(acme, jane.Property());
+
+            Assert.Null(gizmo.Owner());
+            Assert.Null(john.Property());
+
+            acme.Named(jane);
+
+            Assert.Equal(jane, acme.Named());
+            Assert.Equal(acme, jane.By());
+
+            Assert.Null(gizmo.Named());
+            Assert.Null(john.By());
+        }
+
+        [Fact]
+        public void DynamicPropertySet()
+        {
+            DynamicPopulation population = new DynamicPopulation();
+            var meta = population.Meta;
+            var (property, owner) = meta.AddOneToOne<Organisation, Person>("Property", "Owner");
+            var (organisation, named) = meta.AddOneToOne<Organisation, Person>("By", "Named");
+
+            dynamic acme = population.New<Organisation>();
+            dynamic gizmo = population.New<Organisation>();
+
+            dynamic jane = population.New<Person>();
+            dynamic john = population.New<Person>();
 
             acme.Owner = jane;
-            gizmo.Owner = john;
 
             Assert.Equal(jane, acme.Owner);
-            Assert.Equal(john, gizmo.Owner);
-
             Assert.Equal(acme, jane.Property);
-            Assert.Equal(gizmo, john.Property);
+            Assert.Equal(jane, acme["Owner"]);
+            Assert.Equal(acme, jane["Property"]);
+            Assert.Equal(jane, acme[owner]);
+            Assert.Equal(acme, jane[property]);
 
-            gizmo.Owner = jane;
-
-            Assert.Null(acme.Owner);
-            Assert.Equal(jane, gizmo.Owner);
-
-            Assert.Equal(gizmo, jane.Property);
+            Assert.Null(gizmo.Owner);
             Assert.Null(john.Property);
+            Assert.Null(gizmo["Owner"]);
+            Assert.Null(john["Property"]);
+            Assert.Null(gizmo[owner]);
+            Assert.Null(john[property]);
+
+            // Wrong Type
+            Assert.Throws<ArgumentException>(() =>
+            {
+                acme.Owner = gizmo;
+            });
+        }
+
+        [Fact]
+        public void IndexByNameSet()
+        {
+            DynamicPopulation population = new DynamicPopulation();
+            var meta = population.Meta;
+            var (property, owner) = meta.AddOneToOne<Organisation, Person>("Property", "Owner");
+            var (organisation, named) = meta.AddOneToOne<Organisation, Person>("By", "Named");
+
+            dynamic acme = population.New<Organisation>();
+            dynamic gizmo = population.New<Organisation>();
+            dynamic jane = population.New<Person>();
+            dynamic john = population.New<Person>();
+
+            acme["Owner"] = jane;
+
+            Assert.Equal(jane, acme.Owner);
+            Assert.Equal(acme, jane.Property);
+            Assert.Equal(jane, acme["Owner"]);
+            Assert.Equal(acme, jane["Property"]);
+            Assert.Equal(jane, acme[owner]);
+            Assert.Equal(acme, jane[property]);
+
+            Assert.Null(gizmo.Owner);
+            Assert.Null(john.Property);
+            Assert.Null(gizmo["Owner"]);
+            Assert.Null(john["Property"]);
+            Assert.Null(gizmo[owner]);
+            Assert.Null(john[property]);
+
+            // Wrong Type
+            Assert.Throws<ArgumentException>(() =>
+            {
+                acme["Owner"] = gizmo;
+            });
+        }
+
+        [Fact]
+        public void IndexByRoleSet()
+        {
+            DynamicPopulation population = new DynamicPopulation();
+            var meta = population.Meta;
+            var (property, owner) = meta.AddOneToOne<Organisation, Person>("Property", "Owner");
+            var (organisation, named) = meta.AddOneToOne<Organisation, Person>("By", "Named");
+
+            dynamic acme = population.New<Organisation>();
+            dynamic gizmo = population.New<Organisation>();
+            dynamic jane = population.New<Person>();
+            dynamic john = population.New<Person>();
+
+            acme[owner] = jane;
+
+            Assert.Equal(jane, acme.Owner);
+            Assert.Equal(acme, jane.Property);
+            Assert.Equal(jane, acme["Owner"]);
+            Assert.Equal(acme, jane["Property"]);
+            Assert.Equal(jane, acme[owner]);
+            Assert.Equal(acme, jane[property]);
+
+            Assert.Null(gizmo.Owner);
+            Assert.Null(john.Property);
+            Assert.Null(gizmo["Owner"]);
+            Assert.Null(john["Property"]);
+            Assert.Null(gizmo[owner]);
+            Assert.Null(john[property]);
+
+            // Wrong Type
+            Assert.Throws<ArgumentException>(() =>
+            {
+                acme[owner] = gizmo;
+            });
         }
     }
 }

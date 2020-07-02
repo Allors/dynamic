@@ -23,5 +23,17 @@ namespace Allors.Dynamic.Tests.Domain
             @this.SetRole(nameof(Owner), value);
             return @this;
         }
+
+
+        public static Named Named(this Organisation @this)
+        {
+            return @this.GetRole<Named>(nameof(Named));
+        }
+
+        public static Organisation Named(this Organisation @this, Named value)
+        {
+            @this.SetRole(nameof(Named), value);
+            return @this;
+        }
     }
 }

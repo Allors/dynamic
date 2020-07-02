@@ -5,7 +5,7 @@
     using System.Linq;
     using Allors.Dynamic.Meta;
 
-    public abstract class DynamicObject : System.Dynamic.DynamicObject
+    public abstract class DynamicObject : System.Dynamic.DynamicObject, IDynamicObject
     {
         private readonly DynamicPopulation population;
 
