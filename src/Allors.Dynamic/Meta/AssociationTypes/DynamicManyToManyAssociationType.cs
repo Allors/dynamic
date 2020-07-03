@@ -9,6 +9,8 @@
             roleType.AssociationType = this;
             this.RoleType = roleType;
             this.Type = type;
+            this.SingularName = roleType.SingularNameForAssociation(type);
+            this.PluralName = roleType.PluralNameForAssociation(type);
         }
 
         DynamicRoleType DynamicAssociationType.RoleType => this.RoleType;
@@ -19,9 +21,9 @@
 
         public string Name => this.PluralName;
 
-        public string SingularName { get; internal set; }
+        public string SingularName { get; }
 
-        public string PluralName { get; internal set; }
+        public string PluralName { get; }
 
         public bool IsOne => false;
 

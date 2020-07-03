@@ -8,9 +8,9 @@ namespace Allors.Dynamic.Tests
         [Fact]
         public void PropertySet()
         {
-            DynamicPopulation population = new DynamicPopulation(v => v
-                 .AddUnit<string>("FirstName")
-              );
+            var population = new DynamicPopulation(
+                new Pluralizer(),
+                v => v.AddUnit<Person, string>("FirstName"));
 
             dynamic jubayer = population.New<Person>();
             dynamic walter = population.New<Person>();
@@ -26,9 +26,9 @@ namespace Allors.Dynamic.Tests
         [Fact]
         public void IndexSet()
         {
-            DynamicPopulation population = new DynamicPopulation(v => v
-                 .AddUnit<string>("FirstName")
-              );
+            var population = new DynamicPopulation(
+              new Pluralizer(),
+              v => v.AddUnit<Person, string>("FirstName"));
 
             dynamic jubayer = population.New<Person>();
             dynamic walter = population.New<Person>();

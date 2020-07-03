@@ -5,8 +5,18 @@
     using System.Collections.Generic;
     using System.Linq;
 
-    public static class DynamicRoleTypeExtensions
+    internal static class DynamicRoleTypeExtensions
     {
+        internal static string SingularNameForAssociation(this DynamicRoleType @this, Type type)
+        {
+            return $"{type.Name}Where{@this.SingularName}";
+        }
+
+        internal static string PluralNameForAssociation(this DynamicRoleType @this, Type type)
+        {
+            return $"{@this.Meta.Pluralizer.Pluralize(type.Name)}Where{@this.SingularName}";
+        }
+
         internal static object NormalizeToOne(this DynamicRoleType @this, object value)
         {
             if (value != null)

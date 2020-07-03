@@ -1,8 +1,8 @@
 namespace Allors.Dynamic.Tests
 {
-    using Allors.Dynamic.Tests.Domain;
     using System;
     using System.Linq;
+    using Allors.Dynamic.Tests.Domain;
     using Xunit;
 
     public class DerivationOverrideTests
@@ -10,13 +10,15 @@ namespace Allors.Dynamic.Tests
         [Fact]
         public void Derivation()
         {
-            DynamicPopulation population = new DynamicPopulation(v =>
+            DynamicPopulation population = new DynamicPopulation(
+                new Pluralizer(),
+                v =>
             {
-                v.AddUnit<string>("FirstName");
-                v.AddUnit<string>("LastName");
-                v.AddUnit<string>("FullName");
-                v.AddUnit<DateTime>("DerivedAt");
-                v.AddUnit<string>("Greeting");
+                v.AddUnit<Person, string>("FirstName");
+                v.AddUnit<Person, string>("LastName");
+                v.AddUnit<Person, string>("FullName");
+                v.AddUnit<Person, DateTime>("DerivedAt");
+                v.AddUnit<Person, string>("Greeting");
             });
 
             population.DerivationById["FullName"] = new FullNameDerivation();

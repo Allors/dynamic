@@ -9,9 +9,11 @@ namespace Allors.Dynamic.Tests
         [Fact]
         public void StaticPropertySet()
         {
-            DynamicPopulation population = new DynamicPopulation(v =>
+            DynamicPopulation population = new DynamicPopulation(
+                 new Pluralizer(),
+                 v =>
             {
-                v.AddOneToOne<Organisation, Person>("Property", "Owner");
+                v.AddOneToOne<Organisation, Person>("OrganisationWhereOwner", "Owner");
                 v.AddOneToOne<Organisation, Named>("By", "Named");
             });
 
@@ -24,26 +26,26 @@ namespace Allors.Dynamic.Tests
             acme.Owner(jane);
 
             Assert.Equal(jane, acme.Owner());
-            Assert.Equal(acme, jane.Property());
+            Assert.Equal(acme, jane.OrganisationWhereOwner());
 
             Assert.Null(gizmo.Owner());
-            Assert.Null(john.Property());
+            Assert.Null(john.OrganisationWhereOwner());
 
             acme.Named(jane);
 
             Assert.Equal(jane, acme.Named());
-            Assert.Equal(acme, jane.By());
+            Assert.Equal(acme, jane.OrganisationWhereNamed());
 
             Assert.Null(gizmo.Named());
-            Assert.Null(john.By());
+            Assert.Null(john.OrganisationWhereNamed());
         }
 
         [Fact]
         public void DynamicPropertySet()
         {
-            DynamicPopulation population = new DynamicPopulation();
+            DynamicPopulation population = new DynamicPopulation(new Pluralizer());
             var meta = population.Meta;
-            var (property, owner) = meta.AddOneToOne<Organisation, Person>("Property", "Owner");
+            var (property, owner) = meta.AddOneToOne<Organisation, Person>("OrganisationWhereOwner", "Owner");
             var (organisation, named) = meta.AddOneToOne<Organisation, Person>("By", "Named");
 
             dynamic acme = population.New<Organisation>();
@@ -55,16 +57,16 @@ namespace Allors.Dynamic.Tests
             acme.Owner = jane;
 
             Assert.Equal(jane, acme.Owner);
-            Assert.Equal(acme, jane.Property);
+            Assert.Equal(acme, jane.OrganisationWhereOwner);
             Assert.Equal(jane, acme["Owner"]);
-            Assert.Equal(acme, jane["Property"]);
+            Assert.Equal(acme, jane["OrganisationWhereOwner"]);
             Assert.Equal(jane, acme[owner]);
             Assert.Equal(acme, jane[property]);
 
             Assert.Null(gizmo.Owner);
-            Assert.Null(john.Property);
+            Assert.Null(john.OrganisationWhereOwner);
             Assert.Null(gizmo["Owner"]);
-            Assert.Null(john["Property"]);
+            Assert.Null(john["OrganisationWhereOwner"]);
             Assert.Null(gizmo[owner]);
             Assert.Null(john[property]);
 
@@ -78,9 +80,9 @@ namespace Allors.Dynamic.Tests
         [Fact]
         public void IndexByNameSet()
         {
-            DynamicPopulation population = new DynamicPopulation();
+            DynamicPopulation population = new DynamicPopulation(new Pluralizer());
             var meta = population.Meta;
-            var (property, owner) = meta.AddOneToOne<Organisation, Person>("Property", "Owner");
+            var (property, owner) = meta.AddOneToOne<Organisation, Person>("OrganisationWhereOwner", "Owner");
             var (organisation, named) = meta.AddOneToOne<Organisation, Person>("By", "Named");
 
             dynamic acme = population.New<Organisation>();
@@ -91,16 +93,16 @@ namespace Allors.Dynamic.Tests
             acme["Owner"] = jane;
 
             Assert.Equal(jane, acme.Owner);
-            Assert.Equal(acme, jane.Property);
+            Assert.Equal(acme, jane.OrganisationWhereOwner);
             Assert.Equal(jane, acme["Owner"]);
-            Assert.Equal(acme, jane["Property"]);
+            Assert.Equal(acme, jane["OrganisationWhereOwner"]);
             Assert.Equal(jane, acme[owner]);
             Assert.Equal(acme, jane[property]);
 
             Assert.Null(gizmo.Owner);
-            Assert.Null(john.Property);
+            Assert.Null(john.OrganisationWhereOwner);
             Assert.Null(gizmo["Owner"]);
-            Assert.Null(john["Property"]);
+            Assert.Null(john["OrganisationWhereOwner"]);
             Assert.Null(gizmo[owner]);
             Assert.Null(john[property]);
 
@@ -114,9 +116,9 @@ namespace Allors.Dynamic.Tests
         [Fact]
         public void IndexByRoleSet()
         {
-            DynamicPopulation population = new DynamicPopulation();
+            DynamicPopulation population = new DynamicPopulation(new Pluralizer());
             var meta = population.Meta;
-            var (property, owner) = meta.AddOneToOne<Organisation, Person>("Property", "Owner");
+            var (property, owner) = meta.AddOneToOne<Organisation, Person>("OrganisationWhereOwner", "Owner");
             var (organisation, named) = meta.AddOneToOne<Organisation, Person>("By", "Named");
 
             dynamic acme = population.New<Organisation>();
@@ -127,16 +129,16 @@ namespace Allors.Dynamic.Tests
             acme[owner] = jane;
 
             Assert.Equal(jane, acme.Owner);
-            Assert.Equal(acme, jane.Property);
+            Assert.Equal(acme, jane.OrganisationWhereOwner);
             Assert.Equal(jane, acme["Owner"]);
-            Assert.Equal(acme, jane["Property"]);
+            Assert.Equal(acme, jane["OrganisationWhereOwner"]);
             Assert.Equal(jane, acme[owner]);
             Assert.Equal(acme, jane[property]);
 
             Assert.Null(gizmo.Owner);
-            Assert.Null(john.Property);
+            Assert.Null(john.OrganisationWhereOwner);
             Assert.Null(gizmo["Owner"]);
-            Assert.Null(john["Property"]);
+            Assert.Null(john["OrganisationWhereOwner"]);
             Assert.Null(gizmo[owner]);
             Assert.Null(john[property]);
 

@@ -15,9 +15,9 @@
 
         private readonly DynamicDatabase database;
 
-        public DynamicPopulation(params Action<DynamicMeta>[] builders)
+        public DynamicPopulation(IPluralizer pluralizer, params Action<DynamicMeta>[] builders)
         {
-            this.Meta = new DynamicMeta();
+            this.Meta = new DynamicMeta(pluralizer);
 
             this.DerivationById = new Dictionary<string, IDynamicDerivation>();
 
@@ -141,7 +141,7 @@
             return (T)result;
         }
 
-        internal void Get(DynamicObject obj, DynamicRoleType roleType, out object result)
+        private void Get(DynamicObject obj, DynamicRoleType roleType, out object result)
         {
             this.database.GetRole(obj, roleType, out result);
 
@@ -151,7 +151,7 @@
             }
         }
 
-        internal void Get(DynamicObject obj, DynamicAssociationType associationType, out object result)
+        private void Get(DynamicObject obj, DynamicAssociationType associationType, out object result)
         {
             this.database.GetAssociation(obj, associationType, out result);
 
@@ -161,17 +161,17 @@
             }
         }
 
-        internal void Set(DynamicObject obj, DynamicRoleType roleType, object role)
+        private void Set(DynamicObject obj, DynamicRoleType roleType, object role)
         {
             this.database.SetRole(obj, roleType, role);
         }
 
-        internal void Add(DynamicObject obj, DynamicRoleType roleType, DynamicObject role)
+        private void Add(DynamicObject obj, DynamicRoleType roleType, DynamicObject role)
         {
             this.database.AddRole(obj, roleType, role);
         }
 
-        internal void Remove(DynamicObject obj, DynamicRoleType roleType, DynamicObject role)
+        private void Remove(DynamicObject obj, DynamicRoleType roleType, DynamicObject role)
         {
             this.database.RemoveRole(obj, roleType, role);
         }

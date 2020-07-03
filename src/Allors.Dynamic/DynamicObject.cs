@@ -58,16 +58,6 @@
             }
         }
 
-        public void Get(DynamicRoleType roleType, out object result) => this.population.Get(this, roleType, out result);
-
-        public void Get(DynamicAssociationType associationType, out object result) => this.population.Get(this, associationType, out result);
-
-        public void Set(DynamicRoleType roleType, object role) => this.population.Set(this, roleType, role);
-
-        public void Add(DynamicRoleType roleType, DynamicObject role) => this.population.Add(this, roleType, role);
-
-        public void Remove(DynamicRoleType roleType, DynamicObject role) => this.population.Remove(this, roleType, role);
-
         public T GetRole<T>(string name) => this.population.GetRole<T>(this, name);
 
         public void SetRole<T>(string name, T value) => this.population.SetRole<T>(this, name, value);

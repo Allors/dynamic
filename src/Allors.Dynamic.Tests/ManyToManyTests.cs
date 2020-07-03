@@ -8,8 +8,9 @@ namespace Allors.Dynamic.Tests
         [Fact]
         public void SingleActiveLink()
         {
-            DynamicPopulation population = new DynamicPopulation(v => v
-                 .AddManyToMany<Organisation, Person>("Employer", "Employee"));
+            DynamicPopulation population = new DynamicPopulation(
+                  new Pluralizer(),
+                  v => v.AddManyToMany<Organisation, Person>("Employer", "Employee"));
 
             dynamic acme = population.New<Organisation>();
             dynamic hooli = population.New<Organisation>();
@@ -22,14 +23,14 @@ namespace Allors.Dynamic.Tests
             acme.AddEmployee(john);
             acme.AddEmployee(jenny);
 
-            Assert.Single(jane.Employers);
-            Assert.Contains(acme, jane.Employers);
+            Assert.Single(jane.OrganisationWhereEmployee);
+            Assert.Contains(acme, jane.OrganisationWhereEmployee);
 
-            Assert.Single(john.Employers);
-            Assert.Contains(acme, john.Employers);
+            Assert.Single(john.OrganisationWhereEmployee);
+            Assert.Contains(acme, john.OrganisationWhereEmployee);
 
-            Assert.Single(jenny.Employers);
-            Assert.Contains(acme, jenny.Employers);
+            Assert.Single(jenny.OrganisationWhereEmployee);
+            Assert.Contains(acme, jenny.OrganisationWhereEmployee);
 
             Assert.Equal(3, acme.Employees.Length);
             Assert.Contains(jane, acme.Employees);
@@ -42,8 +43,9 @@ namespace Allors.Dynamic.Tests
         [Fact]
         public void MultipeleActiveLinks()
         {
-            DynamicPopulation population = new DynamicPopulation(v => v
-                 .AddManyToMany<Organisation, Person>("Employer", "Employee"));
+            DynamicPopulation population = new DynamicPopulation(
+                  new Pluralizer(),
+                  v => v.AddManyToMany<Organisation, Person>("Employer", "Employee"));
 
             dynamic acme = population.New<Organisation>();
             dynamic hooli = population.New<Organisation>();
@@ -58,15 +60,15 @@ namespace Allors.Dynamic.Tests
 
             hooli.AddEmployee(jane);
 
-            Assert.Equal(2, jane.Employers.Length);
-            Assert.Contains(acme, jane.Employers);
-            Assert.Contains(hooli, jane.Employers);
+            Assert.Equal(2, jane.OrganisationWhereEmployee.Length);
+            Assert.Contains(acme, jane.OrganisationWhereEmployee);
+            Assert.Contains(hooli, jane.OrganisationWhereEmployee);
 
-            Assert.Single(john.Employers);
-            Assert.Contains(acme, john.Employers);
+            Assert.Single(john.OrganisationWhereEmployee);
+            Assert.Contains(acme, john.OrganisationWhereEmployee);
 
-            Assert.Single(jenny.Employers);
-            Assert.Contains(acme, jenny.Employers);
+            Assert.Single(jenny.OrganisationWhereEmployee);
+            Assert.Contains(acme, jenny.OrganisationWhereEmployee);
 
             Assert.Equal(3, acme.Employees.Length);
             Assert.Contains(jane, acme.Employees);
@@ -78,16 +80,16 @@ namespace Allors.Dynamic.Tests
 
             hooli.AddEmployee(john);
 
-            Assert.Equal(2, jane.Employers.Length);
-            Assert.Contains(acme, jane.Employers);
-            Assert.Contains(hooli, jane.Employers);
+            Assert.Equal(2, jane.OrganisationWhereEmployee.Length);
+            Assert.Contains(acme, jane.OrganisationWhereEmployee);
+            Assert.Contains(hooli, jane.OrganisationWhereEmployee);
 
-            Assert.Equal(2, john.Employers.Length);
-            Assert.Contains(acme, john.Employers);
-            Assert.Contains(hooli, john.Employers);
+            Assert.Equal(2, john.OrganisationWhereEmployee.Length);
+            Assert.Contains(acme, john.OrganisationWhereEmployee);
+            Assert.Contains(hooli, john.OrganisationWhereEmployee);
 
-            Assert.Single(jenny.Employers);
-            Assert.Contains(acme, jenny.Employers);
+            Assert.Single(jenny.OrganisationWhereEmployee);
+            Assert.Contains(acme, jenny.OrganisationWhereEmployee);
 
             Assert.Equal(3, acme.Employees.Length);
             Assert.Contains(jane, acme.Employees);
@@ -100,17 +102,17 @@ namespace Allors.Dynamic.Tests
 
             hooli.AddEmployee(jenny);
 
-            Assert.Equal(2, jane.Employers.Length);
-            Assert.Contains(acme, jane.Employers);
-            Assert.Contains(hooli, jane.Employers);
+            Assert.Equal(2, jane.OrganisationWhereEmployee.Length);
+            Assert.Contains(acme, jane.OrganisationWhereEmployee);
+            Assert.Contains(hooli, jane.OrganisationWhereEmployee);
 
-            Assert.Equal(2, john.Employers.Length);
-            Assert.Contains(acme, john.Employers);
-            Assert.Contains(hooli, john.Employers);
+            Assert.Equal(2, john.OrganisationWhereEmployee.Length);
+            Assert.Contains(acme, john.OrganisationWhereEmployee);
+            Assert.Contains(hooli, john.OrganisationWhereEmployee);
 
-            Assert.Equal(2, jenny.Employers.Length);
-            Assert.Contains(acme, jenny.Employers);
-            Assert.Contains(hooli, jenny.Employers);
+            Assert.Equal(2, jenny.OrganisationWhereEmployee.Length);
+            Assert.Contains(acme, jenny.OrganisationWhereEmployee);
+            Assert.Contains(hooli, jenny.OrganisationWhereEmployee);
 
             Assert.Equal(3, acme.Employees.Length);
             Assert.Contains(jane, acme.Employees);

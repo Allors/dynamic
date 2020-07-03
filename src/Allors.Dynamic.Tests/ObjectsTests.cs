@@ -1,8 +1,8 @@
 namespace Allors.Dynamic.Tests
 {
-    using Allors.Dynamic.Tests.Domain;
     using System;
     using System.Linq;
+    using Allors.Dynamic.Tests.Domain;
     using Xunit;
 
     public class ObjectsTests
@@ -10,10 +10,12 @@ namespace Allors.Dynamic.Tests
         [Fact]
         public void Filter()
         {
-            DynamicPopulation population = new DynamicPopulation(v =>
+            DynamicPopulation population = new DynamicPopulation(
+                  new Pluralizer(),
+                  v =>
             {
-                v.AddUnit<string>("FirstName");
-                v.AddUnit<string>("LastName");
+                v.AddUnit<Person, string>("FirstName");
+                v.AddUnit<Person, string>("LastName");
             });
 
             dynamic Create<T>(params Action<T>[] builders)
@@ -32,14 +34,14 @@ namespace Allors.Dynamic.Tests
                 return (obj) => obj.LastName = lastName;
             }
 
-            dynamic person(string firstName, string lastName)
+            dynamic NewPerson(string firstName, string lastName)
             {
                 return Create<Person>(FirstName(firstName), LastName(lastName));
             }
 
-            dynamic jane = person("Jane", "Doe");
-            dynamic john = person("John", "Doe");
-            dynamic jenny = person("Jenny", "Doe");
+            dynamic jane = NewPerson("Jane", "Doe");
+            dynamic john = NewPerson("John", "Doe");
+            dynamic jenny = NewPerson("Jenny", "Doe");
 
             dynamic[] lastNameDoe = population.Objects.Where(v => v.LastName == "Doe").ToArray();
 

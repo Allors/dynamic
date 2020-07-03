@@ -9,8 +9,9 @@ namespace Allors.Dynamic.Tests
         [Fact]
         public void AddSameAssociation()
         {
-            DynamicPopulation population = new DynamicPopulation(v => v
-                    .AddOneToMany<Organisation, Person>("Employer", "Employee"));
+            DynamicPopulation population = new DynamicPopulation(
+                  new Pluralizer(),
+                  v => v.AddOneToMany<Organisation, Person>("Employer", "Employee"));
 
             dynamic acme = population.New<Organisation>();
             dynamic jane = population.New<Person>();
@@ -25,17 +26,19 @@ namespace Allors.Dynamic.Tests
             Assert.Contains(john, acme.Employees);
             Assert.Contains(jenny, acme.Employees);
 
-            Assert.Equal(acme, jane.Employer);
-            Assert.Equal(acme, john.Employer);
-            Assert.Equal(acme, jenny.Employer);
+            Assert.Equal(acme, jane.OrganisationWhereEmployee);
+            Assert.Equal(acme, john.OrganisationWhereEmployee);
+            Assert.Equal(acme, jenny.OrganisationWhereEmployee);
         }
 
         [Fact]
         public void AddDifferentAssociation()
         {
-            DynamicPopulation population = new DynamicPopulation(v =>
+            DynamicPopulation population = new DynamicPopulation(
+                  new Pluralizer(),
+                  v =>
             {
-                v.AddUnit<string>("Name");
+                v.AddUnit<Named, string>("Name");
                 v.AddOneToMany<Organisation, Person>("Employer", "Employee");
             });
 
@@ -66,18 +69,19 @@ namespace Allors.Dynamic.Tests
             Assert.Contains(john, acme.Employees);
             Assert.Contains(jenny, acme.Employees);
 
-            Assert.Equal(hooli, jane.Employer);
+            Assert.Equal(hooli, jane.OrganisationWhereEmployee);
 
-            Assert.NotEqual(acme, jane.Employer);
-            Assert.Equal(acme, john.Employer);
-            Assert.Equal(acme, jenny.Employer);
+            Assert.NotEqual(acme, jane.OrganisationWhereEmployee);
+            Assert.Equal(acme, john.OrganisationWhereEmployee);
+            Assert.Equal(acme, jenny.OrganisationWhereEmployee);
         }
 
         [Fact]
         public void Remove()
         {
-            DynamicPopulation population = new DynamicPopulation(v => v
-                 .AddOneToMany<Organisation, Person>("Employer", "Employee"));
+            DynamicPopulation population = new DynamicPopulation(
+                 new Pluralizer(),
+                 v => v.AddOneToMany<Organisation, Person>("Employer", "Employee"));
 
             dynamic acme = population.New<Organisation>();
             dynamic jane = population.New<Person>();
@@ -94,9 +98,9 @@ namespace Allors.Dynamic.Tests
             Assert.Contains(john, acme.Employees);
             Assert.Contains(jenny, acme.Employees);
 
-            Assert.NotEqual(acme, jane.Employer);
-            Assert.Equal(acme, john.Employer);
-            Assert.Equal(acme, jenny.Employer);
+            Assert.NotEqual(acme, jane.OrganisationWhereEmployee);
+            Assert.Equal(acme, john.OrganisationWhereEmployee);
+            Assert.Equal(acme, jenny.OrganisationWhereEmployee);
 
             acme.RemoveEmployee(john);
 
@@ -104,9 +108,9 @@ namespace Allors.Dynamic.Tests
             Assert.DoesNotContain(john, acme.Employees);
             Assert.Contains(jenny, acme.Employees);
 
-            Assert.NotEqual(acme, jane.Employer);
-            Assert.NotEqual(acme, john.Employer);
-            Assert.Equal(acme, jenny.Employer);
+            Assert.NotEqual(acme, jane.OrganisationWhereEmployee);
+            Assert.NotEqual(acme, john.OrganisationWhereEmployee);
+            Assert.Equal(acme, jenny.OrganisationWhereEmployee);
 
             acme.RemoveEmployee(jenny);
 
@@ -114,9 +118,9 @@ namespace Allors.Dynamic.Tests
             Assert.DoesNotContain(john, acme.Employees);
             Assert.DoesNotContain(jenny, acme.Employees);
 
-            Assert.NotEqual(acme, jane.Employer);
-            Assert.NotEqual(acme, john.Employer);
-            Assert.NotEqual(acme, jenny.Employer);
+            Assert.NotEqual(acme, jane.OrganisationWhereEmployee);
+            Assert.NotEqual(acme, john.OrganisationWhereEmployee);
+            Assert.NotEqual(acme, jenny.OrganisationWhereEmployee);
         }
     }
 }

@@ -8,10 +8,12 @@ namespace Allors.Dynamic.Tests
         [Fact]
         public void Snapshot()
         {
-            DynamicPopulation population = new DynamicPopulation(v =>
+            DynamicPopulation population = new DynamicPopulation(
+                 new Pluralizer(),
+                 v =>
             {
-                v.AddUnit<string>("FirstName");
-                v.AddUnit<string>("LastName");
+                v.AddUnit<Person, string>("FirstName");
+                v.AddUnit<Person, string>("LastName");
             });
 
             dynamic john = population.New<Person>();

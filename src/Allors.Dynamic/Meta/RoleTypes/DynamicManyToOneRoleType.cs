@@ -1,16 +1,16 @@
 ﻿namespace Allors.Dynamic.Meta
 {
     using System;
-    using System.Collections;
-    using System.Collections.Generic;
 
     public class DynamicManyToOneRoleType : DynamicToOneRoleType
     {
-        public DynamicManyToOneRoleType(DynamicMeta meta, Type type)
+        public DynamicManyToOneRoleType(DynamicMeta meta, Type type, string singularName)
         {
             this.Meta = meta;
             this.Type = type;
             this.TypeCode = System.Type.GetTypeCode(type);
+            this.SingularName = singularName ?? type.Name;
+            this.PluralName = meta.Pluralizer.Pluralize(this.SingularName);
         }
 
         public DynamicMeta Meta { get; }
@@ -25,9 +25,9 @@
 
         public string Name => this.SingularName;
 
-        public string SingularName { get; internal set; }
+        public string SingularName { get; }
 
-        public string PluralName { get; internal set; }
+        public string PluralName { get; }
 
         public bool IsOne => true;
 

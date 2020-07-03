@@ -5,10 +5,13 @@
 
     public class DynamicUnitRoleType : DynamicRoleType
     {
-        public DynamicUnitRoleType(DynamicMeta meta, Type type)
+        public DynamicUnitRoleType(DynamicMeta meta, Type type, string singularName)
         {
             this.Meta = meta;
             this.Type = type;
+            this.TypeCode = Type.GetTypeCode(type);
+            this.SingularName = singularName ?? type.Name;
+            this.PluralName = meta.Pluralizer.Pluralize(this.SingularName);
         }
 
         public Type Type { get; }
@@ -21,9 +24,9 @@
 
         public string Name => this.SingularName;
 
-        public string SingularName { get; internal set; }
+        public string SingularName { get; }
 
-        public string PluralName { get; internal set; }
+        public string PluralName { get; }
 
         public bool IsOne => true;
 
