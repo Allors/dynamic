@@ -5,7 +5,7 @@
     using System.Collections.Generic;
     using System.Linq;
 
-    public class DynamicOneToManyRoleType : DynamicToManyRoleType
+    public class DynamicOneToManyRoleType : IDynamicToManyRoleType
     {
         public DynamicOneToManyRoleType(DynamicMeta meta, Type type, string singularName)
         {
@@ -22,7 +22,7 @@
 
         public TypeCode TypeCode { get; }
 
-        DynamicAssociationType DynamicRoleType.AssociationType => this.AssociationType;
+        IDynamicAssociationType IDynamicRoleType.AssociationType => this.AssociationType;
 
         public DynamicOneToManyAssociationType AssociationType { get; internal set; }
 

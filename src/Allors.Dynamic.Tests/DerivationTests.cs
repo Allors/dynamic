@@ -1,5 +1,6 @@
 namespace Allors.Dynamic.Tests
 {
+    using Allors.Dynamic.Meta;
     using Allors.Dynamic.Tests.Domain;
     using System;
     using System.Linq;
@@ -10,8 +11,8 @@ namespace Allors.Dynamic.Tests
         [Fact]
         public void Derivation()
         {
-            DynamicPopulation population = new DynamicPopulation(
-                 new Pluralizer(),
+            var population = new Default.DynamicPopulation(
+                 new DynamicMeta(new Pluralizer()),
                  v =>
             {
                 v.AddUnit<Person, string>("FirstName");

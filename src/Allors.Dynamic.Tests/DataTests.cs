@@ -1,5 +1,6 @@
 namespace Allors.Dynamic.Tests
 {
+    using Allors.Dynamic.Meta;
     using Allors.Dynamic.Tests.Domain;
     using Xunit;
 
@@ -8,8 +9,8 @@ namespace Allors.Dynamic.Tests
         [Fact]
         public void PropertySet()
         {
-            var population = new DynamicPopulation(
-                new Pluralizer(),
+            var population = new Default.DynamicPopulation(
+                new DynamicMeta(new Pluralizer()),
                 v => v.AddUnit<Person, string>("FirstName"));
 
             dynamic jubayer = population.New<Person>();
@@ -26,8 +27,8 @@ namespace Allors.Dynamic.Tests
         [Fact]
         public void IndexSet()
         {
-            var population = new DynamicPopulation(
-              new Pluralizer(),
+            var population = new Default.DynamicPopulation(
+              new DynamicMeta(new Pluralizer()),
               v => v.AddUnit<Person, string>("FirstName"));
 
             dynamic jubayer = population.New<Person>();

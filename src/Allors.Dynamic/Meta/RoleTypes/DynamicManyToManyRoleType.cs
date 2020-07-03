@@ -2,7 +2,7 @@
 {
     using System;
 
-    public class DynamicManyToManyRoleType : DynamicToManyRoleType
+    public class DynamicManyToManyRoleType : IDynamicToManyRoleType
     {
         public DynamicManyToManyRoleType(DynamicMeta meta, Type type, string singularName)
         {
@@ -19,7 +19,7 @@
 
         public TypeCode TypeCode { get; }
 
-        DynamicAssociationType DynamicRoleType.AssociationType => this.AssociationType;
+        IDynamicAssociationType IDynamicRoleType.AssociationType => this.AssociationType;
 
         public DynamicManyToManyAssociationType AssociationType { get; internal set; }
 

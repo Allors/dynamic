@@ -2,7 +2,7 @@
 {
     using System;
 
-    public class DynamicOneToOneAssociationType : DynamicOneToAssociationType
+    public class DynamicOneToOneAssociationType : IDynamicOneToAssociationType
     {
         public DynamicOneToOneAssociationType(DynamicOneToOneRoleType roleType, Type type)
         {
@@ -13,7 +13,7 @@
             this.PluralName = roleType.PluralNameForAssociation(type);
         }
 
-        DynamicRoleType DynamicAssociationType.RoleType => this.RoleType;
+        IDynamicRoleType IDynamicAssociationType.RoleType => this.RoleType;
 
         public DynamicOneToOneRoleType RoleType { get; }
 

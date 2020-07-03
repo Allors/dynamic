@@ -2,7 +2,7 @@
 {
     using System;
 
-    public interface DynamicRoleType
+    public interface IDynamicRoleType
     {
         DynamicMeta Meta { get; }
 
@@ -10,7 +10,7 @@
 
         TypeCode TypeCode { get; }
 
-        DynamicAssociationType AssociationType { get; }
+        IDynamicAssociationType AssociationType { get; }
 
         string Name { get; }
 

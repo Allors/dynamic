@@ -5,11 +5,11 @@
     using System.Linq;
     using Allors.Dynamic.Meta;
 
-    public abstract class DynamicObject : System.Dynamic.DynamicObject, IDynamicObject
+    public abstract class DynamicObject : System.Dynamic.DynamicObject
     {
-        private readonly DynamicPopulation population;
+        private readonly IDynamicPopulation population;
 
-        protected DynamicObject(DynamicPopulation population)
+        protected DynamicObject(IDynamicPopulation population)
         {
             this.population = population;
         }
@@ -47,12 +47,12 @@
         /// <inheritdoc/>
         public override IEnumerable<string> GetDynamicMemberNames()
         {
-            foreach (DynamicRoleType roleType in this.population.Meta.RoleTypeByName.Values.ToArray().Distinct())
+            foreach (IDynamicRoleType roleType in this.population.Meta.RoleTypeByName.Values.ToArray().Distinct())
             {
                 yield return roleType.Name;
             }
 
-            foreach (DynamicAssociationType associationType in this.population.Meta.AssociationTypeByName.Values.ToArray().Distinct())
+            foreach (IDynamicAssociationType associationType in this.population.Meta.AssociationTypeByName.Values.ToArray().Distinct())
             {
                 yield return associationType.Name;
             }

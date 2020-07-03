@@ -1,5 +1,6 @@
 namespace Allors.Dynamic.Tests
 {
+    using Allors.Dynamic.Meta;
     using Allors.Dynamic.Tests.Domain;
     using Xunit;
 
@@ -8,8 +9,8 @@ namespace Allors.Dynamic.Tests
         [Fact]
         public void SingleActiveLink()
         {
-            DynamicPopulation population = new DynamicPopulation(
-                  new Pluralizer(),
+            var population = new Default.DynamicPopulation(
+                  new DynamicMeta(new Pluralizer()),
                   v => v.AddManyToMany<Organisation, Person>("Employer", "Employee"));
 
             dynamic acme = population.New<Organisation>();
@@ -43,9 +44,9 @@ namespace Allors.Dynamic.Tests
         [Fact]
         public void MultipeleActiveLinks()
         {
-            DynamicPopulation population = new DynamicPopulation(
-                  new Pluralizer(),
-                  v => v.AddManyToMany<Organisation, Person>("Employer", "Employee"));
+            var population = new Default.DynamicPopulation(
+                  new DynamicMeta(new Pluralizer()),
+                   v => v.AddManyToMany<Organisation, Person>("Employer", "Employee"));
 
             dynamic acme = population.New<Organisation>();
             dynamic hooli = population.New<Organisation>();

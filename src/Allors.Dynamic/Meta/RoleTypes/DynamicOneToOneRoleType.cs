@@ -2,7 +2,7 @@
 {
     using System;
 
-    public class DynamicOneToOneRoleType : DynamicToOneRoleType
+    public class DynamicOneToOneRoleType : IDynamicToOneRoleType
     {
         public DynamicOneToOneRoleType(DynamicMeta meta, Type type, string singularName)
         {
@@ -20,7 +20,7 @@
         public TypeCode TypeCode { get; }
 
 
-        DynamicAssociationType DynamicRoleType.AssociationType => this.AssociationType;
+        IDynamicAssociationType IDynamicRoleType.AssociationType => this.AssociationType;
 
         public DynamicOneToOneAssociationType AssociationType { get; internal set; }
 

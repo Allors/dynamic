@@ -1,5 +1,6 @@
 namespace Allors.Dynamic.Tests
 {
+    using Allors.Dynamic.Meta;
     using Allors.Dynamic.Tests.Domain;
     using Xunit;
 
@@ -8,7 +9,7 @@ namespace Allors.Dynamic.Tests
         [Fact]
         public void New()
         {
-            var population = new DynamicPopulation(new Pluralizer());
+            var population = new Default.DynamicPopulation(new DynamicMeta(new Pluralizer()));
             var name = population.Meta.AddUnit<Named, string>("Name");
             var (property, owner) = population.Meta.AddOneToOne<Organisation, Person>("OrganisationWhereOwner", "Owner");
 

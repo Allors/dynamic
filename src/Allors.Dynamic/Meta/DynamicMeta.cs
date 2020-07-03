@@ -2,22 +2,21 @@
 {
     using System;
     using System.Collections.Generic;
-    using System.Globalization;
 
     public class DynamicMeta
     {
-        internal DynamicMeta(IPluralizer pluralizer)
+        public DynamicMeta(IPluralizer pluralizer)
         {
             this.Pluralizer = pluralizer;
-            this.AssociationTypeByName = new Dictionary<string, DynamicAssociationType>();
-            this.RoleTypeByName = new Dictionary<string, DynamicRoleType>();
+            this.AssociationTypeByName = new Dictionary<string, IDynamicAssociationType>();
+            this.RoleTypeByName = new Dictionary<string, IDynamicRoleType>();
         }
 
         public IPluralizer Pluralizer { get; }
 
-        public Dictionary<string, DynamicAssociationType> AssociationTypeByName { get; }
+        public Dictionary<string, IDynamicAssociationType> AssociationTypeByName { get; }
 
-        public Dictionary<string, DynamicRoleType> RoleTypeByName { get; }
+        public Dictionary<string, IDynamicRoleType> RoleTypeByName { get; }
 
         public DynamicUnitRoleType AddUnit<TAssociation, TRole>(string roleName)
         {
@@ -74,7 +73,7 @@
             return roleType;
         }
 
-        private void AddAssociationType(DynamicAssociationType associationType)
+        private void AddAssociationType(IDynamicAssociationType associationType)
         {
             this.CheckNames(associationType.SingularName, associationType.PluralName);
 
@@ -82,7 +81,7 @@
             this.AssociationTypeByName.Add(associationType.PluralName, associationType);
         }
 
-        private void AddRoleType(DynamicRoleType roleType)
+        private void AddRoleType(IDynamicRoleType roleType)
         {
             this.CheckNames(roleType.SingularName, roleType.PluralName);
 

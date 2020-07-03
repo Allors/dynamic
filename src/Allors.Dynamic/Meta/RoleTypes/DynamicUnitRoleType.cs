@@ -3,7 +3,7 @@
     using System;
     using System.Collections;
 
-    public class DynamicUnitRoleType : DynamicRoleType
+    public class DynamicUnitRoleType : IDynamicRoleType
     {
         public DynamicUnitRoleType(DynamicMeta meta, Type type, string singularName)
         {
@@ -20,7 +20,7 @@
 
         public DynamicMeta Meta { get; }
 
-        public DynamicAssociationType AssociationType { get; internal set; }
+        public IDynamicAssociationType AssociationType { get; internal set; }
 
         public string Name => this.SingularName;
 

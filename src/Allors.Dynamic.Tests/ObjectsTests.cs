@@ -2,6 +2,7 @@ namespace Allors.Dynamic.Tests
 {
     using System;
     using System.Linq;
+    using Allors.Dynamic.Meta;
     using Allors.Dynamic.Tests.Domain;
     using Xunit;
 
@@ -10,8 +11,8 @@ namespace Allors.Dynamic.Tests
         [Fact]
         public void Filter()
         {
-            DynamicPopulation population = new DynamicPopulation(
-                  new Pluralizer(),
+            var population = new Default.DynamicPopulation(
+                 new DynamicMeta(new Pluralizer()),
                   v =>
             {
                 v.AddUnit<Person, string>("FirstName");

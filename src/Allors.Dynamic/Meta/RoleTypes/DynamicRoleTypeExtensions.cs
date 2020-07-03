@@ -7,17 +7,17 @@
 
     internal static class DynamicRoleTypeExtensions
     {
-        internal static string SingularNameForAssociation(this DynamicRoleType @this, Type type)
+        internal static string SingularNameForAssociation(this IDynamicRoleType @this, Type type)
         {
             return $"{type.Name}Where{@this.SingularName}";
         }
 
-        internal static string PluralNameForAssociation(this DynamicRoleType @this, Type type)
+        internal static string PluralNameForAssociation(this IDynamicRoleType @this, Type type)
         {
             return $"{@this.Meta.Pluralizer.Pluralize(type.Name)}Where{@this.SingularName}";
         }
 
-        internal static object NormalizeToOne(this DynamicRoleType @this, object value)
+        internal static object NormalizeToOne(this IDynamicRoleType @this, object value)
         {
             if (value != null)
             {
@@ -30,7 +30,7 @@
             return value;
         }
 
-        internal static object NormalizeToMany(this DynamicRoleType @this, object value)
+        internal static object NormalizeToMany(this IDynamicRoleType @this, object value)
         {
             if (value == null)
             {
@@ -45,7 +45,7 @@
             throw new ArgumentException($"{value.GetType()} is not a collection Type");
         }
 
-        private static IEnumerable<dynamic> NormalizeToMany(this DynamicRoleType @this, ICollection role)
+        private static IEnumerable<dynamic> NormalizeToMany(this IDynamicRoleType @this, ICollection role)
         {
             foreach (var @object in role)
             {

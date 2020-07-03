@@ -2,7 +2,7 @@ namespace Allors.Dynamic.Tests.Domain
 {
     public class Organisation : DynamicObject, Named
     {
-        public Organisation(DynamicPopulation population)
+        public Organisation(IDynamicPopulation population)
             : base(population)
         {
         }

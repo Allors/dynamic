@@ -1,6 +1,7 @@
 namespace Allors.Dynamic.Tests
 {
     using System;
+    using Allors.Dynamic.Meta;
     using Allors.Dynamic.Tests.Domain;
     using Xunit;
 
@@ -9,8 +10,8 @@ namespace Allors.Dynamic.Tests
         [Fact]
         public void StaticPropertySet()
         {
-            DynamicPopulation population = new DynamicPopulation(
-                 new Pluralizer(),
+            var population = new Default.DynamicPopulation(
+                 new DynamicMeta(new Pluralizer()),
                  v =>
             {
                 v.AddOneToOne<Organisation, Person>("OrganisationWhereOwner", "Owner");
@@ -43,8 +44,8 @@ namespace Allors.Dynamic.Tests
         [Fact]
         public void DynamicPropertySet()
         {
-            DynamicPopulation population = new DynamicPopulation(new Pluralizer());
-            var meta = population.Meta;
+            var meta = new DynamicMeta(new Pluralizer());
+            var population = new Default.DynamicPopulation(meta);
             var (property, owner) = meta.AddOneToOne<Organisation, Person>("OrganisationWhereOwner", "Owner");
             var (organisation, named) = meta.AddOneToOne<Organisation, Person>("By", "Named");
 
@@ -80,8 +81,8 @@ namespace Allors.Dynamic.Tests
         [Fact]
         public void IndexByNameSet()
         {
-            DynamicPopulation population = new DynamicPopulation(new Pluralizer());
-            var meta = population.Meta;
+            var meta = new DynamicMeta(new Pluralizer());
+            var population = new Default.DynamicPopulation(meta);
             var (property, owner) = meta.AddOneToOne<Organisation, Person>("OrganisationWhereOwner", "Owner");
             var (organisation, named) = meta.AddOneToOne<Organisation, Person>("By", "Named");
 
@@ -116,8 +117,8 @@ namespace Allors.Dynamic.Tests
         [Fact]
         public void IndexByRoleSet()
         {
-            DynamicPopulation population = new DynamicPopulation(new Pluralizer());
-            var meta = population.Meta;
+            var meta = new DynamicMeta(new Pluralizer());
+            var population = new Default.DynamicPopulation(meta);
             var (property, owner) = meta.AddOneToOne<Organisation, Person>("OrganisationWhereOwner", "Owner");
             var (organisation, named) = meta.AddOneToOne<Organisation, Person>("By", "Named");
 

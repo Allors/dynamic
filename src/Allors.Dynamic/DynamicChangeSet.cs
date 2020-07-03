@@ -6,10 +6,10 @@
 
     public class DynamicChangeSet
     {
-        private readonly Dictionary<DynamicRoleType, Dictionary<DynamicObject, object>> roleByAssociationByRoleType;
-        private readonly Dictionary<DynamicAssociationType, Dictionary<DynamicObject, object>> associationByRoleByRoleType;
+        private readonly Dictionary<IDynamicRoleType, Dictionary<DynamicObject, object>> roleByAssociationByRoleType;
+        private readonly Dictionary<IDynamicAssociationType, Dictionary<DynamicObject, object>> associationByRoleByRoleType;
 
-        public DynamicChangeSet(DynamicMeta meta, Dictionary<DynamicRoleType, Dictionary<DynamicObject, object>> roleByAssociationByRoleType, Dictionary<DynamicAssociationType, Dictionary<DynamicObject, object>> associationByRoleByAssociationType)
+        public DynamicChangeSet(DynamicMeta meta, Dictionary<IDynamicRoleType, Dictionary<DynamicObject, object>> roleByAssociationByRoleType, Dictionary<IDynamicAssociationType, Dictionary<DynamicObject, object>> associationByRoleByAssociationType)
         {
             this.Meta = meta;
             this.roleByAssociationByRoleType = roleByAssociationByRoleType;
@@ -24,11 +24,11 @@
 
         public Dictionary<DynamicObject, object> ChangedRoles(string name)
         {
-            DynamicRoleType roleType = this.Meta.RoleTypeByName[name];
+            IDynamicRoleType roleType = this.Meta.RoleTypeByName[name];
             return this.ChangedRoles(roleType);
         }
 
-        public Dictionary<DynamicObject, object> ChangedRoles(DynamicRoleType roleType)
+        public Dictionary<DynamicObject, object> ChangedRoles(IDynamicRoleType roleType)
         {
             this.roleByAssociationByRoleType.TryGetValue(roleType, out Dictionary<DynamicObject, object> changedRelations);
             return changedRelations;

@@ -1,4 +1,4 @@
-﻿namespace Allors.Dynamic
+﻿namespace Allors.Dynamic.Default
 {
     using System;
 

@@ -2,9 +2,9 @@
 {
     using System;
 
-    public interface DynamicAssociationType
+    public interface IDynamicAssociationType
     {
-        DynamicRoleType RoleType { get; }
+        IDynamicRoleType RoleType { get; }
 
         Type Type { get; }
 
