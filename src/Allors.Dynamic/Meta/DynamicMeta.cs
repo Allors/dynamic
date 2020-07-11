@@ -8,99 +8,40 @@
         public DynamicMeta(IPluralizer pluralizer)
         {
             this.Pluralizer = pluralizer;
-            this.AssociationTypeByName = new Dictionary<string, IDynamicAssociationType>();
-            this.RoleTypeByName = new Dictionary<string, IDynamicRoleType>();
+            this.ObjectTypeByType = new Dictionary<Type, DynamicObjectType>();
         }
 
         public IPluralizer Pluralizer { get; }
 
-        public Dictionary<string, IDynamicAssociationType> AssociationTypeByName { get; }
+        public IDictionary<Type, DynamicObjectType> ObjectTypeByType { get; }
 
-        public Dictionary<string, IDynamicRoleType> RoleTypeByName { get; }
+        public DynamicUnitRoleType AddUnit<TAssociation, TRole>(string roleName) => this.GetOrAddObjectType(typeof(TAssociation)).AddUnit(this.GetOrAddObjectType(typeof(TRole)), roleName);
 
-        public DynamicUnitRoleType AddUnit<TAssociation, TRole>(string roleName)
+        public DynamicOneToOneRoleType AddOneToOne<TAssociation, TRole>(string roleName) => this.GetOrAddObjectType(typeof(TAssociation)).AddOneToOne(this.GetOrAddObjectType(typeof(TRole)), roleName);
+
+        public DynamicManyToOneRoleType AddManyToOne<TAssociation, TRole>(string roleName) => this.GetOrAddObjectType(typeof(TAssociation)).AddManyToOne(this.GetOrAddObjectType(typeof(TRole)), roleName);
+
+        public DynamicOneToManyRoleType AddOneToMany<TAssociation, TRole>(string roleName) => this.GetOrAddObjectType(typeof(TAssociation)).AddOneToMany(this.GetOrAddObjectType(typeof(TRole)), roleName);
+
+        public DynamicManyToManyRoleType AddManyToMany<TAssociation, TRole>(string roleName) => this.GetOrAddObjectType(typeof(TAssociation)).AddManyToMany(this.GetOrAddObjectType(typeof(TRole)), roleName);
+
+        private DynamicObjectType GetOrAddObjectType(Type type)
         {
-            var roleType = new DynamicUnitRoleType(this, typeof(TRole), roleName);
-            this.AddRoleType(roleType);
-
-            var associationType = new DynamicUnitAssociationType(roleType, typeof(TAssociation));
-            this.AddAssociationType(associationType);
-
-            return roleType;
-        }
-
-        public DynamicOneToOneRoleType AddOneToOne<TAssociation, TRole>(string associationName, string roleName)
-        {
-            var roleType = new DynamicOneToOneRoleType(this, typeof(TRole), roleName);
-            this.AddRoleType(roleType);
-
-            var associationType = new DynamicOneToOneAssociationType(roleType, typeof(TAssociation));
-            this.AddAssociationType(associationType);
-
-            return roleType;
-        }
-
-        public DynamicManyToOneRoleType AddManyToOne<TAssociation, TRole>(string associationName, string roleName)
-        {
-            var roleType = new DynamicManyToOneRoleType(this, typeof(TRole), roleName);
-            this.AddRoleType(roleType);
-
-            var associationType = new DynamicManyToOneAssociationType(roleType, typeof(TAssociation));
-            this.AddAssociationType(associationType);
-
-            return roleType;
-        }
-
-        public DynamicOneToManyRoleType AddOneToMany<TAssociation, TRole>(string associationName, string roleName)
-        {
-            var roleType = new DynamicOneToManyRoleType(this, typeof(TRole), roleName);
-            this.AddRoleType(roleType);
-
-            var associationType = new DynamicOneToManyAssociationType(roleType, typeof(TAssociation));
-            this.AddAssociationType(associationType);
-
-            return roleType;
-        }
-
-        public DynamicManyToManyRoleType AddManyToMany<TAssociation, TRole>(string associationName, string roleName)
-        {
-            var roleType = new DynamicManyToManyRoleType(this, typeof(TRole), roleName);
-            this.AddRoleType(roleType);
-
-            var associationType = new DynamicManyToManyAssociationType(roleType, typeof(TAssociation));
-            this.AddAssociationType(associationType);
-
-            return roleType;
-        }
-
-        private void AddAssociationType(IDynamicAssociationType associationType)
-        {
-            this.CheckNames(associationType.SingularName, associationType.PluralName);
-
-            this.AssociationTypeByName.Add(associationType.SingularName, associationType);
-            this.AssociationTypeByName.Add(associationType.PluralName, associationType);
-        }
-
-        private void AddRoleType(IDynamicRoleType roleType)
-        {
-            this.CheckNames(roleType.SingularName, roleType.PluralName);
-
-            this.RoleTypeByName.Add(roleType.SingularName, roleType);
-            this.RoleTypeByName.Add(roleType.PluralName, roleType);
-        }
-
-        private void CheckNames(string singularName, string pluralName)
-        {
-            if (this.RoleTypeByName.ContainsKey(singularName) ||
-                this.AssociationTypeByName.ContainsKey(singularName))
+            if (!this.ObjectTypeByType.TryGetValue(type, out var objectType))
             {
-                throw new Exception($"{singularName} is not unique");
+                objectType = new DynamicObjectType(this, type);
+                this.ObjectTypeByType.Add(type, objectType);
             }
 
-            if (this.RoleTypeByName.ContainsKey(pluralName) ||
-                this.AssociationTypeByName.ContainsKey(pluralName))
+            return objectType;
+        }
+
+        internal void ResetDerivations()
+        {
+            foreach(var kvp in this.ObjectTypeByType)
             {
-                throw new Exception($"{pluralName} is not unique");
+                var objectType = kvp.Value;
+                objectType.ResetDerivations();
             }
         }
     }

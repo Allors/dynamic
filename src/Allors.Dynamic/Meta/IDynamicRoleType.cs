@@ -4,11 +4,7 @@
 
     public interface IDynamicRoleType
     {
-        DynamicMeta Meta { get; }
-
-        Type Type { get; }
-
-        TypeCode TypeCode { get; }
+        DynamicObjectType ObjectType { get; }
 
         IDynamicAssociationType AssociationType { get; }
 

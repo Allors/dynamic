@@ -47,12 +47,13 @@
         /// <inheritdoc/>
         public override IEnumerable<string> GetDynamicMemberNames()
         {
-            foreach (IDynamicRoleType roleType in this.population.Meta.RoleTypeByName.Values.ToArray().Distinct())
+            var objectType = this.population.Meta.ObjectTypeByType[this.GetType()];
+            foreach (IDynamicRoleType roleType in objectType.RoleTypeByName.Values.ToArray().Distinct())
             {
                 yield return roleType.Name;
             }
 
-            foreach (IDynamicAssociationType associationType in this.population.Meta.AssociationTypeByName.Values.ToArray().Distinct())
+            foreach (IDynamicAssociationType associationType in objectType.AssociationTypeByName.Values.ToArray().Distinct())
             {
                 yield return associationType.Name;
             }

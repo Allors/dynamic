@@ -14,8 +14,8 @@ namespace Allors.Dynamic.Tests
                  new DynamicMeta(new Pluralizer()),
                  v =>
             {
-                v.AddOneToOne<Organisation, Person>("OrganisationWhereOwner", "Owner");
-                v.AddOneToOne<Organisation, Named>("By", "Named");
+                v.AddOneToOne<Organisation, Named>("Named");
+                v.AddOneToOne<Organisation, Person>("Owner");
             });
 
             var acme = population.New<Organisation>();
@@ -46,8 +46,8 @@ namespace Allors.Dynamic.Tests
         {
             var meta = new DynamicMeta(new Pluralizer());
             var population = new Default.DynamicPopulation(meta);
-            var (property, owner) = meta.AddOneToOne<Organisation, Person>("OrganisationWhereOwner", "Owner");
-            var (organisation, named) = meta.AddOneToOne<Organisation, Person>("By", "Named");
+            var (property, owner) = meta.AddOneToOne<Organisation, Person>("Owner");
+            var (organisation, named) = meta.AddOneToOne<Organisation, Person>("Named");
 
             dynamic acme = population.New<Organisation>();
             dynamic gizmo = population.New<Organisation>();
@@ -83,8 +83,8 @@ namespace Allors.Dynamic.Tests
         {
             var meta = new DynamicMeta(new Pluralizer());
             var population = new Default.DynamicPopulation(meta);
-            var (property, owner) = meta.AddOneToOne<Organisation, Person>("OrganisationWhereOwner", "Owner");
-            var (organisation, named) = meta.AddOneToOne<Organisation, Person>("By", "Named");
+            var (property, owner) = meta.AddOneToOne<Organisation, Person>("Owner");
+            var (organisation, named) = meta.AddOneToOne<Organisation, Person>("Named");
 
             dynamic acme = population.New<Organisation>();
             dynamic gizmo = population.New<Organisation>();
@@ -119,8 +119,8 @@ namespace Allors.Dynamic.Tests
         {
             var meta = new DynamicMeta(new Pluralizer());
             var population = new Default.DynamicPopulation(meta);
-            var (property, owner) = meta.AddOneToOne<Organisation, Person>("OrganisationWhereOwner", "Owner");
-            var (organisation, named) = meta.AddOneToOne<Organisation, Person>("By", "Named");
+            var (property, owner) = meta.AddOneToOne<Organisation, Person>("Owner");
+            var (organisation, named) = meta.AddOneToOne<Organisation, Person>("Named");
 
             dynamic acme = population.New<Organisation>();
             dynamic gizmo = population.New<Organisation>();

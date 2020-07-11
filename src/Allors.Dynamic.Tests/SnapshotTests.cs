@@ -28,8 +28,8 @@ namespace Allors.Dynamic.Tests
             jane.FirstName = "Jane";
             jane.LastName = "Doe";
 
-            System.Collections.Generic.Dictionary<DynamicObject, object> changedFirstNames = snapshot1.ChangedRoles("FirstName");
-            System.Collections.Generic.Dictionary<DynamicObject, object> changedLastNames = snapshot1.ChangedRoles("LastName");
+            System.Collections.Generic.Dictionary<DynamicObject, object> changedFirstNames = snapshot1.ChangedRoles<Person>("FirstName");
+            System.Collections.Generic.Dictionary<DynamicObject, object> changedLastNames = snapshot1.ChangedRoles<Person>("LastName");
 
             Assert.Single(changedFirstNames.Keys);
             Assert.Single(changedLastNames.Keys);
@@ -38,8 +38,8 @@ namespace Allors.Dynamic.Tests
 
             DynamicChangeSet snapshot2 = population.Snapshot();
 
-            changedFirstNames = snapshot2.ChangedRoles("FirstName");
-            changedLastNames = snapshot2.ChangedRoles("LastName");
+            changedFirstNames = snapshot2.ChangedRoles<Person>("FirstName");
+            changedLastNames = snapshot2.ChangedRoles<Person>("LastName");
 
             Assert.Single(changedFirstNames.Keys);
             Assert.Single(changedLastNames.Keys);

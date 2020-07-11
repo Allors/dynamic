@@ -1,24 +1,19 @@
 ﻿namespace Allors.Dynamic.Meta
 {
     using System;
-    using System.Collections;
 
     public class DynamicUnitRoleType : IDynamicRoleType
     {
-        public DynamicUnitRoleType(DynamicMeta meta, Type type, string singularName)
+        public DynamicUnitRoleType(DynamicObjectType objectType, string singularName)
         {
-            this.Meta = meta;
-            this.Type = type;
-            this.TypeCode = Type.GetTypeCode(type);
-            this.SingularName = singularName ?? type.Name;
-            this.PluralName = meta.Pluralizer.Pluralize(this.SingularName);
+            var pluralizer = objectType.Meta.Pluralizer;
+
+            this.ObjectType = objectType;
+            this.SingularName = singularName ?? objectType.Type.Name;
+            this.PluralName = pluralizer.Pluralize(this.SingularName);
         }
 
-        public Type Type { get; }
-
-        public TypeCode TypeCode { get; }
-
-        public DynamicMeta Meta { get; }
+        public DynamicObjectType ObjectType { get; }
 
         public IDynamicAssociationType AssociationType { get; internal set; }
 
@@ -64,9 +59,9 @@ Use DateTimeKind.Utc or DateTimeKind.Local.");
                 return new DateTime(dateTime.Year, dateTime.Month, dateTime.Day, dateTime.Hour, dateTime.Minute, dateTime.Second, dateTime.Millisecond, DateTimeKind.Utc);
             }
 
-            if (value.GetType() != this.Type)
+            if (value.GetType() != this.ObjectType.Type)
             {
-                value = Convert.ChangeType(value, this.TypeCode);
+                value = Convert.ChangeType(value, this.ObjectType.TypeCode);
             }
 
             return value;

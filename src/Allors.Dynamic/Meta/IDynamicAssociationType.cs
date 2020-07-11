@@ -4,9 +4,9 @@
 
     public interface IDynamicAssociationType
     {
-        IDynamicRoleType RoleType { get; }
+        DynamicObjectType ObjectType { get; }
 
-        Type Type { get; }
+        IDynamicRoleType RoleType { get; }
 
         string Name { get; }
 

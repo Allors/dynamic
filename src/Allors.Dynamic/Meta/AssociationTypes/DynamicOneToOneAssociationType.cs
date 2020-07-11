@@ -1,23 +1,21 @@
 ﻿namespace Allors.Dynamic.Meta
 {
-    using System;
-
     public class DynamicOneToOneAssociationType : IDynamicOneToAssociationType
     {
-        public DynamicOneToOneAssociationType(DynamicOneToOneRoleType roleType, Type type)
+        public DynamicOneToOneAssociationType(DynamicObjectType objectType, DynamicOneToOneRoleType roleType)
         {
+            this.ObjectType = objectType;
             roleType.AssociationType = this;
             this.RoleType = roleType;
-            this.Type = type;
-            this.SingularName = roleType.SingularNameForAssociation(type);
-            this.PluralName = roleType.PluralNameForAssociation(type);
+            this.SingularName = roleType.SingularNameForAssociation(objectType);
+            this.PluralName = roleType.PluralNameForAssociation(objectType);
         }
+
+        public DynamicObjectType ObjectType { get; }
 
         IDynamicRoleType IDynamicAssociationType.RoleType => this.RoleType;
 
         public DynamicOneToOneRoleType RoleType { get; }
-
-        public Type Type { get; }
 
         public string Name => this.SingularName;
 

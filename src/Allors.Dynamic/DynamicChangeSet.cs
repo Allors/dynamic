@@ -22,9 +22,16 @@
             this.roleByAssociationByRoleType.Any(v => v.Value.Count > 0) ||
             this.associationByRoleByRoleType.Any(v => v.Value.Count > 0);
 
-        public Dictionary<DynamicObject, object> ChangedRoles(string name)
+        public Dictionary<DynamicObject, object> ChangedRoles<TRole>(string name)
         {
-            IDynamicRoleType roleType = this.Meta.RoleTypeByName[name];
+            DynamicObjectType objectType = this.Meta.ObjectTypeByType[typeof(TRole)];
+            IDynamicRoleType roleType = objectType.RoleTypeByName[name];
+            return this.ChangedRoles(roleType);
+        }
+
+        public Dictionary<DynamicObject, object> ChangedRoles(DynamicObjectType objectType, string name)
+        {
+            IDynamicRoleType roleType = objectType.RoleTypeByName[name];
             return this.ChangedRoles(roleType);
         }
 

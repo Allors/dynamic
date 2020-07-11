@@ -3,15 +3,12 @@
   <Class Name="Allors.Dynamic.Meta.DynamicMeta" Collapsed="true">
     <Position X="5.25" Y="0.5" Width="1.5" />
     <TypeIdentifier>
-      <HashCode>QAQAAAAAAAAQAABAAEAAABAAQYAABAgAAAAAAAAAAAA=</HashCode>
+      <HashCode>AAAAAAAAAAAQAAAAAAAAAAAASYAABAgAAAAAAAACAAA=</HashCode>
       <FileName>Meta\DynamicMeta.cs</FileName>
     </TypeIdentifier>
-    <ShowAsCollectionAssociation>
-      <Property Name="AssociationTypeByName" />
-    </ShowAsCollectionAssociation>
   </Class>
   <Class Name="Allors.Dynamic.Meta.DynamicManyToManyRoleType">
-    <Position X="7.75" Y="6.5" Width="2.5" />
+    <Position X="7.75" Y="6.5" Width="2.75" />
     <TypeIdentifier>
       <HashCode>AAAAiAAAAAAAAAYEEAAAgAQAgCAAAIACAQAAAAAAAgA=</HashCode>
       <FileName>Meta\RoleTypes\DynamicManyToManyRoleType.cs</FileName>
@@ -53,14 +50,6 @@
       <FileName>Meta\AssociationTypes\DynamicOneToAssociationType.cs</FileName>
     </TypeIdentifier>
   </Interface>
-  <Interface Name="Allors.Dynamic.Meta.IDynamicObjectType">
-    <Position X="7.5" Y="1.5" Width="1.5" />
-    <TypeIdentifier>
-      <HashCode>AAAAiAAAAAAAAAYAEAAAAAQAgCAAAIACAQAAAAAAAAA=</HashCode>
-      <FileName>Meta\IDynamicObjectType.cs</FileName>
-      <NewMemberFileName>Meta\IDynamicRoleType.cs</NewMemberFileName>
-    </TypeIdentifier>
-  </Interface>
   <Interface Name="Allors.Dynamic.Meta.DynamicToOneRoleType" Collapsed="true">
     <Position X="6.75" Y="5" Width="2" />
     <TypeIdentifier>
@@ -73,6 +62,21 @@
     <TypeIdentifier>
       <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
       <FileName>Meta\RoleTypes\DynamicToManyRoleType.cs</FileName>
+    </TypeIdentifier>
+  </Interface>
+  <Interface Name="Allors.Dynamic.Meta.DynamicObjectType">
+    <Position X="5.25" Y="1.5" Width="1.75" />
+    <TypeIdentifier>
+      <HashCode>QAQAAAAAAAAAAAQAAAAAAAAAAAAAAIAAAQAAAAAAAAA=</HashCode>
+      <FileName>Meta\DynamicObjectType.cs</FileName>
+      <NewMemberFileName>Meta\IDynamicRoleType.cs</NewMemberFileName>
+    </TypeIdentifier>
+  </Interface>
+  <Interface Name="Allors.Dynamic.Meta.IDynamicRoleType">
+    <Position X="7.75" Y="1.5" Width="1.75" />
+    <TypeIdentifier>
+      <HashCode>AAAAiAAAAAAAAAYAEAAAAAQAgCAAAIACAQAAAAAAAAA=</HashCode>
+      <FileName>Meta\IDynamicRoleType.cs</FileName>
     </TypeIdentifier>
   </Interface>
   <Font Name="Segoe UI" Size="9" />

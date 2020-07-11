@@ -7,23 +7,24 @@
 
     internal static class DynamicRoleTypeExtensions
     {
-        internal static string SingularNameForAssociation(this IDynamicRoleType @this, Type type)
+        internal static string SingularNameForAssociation(this IDynamicRoleType @this, DynamicObjectType objectType)
         {
-            return $"{type.Name}Where{@this.SingularName}";
+            return $"{objectType.Type.Name}Where{@this.SingularName}";
         }
 
-        internal static string PluralNameForAssociation(this IDynamicRoleType @this, Type type)
+        internal static string PluralNameForAssociation(this IDynamicRoleType @this, DynamicObjectType objectType)
         {
-            return $"{@this.Meta.Pluralizer.Pluralize(type.Name)}Where{@this.SingularName}";
+            return $"{@this.ObjectType.Meta.Pluralizer.Pluralize(objectType.Type.Name)}Where{@this.SingularName}";
         }
 
         internal static object NormalizeToOne(this IDynamicRoleType @this, object value)
         {
             if (value != null)
             {
-                if (!@this.Type.IsAssignableFrom(value.GetType()))
+                var type = @this.ObjectType.Type;
+                if (!type.IsAssignableFrom(value.GetType()))
                 {
-                    throw new ArgumentException($"{@this.Name} should be a {@this.Type.Name} but was a {value.GetType()}");
+                    throw new ArgumentException($"{@this.Name} should be a {type.Name} but was a {value.GetType()}");
                 }
             }
 
@@ -51,9 +52,11 @@
             {
                 if (@object != null)
                 {
-                    if (!@this.Type.IsAssignableFrom(@object.GetType()))
+                    Type type = @this.ObjectType.Type;
+
+                    if (!type.IsAssignableFrom(@object.GetType()))
                     {
-                        throw new ArgumentException($"{@this.Name} should be a {@this.Type.Name} but was a {@object.GetType()}");
+                        throw new ArgumentException($"{@this.Name} should be a {type.Name} but was a {@object.GetType()}");
                     }
 
                     yield return @object;

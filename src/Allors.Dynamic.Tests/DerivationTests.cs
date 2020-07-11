@@ -46,8 +46,8 @@ namespace Allors.Dynamic.Tests
         {
             public void Derive(DynamicChangeSet changeSet)
             {
-                System.Collections.Generic.Dictionary<DynamicObject, object> firstNames = changeSet.ChangedRoles("FirstName");
-                System.Collections.Generic.Dictionary<DynamicObject, object> lastNames = changeSet.ChangedRoles("LastName");
+                System.Collections.Generic.Dictionary<DynamicObject, object> firstNames = changeSet.ChangedRoles<Person>("FirstName");
+                System.Collections.Generic.Dictionary<DynamicObject, object> lastNames = changeSet.ChangedRoles<Person>("LastName");
 
                 if (firstNames?.Any() == true || lastNames?.Any() == true)
                 {
@@ -80,8 +80,8 @@ namespace Allors.Dynamic.Tests
             {
                 this.derivation.Derive(changeSet);
 
-                System.Collections.Generic.Dictionary<DynamicObject, object> firstNames = changeSet.ChangedRoles("FirstName");
-                System.Collections.Generic.Dictionary<DynamicObject, object> lastNames = changeSet.ChangedRoles("LastName");
+                System.Collections.Generic.Dictionary<DynamicObject, object> firstNames = changeSet.ChangedRoles<Person>("FirstName");
+                System.Collections.Generic.Dictionary<DynamicObject, object> lastNames = changeSet.ChangedRoles<Person>("LastName");
 
                 if (firstNames?.Any() == true || lastNames?.Any() == true)
                 {

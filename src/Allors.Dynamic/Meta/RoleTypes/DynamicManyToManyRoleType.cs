@@ -4,20 +4,16 @@
 
     public class DynamicManyToManyRoleType : IDynamicToManyRoleType
     {
-        public DynamicManyToManyRoleType(DynamicMeta meta, Type type, string singularName)
+        public DynamicManyToManyRoleType(DynamicObjectType objectType, string singularName)
         {
-            this.Meta = meta;
-            this.Type = type;
-            this.TypeCode = Type.GetTypeCode(type);
-            this.SingularName = singularName ?? type.Name;
-            this.PluralName = meta.Pluralizer.Pluralize(this.SingularName);
+            var pluralizer = objectType.Meta.Pluralizer;
+
+            this.ObjectType = objectType;
+            this.SingularName = singularName ?? objectType.Type.Name;
+            this.PluralName = pluralizer.Pluralize(this.SingularName);
         }
 
-        public DynamicMeta Meta { get; }
-
-        public Type Type { get; }
-
-        public TypeCode TypeCode { get; }
+        public DynamicObjectType ObjectType { get; }
 
         IDynamicAssociationType IDynamicRoleType.AssociationType => this.AssociationType;
 

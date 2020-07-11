@@ -4,20 +4,20 @@
 
     public class DynamicOneToManyAssociationType : IDynamicOneToAssociationType
     {
-        public DynamicOneToManyAssociationType(DynamicOneToManyRoleType roleType, Type type)
+        public DynamicOneToManyAssociationType(DynamicObjectType objectType, DynamicOneToManyRoleType roleType)
         {
+            this.ObjectType = objectType;
             roleType.AssociationType = this;
             this.RoleType = roleType;
-            this.Type = type;
-            this.SingularName = roleType.SingularNameForAssociation(type);
-            this.PluralName = roleType.PluralNameForAssociation(type);
+            this.SingularName = roleType.SingularNameForAssociation(objectType);
+            this.PluralName = roleType.PluralNameForAssociation(objectType);
         }
+
+        public DynamicObjectType ObjectType { get; }
 
         IDynamicRoleType IDynamicAssociationType.RoleType => this.RoleType;
 
         public DynamicOneToManyRoleType RoleType { get; }
-
-        public Type Type { get; }
 
         public string Name => this.SingularName;
 

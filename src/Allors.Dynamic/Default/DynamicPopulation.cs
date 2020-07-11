@@ -99,16 +99,17 @@
         public bool TryInvokeMember(DynamicObject obj, InvokeMemberBinder binder, object[] args, out object result)
         {
             string name = binder.Name;
+            var objectType = this.Meta.ObjectTypeByType[obj.GetType()];
 
             result = null;
 
-            if (name.StartsWith("Add") && this.Meta.RoleTypeByName.TryGetValue(name.Substring(3), out IDynamicRoleType roleType))
+            if (name.StartsWith("Add") && objectType.RoleTypeByName.TryGetValue(name.Substring(3), out IDynamicRoleType roleType))
             {
                 this.Add(obj, roleType, (DynamicObject)args[0]);
                 return true;
             }
 
-            if (name.StartsWith("Remove") && this.Meta.RoleTypeByName.TryGetValue(name.Substring(6), out roleType))
+            if (name.StartsWith("Remove") && objectType.RoleTypeByName.TryGetValue(name.Substring(6), out roleType))
             {
                 // TODO: RemoveAll
                 this.Remove(obj, roleType, (DynamicObject)args[0]);
@@ -120,20 +121,23 @@
 
         public T GetRole<T>(DynamicObject obj, string name)
         {
-            var roleType = this.Meta.RoleTypeByName[name];
+            var objectType = this.Meta.ObjectTypeByType[obj.GetType()];
+            var roleType = objectType.RoleTypeByName[name];
             this.database.GetRole(obj, roleType, out var result);
             return (T)result;
         }
 
         public void SetRole<T>(DynamicObject obj, string name, T value)
         {
-            var roleType = this.Meta.RoleTypeByName[name];
+            var objectType = this.Meta.ObjectTypeByType[obj.GetType()];
+            var roleType = objectType.RoleTypeByName[name];
             this.database.SetRole(obj, roleType, value);
         }
 
         public T GetAssociation<T>(DynamicObject obj, string name)
         {
-            var associationType = this.Meta.AssociationTypeByName[name];
+            var objectType = this.Meta.ObjectTypeByType[obj.GetType()];
+            var associationType = objectType.AssociationTypeByName[name];
             this.database.GetAssociation(obj, associationType, out var result);
             return (T)result;
         }
@@ -179,13 +183,15 @@
             {
                 case string name:
                     {
-                        if (this.Meta.RoleTypeByName.TryGetValue(name, out IDynamicRoleType roleType))
+                        var objectType = this.Meta.ObjectTypeByType[obj.GetType()];
+
+                        if (objectType.RoleTypeByName.TryGetValue(name, out IDynamicRoleType roleType))
                         {
                             this.Get(obj, roleType, out result);
                             return true;
                         }
 
-                        if (this.Meta.AssociationTypeByName.TryGetValue(name, out IDynamicAssociationType associationType))
+                        if (objectType.AssociationTypeByName.TryGetValue(name, out IDynamicAssociationType associationType))
                         {
                             this.Get(obj, associationType, out result);
                             return true;
@@ -213,7 +219,9 @@
             {
                 case string name:
                     {
-                        if (this.Meta.RoleTypeByName.TryGetValue(name, out IDynamicRoleType roleType))
+                        var objectType = this.Meta.ObjectTypeByType[obj.GetType()];
+
+                        if (objectType.RoleTypeByName.TryGetValue(name, out IDynamicRoleType roleType))
                         {
                             this.Set(obj, roleType, value);
                             return true;

@@ -1,26 +1,17 @@
 ﻿namespace Allors.Dynamic.Meta
 {
-    using System;
-    using System.Collections;
-    using System.Collections.Generic;
-    using System.Linq;
-
     public class DynamicOneToManyRoleType : IDynamicToManyRoleType
     {
-        public DynamicOneToManyRoleType(DynamicMeta meta, Type type, string singularName)
+        public DynamicOneToManyRoleType(DynamicObjectType objectType, string singularName)
         {
-            this.Meta = meta;
-            this.Type = type;
-            this.TypeCode = Type.GetTypeCode(type);
-            this.SingularName = singularName ?? type.Name;
-            this.PluralName = meta.Pluralizer.Pluralize(this.SingularName);
+            var pluralizer = objectType.Meta.Pluralizer;
+
+            this.ObjectType = objectType;
+            this.SingularName = singularName ?? objectType.Type.Name;
+            this.PluralName = pluralizer.Pluralize(this.SingularName);
         }
 
-        public DynamicMeta Meta { get; }
-
-        public Type Type { get; }
-
-        public TypeCode TypeCode { get; }
+        public DynamicObjectType ObjectType { get; }
 
         IDynamicAssociationType IDynamicRoleType.AssociationType => this.AssociationType;
 

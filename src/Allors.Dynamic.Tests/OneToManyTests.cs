@@ -12,7 +12,7 @@ namespace Allors.Dynamic.Tests
         {
             var population = new Default.DynamicPopulation(
                  new DynamicMeta(new Pluralizer()),
-                  v => v.AddOneToMany<Organisation, Person>("Employer", "Employee"));
+                  v => v.AddOneToMany<Organisation, Person>("Employee"));
 
             dynamic acme = population.New<Organisation>();
             dynamic jane = population.New<Person>();
@@ -40,7 +40,7 @@ namespace Allors.Dynamic.Tests
                   v =>
             {
                 v.AddUnit<Named, string>("Name");
-                v.AddOneToMany<Organisation, Person>("Employer", "Employee");
+                v.AddOneToMany<Organisation, Person>("Employee");
             });
 
             dynamic acme = population.New<Organisation>();
@@ -82,7 +82,7 @@ namespace Allors.Dynamic.Tests
         {
             var population = new Default.DynamicPopulation(
                  new DynamicMeta(new Pluralizer()),
-                 v => v.AddOneToMany<Organisation, Person>("Employer", "Employee"));
+                 v => v.AddOneToMany<Organisation, Person>("Employee"));
 
             dynamic acme = population.New<Organisation>();
             dynamic jane = population.New<Person>();
