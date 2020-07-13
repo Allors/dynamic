@@ -1,16 +1,15 @@
 namespace Allors.Dynamic.Tests.Domain
 {
+    using Allors.Dynamic.Meta;
+
     public class C1 : DynamicObject
     {
-        public C1(IDynamicPopulation population)
-           : base(population)
+        public C1(IDynamicPopulation population, DynamicObjectType objectType)
+           : base(population, objectType)
         {
         }
 
-        public string Same()
-        {
-            return this.GetRole<string>(nameof(Same));
-        }
+        public string Same() => (string)this.GetRole(nameof(Same));
 
         public C1 Same(string value)
         {

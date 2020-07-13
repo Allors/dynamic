@@ -25,7 +25,7 @@
 
         public DynamicManyToManyRoleType AddManyToMany<TAssociation, TRole>(string roleName) => this.GetOrAddObjectType(typeof(TAssociation)).AddManyToMany(this.GetOrAddObjectType(typeof(TRole)), roleName);
 
-        private DynamicObjectType GetOrAddObjectType(Type type)
+        internal DynamicObjectType GetOrAddObjectType(Type type)
         {
             if (!this.ObjectTypeByType.TryGetValue(type, out var objectType))
             {

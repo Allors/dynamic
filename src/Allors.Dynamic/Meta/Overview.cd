@@ -1,83 +1,45 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <ClassDiagram MajorVersion="1" MinorVersion="1">
   <Class Name="Allors.Dynamic.Meta.DynamicMeta" Collapsed="true">
-    <Position X="5.25" Y="0.5" Width="1.5" />
+    <Position X="0.5" Y="0.5" Width="1.5" />
     <TypeIdentifier>
-      <HashCode>AAAAAAAAAAAQAAAAAAAAAAAASYAABAgAAAAAAAACAAA=</HashCode>
+      <HashCode>AAAAAAAAAAAQAAAAAAAAAAAASYAABAgAAAAAAAACACA=</HashCode>
       <FileName>Meta\DynamicMeta.cs</FileName>
     </TypeIdentifier>
+    <ShowAsCollectionAssociation>
+      <Property Name="ObjectTypeByType" />
+    </ShowAsCollectionAssociation>
   </Class>
-  <Class Name="Allors.Dynamic.Meta.DynamicManyToManyRoleType">
-    <Position X="7.75" Y="6.5" Width="2.75" />
+  <Class Name="Allors.Dynamic.Meta.DynamicObjectType" Collapsed="true">
+    <Position X="0.5" Y="2.25" Width="1.5" />
     <TypeIdentifier>
-      <HashCode>AAAAiAAAAAAAAAYEEAAAgAQAgCAAAIACAQAAAAAAAgA=</HashCode>
-      <FileName>Meta\RoleTypes\DynamicManyToManyRoleType.cs</FileName>
+      <HashCode>QAQEAAAAAAAQAARAAGAIABAQAYAARIgAAQAAgAAAACA=</HashCode>
+      <FileName>Meta\DynamicObjectType.cs</FileName>
     </TypeIdentifier>
-    <ShowAsAssociation>
-      <Property Name="AssociationType" />
-    </ShowAsAssociation>
-    <Lollipop Position="0.2" />
+    <ShowAsCollectionAssociation>
+      <Property Name="AssociationTypeByName" />
+      <Property Name="RoleTypeByName" />
+    </ShowAsCollectionAssociation>
   </Class>
-  <Class Name="Allors.Dynamic.Meta.DynamicManyToManyAssociationType">
-    <Position X="3.5" Y="6.5" Width="2.75" />
+  <Interface Name="Allors.Dynamic.Meta.IDynamicAssociationType">
+    <Position X="4" Y="1.75" Width="2" />
     <TypeIdentifier>
-      <HashCode>AAIAiAAAAgAAAAIEAAAAAAQAAAAAAAACAQAAAAAAAAA=</HashCode>
-      <FileName>Meta\AssociationTypes\DynamicManyToManyAssociationType.cs</FileName>
+      <HashCode>AAIAiAAAAAAAAAIAAAAAAAQAAAAAAAACAIAAAAAAAAA=</HashCode>
+      <FileName>Meta\IDynamicAssociationType.cs</FileName>
     </TypeIdentifier>
     <ShowAsAssociation>
       <Property Name="RoleType" />
     </ShowAsAssociation>
-    <Lollipop Position="0.2" />
-  </Class>
-  <Interface Name="Allors.Dynamic.Meta.IDynamicAssociationType">
-    <Position X="2.25" Y="1.5" Width="2" />
-    <TypeIdentifier>
-      <HashCode>AAIAiAAAAAAAAAIAAAAAAAQAAAAAAAACAQAAAAAAAAA=</HashCode>
-      <FileName>Meta\IDynamicAssociationType.cs</FileName>
-    </TypeIdentifier>
-  </Interface>
-  <Interface Name="Allors.Dynamic.Meta.DynamicManyToAssociationType" Collapsed="true">
-    <Position X="3.25" Y="5" Width="2.5" />
-    <TypeIdentifier>
-      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
-      <FileName>Meta\AssociationTypes\DynamicManyToAssociationType.cs</FileName>
-    </TypeIdentifier>
-  </Interface>
-  <Interface Name="Allors.Dynamic.Meta.DynamicOneToAssociationType" Collapsed="true">
-    <Position X="0.5" Y="5" Width="2.5" />
-    <TypeIdentifier>
-      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
-      <FileName>Meta\AssociationTypes\DynamicOneToAssociationType.cs</FileName>
-    </TypeIdentifier>
-  </Interface>
-  <Interface Name="Allors.Dynamic.Meta.DynamicToOneRoleType" Collapsed="true">
-    <Position X="6.75" Y="5" Width="2" />
-    <TypeIdentifier>
-      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
-      <FileName>Meta\RoleTypes\DynamicToOneRoleType.cs</FileName>
-    </TypeIdentifier>
-  </Interface>
-  <Interface Name="Allors.Dynamic.Meta.DynamicToManyRoleType" Collapsed="true">
-    <Position X="9.5" Y="5" Width="2" />
-    <TypeIdentifier>
-      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
-      <FileName>Meta\RoleTypes\DynamicToManyRoleType.cs</FileName>
-    </TypeIdentifier>
-  </Interface>
-  <Interface Name="Allors.Dynamic.Meta.DynamicObjectType">
-    <Position X="5.25" Y="1.5" Width="1.75" />
-    <TypeIdentifier>
-      <HashCode>QAQAAAAAAAAAAAQAAAAAAAAAAAAAAIAAAQAAAAAAAAA=</HashCode>
-      <FileName>Meta\DynamicObjectType.cs</FileName>
-      <NewMemberFileName>Meta\IDynamicRoleType.cs</NewMemberFileName>
-    </TypeIdentifier>
   </Interface>
   <Interface Name="Allors.Dynamic.Meta.IDynamicRoleType">
-    <Position X="7.75" Y="1.5" Width="1.75" />
+    <Position X="8.25" Y="2.25" Width="1.75" />
     <TypeIdentifier>
-      <HashCode>AAAAiAAAAAAAAAYAEAAAAAQAgCAAAIACAQAAAAAAAAA=</HashCode>
+      <HashCode>AAAAiAAAAAAAAAIAEAAAAAQAgCAAAAACAIAAAAAAAAA=</HashCode>
       <FileName>Meta\IDynamicRoleType.cs</FileName>
     </TypeIdentifier>
+    <ShowAsAssociation>
+      <Property Name="AssociationType" />
+    </ShowAsAssociation>
   </Interface>
   <Font Name="Segoe UI" Size="9" />
 </ClassDiagram>

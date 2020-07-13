@@ -2,10 +2,7 @@ namespace Allors.Dynamic.Tests.Domain
 {
     public static class OrganisationExtensions
     {
-        public static string Name(this Organisation @this)
-        {
-            return @this.GetRole<string>(nameof(Name));
-        }
+        public static string Name(this Organisation @this) => (string)@this.GetRole(nameof(Name));
 
         public static Organisation Name(this Organisation @this, string value)
         {
@@ -13,10 +10,7 @@ namespace Allors.Dynamic.Tests.Domain
             return @this;
         }
 
-        public static Person Owner(this Organisation @this)
-        {
-            return @this.GetRole<Person>(nameof(Owner));
-        }
+        public static Person Owner(this Organisation @this) => (Person)@this.GetRole(nameof(Owner));
 
         public static Organisation Owner(this Organisation @this, Person value)
         {
@@ -24,11 +18,7 @@ namespace Allors.Dynamic.Tests.Domain
             return @this;
         }
 
-
-        public static Named Named(this Organisation @this)
-        {
-            return @this.GetRole<Named>(nameof(Named));
-        }
+        public static Named Named(this Organisation @this) => (Domain.Named)@this.GetRole(nameof(Named));
 
         public static Organisation Named(this Organisation @this, Named value)
         {

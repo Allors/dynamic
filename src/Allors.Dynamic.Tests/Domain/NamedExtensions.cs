@@ -4,7 +4,7 @@ namespace Allors.Dynamic.Tests.Domain
     {
         public static Organisation OrganisationWhereNamed(this Named @this)
         {
-            return @this.GetAssociation<Organisation>(nameof(OrganisationWhereNamed));
+            return (Organisation)@this.GetAssociation(nameof(OrganisationWhereNamed));
         }
     }
 }

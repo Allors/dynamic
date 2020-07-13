@@ -2,10 +2,14 @@
 {
     public interface IDynamicObject
     {
-        T GetRole<T>(string name);
+        object GetRole(string name);
 
-        void SetRole<T>(string name, T value);
+        void SetRole(string name, object value);
 
-        T GetAssociation<T>(string name);
+        void AddRole(string name, IDynamicObject dynamicObject);
+
+        void RemoveRole(string name, IDynamicObject dynamicObject);
+
+        object GetAssociation(string name);
     }
 }

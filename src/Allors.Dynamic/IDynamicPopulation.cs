@@ -2,7 +2,6 @@
 {
     using System;
     using System.Collections.Generic;
-    using System.Dynamic;
     using Allors.Dynamic.Meta;
 
     public delegate T New<T>(params Action<T>[] builders);
@@ -11,33 +10,27 @@
     {
         DynamicMeta Meta { get; }
 
-        Dictionary<string, IDynamicDerivation> DerivationById { get; }
+        IEnumerable<dynamic> Objects { get; }
 
-        void Derive();
+        Dictionary<string, IDynamicDerivation> DerivationById { get; }
 
         T New<T>(params Action<T>[] builders)
             where T : DynamicObject;
 
         dynamic New(Type t, params Action<dynamic>[] builders);
 
+        object GetRole(DynamicObject dynamicObject, IDynamicRoleType roleType);
+
+        void SetRole(DynamicObject dynamicObject, IDynamicRoleType roleType, object value);
+
+        void AddRole(DynamicObject obj, IDynamicRoleType roleType, IDynamicObject dynamicObject);
+
+        void RemoveRole(DynamicObject obj, IDynamicRoleType roleType, IDynamicObject dynamicObject);
+
+        object GetAssociation(DynamicObject dynamicObject, IDynamicAssociationType associationType);
+
         DynamicChangeSet Snapshot();
 
-        IEnumerable<dynamic> Objects { get; }
-
-        bool TryGetIndex(DynamicObject dynamicObject, GetIndexBinder binder, object[] indexes, out object result);
-
-        bool TrySetIndex(DynamicObject dynamicObject, SetIndexBinder binder, object[] indexes, object value);
-
-        bool TryGetMember(DynamicObject dynamicObject, GetMemberBinder binder, out object result);
-
-        bool TrySetMember(DynamicObject dynamicObject, SetMemberBinder binder, object value);
-
-        bool TryInvokeMember(DynamicObject dynamicObject, InvokeMemberBinder binder, object[] args, out object result);
-
-        T GetRole<T>(DynamicObject dynamicObject, string name);
-
-        void SetRole<T>(DynamicObject dynamicObject, string name, T value);
-
-        T GetAssociation<T>(DynamicObject dynamicObject, string name);
+        void Derive();
     }
 }
