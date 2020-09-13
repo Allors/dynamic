@@ -38,12 +38,12 @@ namespace Allors.Dynamic.Tests
         {
             public void Derive(DynamicChangeSet changeSet)
             {
-                System.Collections.Generic.Dictionary<DynamicObject, object> firstNames = changeSet.ChangedRoles<Person>("FirstName");
-                System.Collections.Generic.Dictionary<DynamicObject, object> lastNames = changeSet.ChangedRoles<Person>("LastName");
+                var firstNames = changeSet.ChangedRoles<Person>("FirstName");
+                var lastNames = changeSet.ChangedRoles<Person>("LastName");
 
                 if (firstNames?.Any() == true || lastNames?.Any() == true)
                 {
-                    System.Collections.Generic.IEnumerable<DynamicObject> people = firstNames.Union(lastNames).Select(v => v.Key).Distinct();
+                    var people = firstNames.Union(lastNames).Select(v => v.Key).Distinct();
 
                     foreach (dynamic person in people)
                     {
@@ -63,11 +63,11 @@ namespace Allors.Dynamic.Tests
         {
             public void Derive(DynamicChangeSet changeSet)
             {
-                System.Collections.Generic.Dictionary<DynamicObject, object> fullNames = changeSet.ChangedRoles<Person>("FullName");
+                var fullNames = changeSet.ChangedRoles<Person>("FullName");
 
                 if (fullNames?.Any() == true)
                 {
-                    System.Collections.Generic.IEnumerable<DynamicObject> people = fullNames.Select(v => v.Key).Distinct();
+                    var people = fullNames.Select(v => v.Key).Distinct();
 
                     foreach (dynamic person in people)
                     {

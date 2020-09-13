@@ -16,7 +16,7 @@
             this.DerivationById = new Dictionary<string, IDynamicDerivation>();
             this.database = new DynamicDatabase(this.Meta);
 
-            foreach (Action<DynamicMeta> builder in builders)
+            foreach (var builder in builders)
             {
                 builder?.Invoke(this.Meta);
             }
@@ -42,7 +42,7 @@
         public T New<T>(params Action<T>[] builders)
               where T : DynamicObject
         {
-            T @new = (T)Activator.CreateInstance(typeof(T), new object[] { this, this.Meta.GetOrAddObjectType(typeof(T)) });
+            var @new = (T)Activator.CreateInstance(typeof(T), new object[] { this, this.Meta.GetOrAddObjectType(typeof(T)) });
             this.database.AddObject(@new);
 
             foreach (var builder in builders)
@@ -60,13 +60,13 @@
 
         public void Derive()
         {
-            DynamicChangeSet changeSet = this.Snapshot();
+            var changeSet = this.Snapshot();
 
             while (changeSet.HasChanges)
             {
-                foreach (KeyValuePair<string, IDynamicDerivation> kvp in this.DerivationById)
+                foreach (var kvp in this.DerivationById)
                 {
-                    IDynamicDerivation derivation = kvp.Value;
+                    var derivation = kvp.Value;
                     derivation.Derive(changeSet);
                 }
 

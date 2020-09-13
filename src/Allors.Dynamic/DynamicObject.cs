@@ -54,11 +54,11 @@
         /// <inheritdoc/>
         public override bool TryInvokeMember(InvokeMemberBinder binder, object[] args, out object result)
         {
-            string name = binder.Name;
+            var name = binder.Name;
 
             result = null;
 
-            if (name.StartsWith("Add") && this.ObjectType.RoleTypeByName.TryGetValue(name.Substring(3), out IDynamicRoleType roleType))
+            if (name.StartsWith("Add") && this.ObjectType.RoleTypeByName.TryGetValue(name.Substring(3), out var roleType))
             {
                 this.Population.AddRole(this, roleType, (DynamicObject)args[0]);
                 return true;
@@ -78,12 +78,12 @@
         public override IEnumerable<string> GetDynamicMemberNames()
         {
             var objectType = this.Population.Meta.ObjectTypeByType[this.GetType()];
-            foreach (IDynamicRoleType roleType in objectType.RoleTypeByName.Values.ToArray().Distinct())
+            foreach (var roleType in objectType.RoleTypeByName.Values.ToArray().Distinct())
             {
                 yield return roleType.Name;
             }
 
-            foreach (IDynamicAssociationType associationType in objectType.AssociationTypeByName.Values.ToArray().Distinct())
+            foreach (var associationType in objectType.AssociationTypeByName.Values.ToArray().Distinct())
             {
                 yield return associationType.Name;
             }
@@ -95,12 +95,12 @@
             {
                 case string name:
                     {
-                        if (this.ObjectType.RoleTypeByName.TryGetValue(name, out IDynamicRoleType roleType))
+                        if (this.ObjectType.RoleTypeByName.TryGetValue(name, out var roleType))
                         {
                             return this.TryGetRole(roleType, out result);
                         }
 
-                        if (this.ObjectType.AssociationTypeByName.TryGetValue(name, out IDynamicAssociationType associationType))
+                        if (this.ObjectType.AssociationTypeByName.TryGetValue(name, out var associationType))
                         {
                             return this.TryGetAssociation(associationType, out result);
                         }
@@ -147,7 +147,7 @@
             {
                 case string name:
                     {
-                        if (this.ObjectType.RoleTypeByName.TryGetValue(name, out IDynamicRoleType roleType))
+                        if (this.ObjectType.RoleTypeByName.TryGetValue(name, out var roleType))
                         {
                             this.Population.SetRole(this, roleType, value);
                             return true;

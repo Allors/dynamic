@@ -60,9 +60,9 @@ namespace Allors.Dynamic.Tests
 
             hooli.AddEmployee(jane);
 
-            dynamic[] people = new[] { jane, john, jenny };
+            var people = new[] { jane, john, jenny };
 
-            System.Collections.Generic.IEnumerable<dynamic> x = people.Where(v => "Jane".Equals(v.FirstName));
+            var x = people.Where(v => "Jane".Equals(v.FirstName));
 
             Assert.Contains(jane, hooli.Employees);
 

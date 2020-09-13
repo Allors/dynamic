@@ -31,7 +31,7 @@
                 if (this.derivedAssociationTypeByName == null)
                 {
                     this.derivedAssociationTypeByName = new Dictionary<string, IDynamicAssociationType>(this.assignedAssociationTypeByName);
-                    foreach (KeyValuePair<string, IDynamicAssociationType> item in this.SuperTypes.SelectMany(v => v.assignedAssociationTypeByName))
+                    foreach (var item in this.SuperTypes.SelectMany(v => v.assignedAssociationTypeByName))
                     {
                         this.derivedAssociationTypeByName[item.Key] = item.Value;
                     }
@@ -48,7 +48,7 @@
                 if (this.derivedRoleTypeByName == null)
                 {
                     this.derivedRoleTypeByName = new Dictionary<string, IDynamicRoleType>(this.assignedRoleTypeByName);
-                    foreach (KeyValuePair<string, IDynamicRoleType> item in this.SuperTypes.SelectMany(v => v.assignedRoleTypeByName))
+                    foreach (var item in this.SuperTypes.SelectMany(v => v.assignedRoleTypeByName))
                     {
                         this.derivedRoleTypeByName[item.Key] = item.Value;
                     }
@@ -70,7 +70,7 @@
             this.EmptyArray = Array.CreateInstance(type, 0);
 
             var hierarchyChanged = false;
-            foreach (DynamicObjectType other in meta.ObjectTypeByType.Values)
+            foreach (var other in meta.ObjectTypeByType.Values)
             {
                 if (this.Type.IsAssignableFrom(other.Type))
                 {

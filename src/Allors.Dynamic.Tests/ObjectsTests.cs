@@ -40,28 +40,28 @@ namespace Allors.Dynamic.Tests
                 return Create<Person>(FirstName(firstName), LastName(lastName));
             }
 
-            dynamic jane = NewPerson("Jane", "Doe");
-            dynamic john = NewPerson("John", "Doe");
-            dynamic jenny = NewPerson("Jenny", "Doe");
+            var jane = NewPerson("Jane", "Doe");
+            var john = NewPerson("John", "Doe");
+            var jenny = NewPerson("Jenny", "Doe");
 
-            dynamic[] lastNameDoe = population.Objects.Where(v => v.LastName == "Doe").ToArray();
+            var lastNameDoe = population.Objects.Where(v => v.LastName == "Doe").ToArray();
 
             Assert.Equal(3, lastNameDoe.Length);
             Assert.Contains(jane, lastNameDoe);
             Assert.Contains(john, lastNameDoe);
             Assert.Contains(jenny, lastNameDoe);
 
-            dynamic[] lessThanFourLetterFirstNames = population.Objects.Where(v => v.FirstName.Length < 4).ToArray();
+            var lessThanFourLetterFirstNames = population.Objects.Where(v => v.FirstName.Length < 4).ToArray();
 
             Assert.Empty(lessThanFourLetterFirstNames);
 
-            dynamic[] fourLetterFirstNames = population.Objects.Where(v => v.FirstName.Length == 4).ToArray();
+            var fourLetterFirstNames = population.Objects.Where(v => v.FirstName.Length == 4).ToArray();
 
             Assert.Equal(2, fourLetterFirstNames.Length);
             Assert.Contains(jane, fourLetterFirstNames);
             Assert.Contains(john, fourLetterFirstNames);
 
-            dynamic[] fiveLetterFirstNames = population.Objects.Where(v => v.FirstName.Length == 5).ToArray();
+            var fiveLetterFirstNames = population.Objects.Where(v => v.FirstName.Length == 5).ToArray();
             Assert.Single(fiveLetterFirstNames);
             Assert.Contains(jenny, fiveLetterFirstNames);
         }

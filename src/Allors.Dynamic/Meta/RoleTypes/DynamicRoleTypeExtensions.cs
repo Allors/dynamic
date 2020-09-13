@@ -52,7 +52,7 @@
             {
                 if (@object != null)
                 {
-                    Type type = @this.ObjectType.Type;
+                    var type = @this.ObjectType.Type;
 
                     if (!type.IsAssignableFrom(@object.GetType()))
                     {

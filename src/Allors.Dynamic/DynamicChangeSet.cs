@@ -24,20 +24,20 @@
 
         public Dictionary<DynamicObject, object> ChangedRoles<TRole>(string name)
         {
-            DynamicObjectType objectType = this.Meta.ObjectTypeByType[typeof(TRole)];
-            IDynamicRoleType roleType = objectType.RoleTypeByName[name];
+            var objectType = this.Meta.ObjectTypeByType[typeof(TRole)];
+            var roleType = objectType.RoleTypeByName[name];
             return this.ChangedRoles(roleType);
         }
 
         public Dictionary<DynamicObject, object> ChangedRoles(DynamicObjectType objectType, string name)
         {
-            IDynamicRoleType roleType = objectType.RoleTypeByName[name];
+            var roleType = objectType.RoleTypeByName[name];
             return this.ChangedRoles(roleType);
         }
 
         public Dictionary<DynamicObject, object> ChangedRoles(IDynamicRoleType roleType)
         {
-            this.roleByAssociationByRoleType.TryGetValue(roleType, out Dictionary<DynamicObject, object> changedRelations);
+            this.roleByAssociationByRoleType.TryGetValue(roleType, out var changedRelations);
             return changedRelations;
         }
     }
