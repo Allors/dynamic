@@ -14,12 +14,12 @@ namespace Allors.Dynamic.Tests
                  new DynamicMeta(new Pluralizer()),
                  v =>
             {
-                v.AddOneToOne<Organisation, Named>("Named");
-                v.AddOneToOne<Organisation, Person>("Owner");
+                v.AddOneToOne<Organization, INamed>("Named");
+                v.AddOneToOne<Organization, Person>("Owner");
             });
 
-            var acme = population.New<Organisation>();
-            var gizmo = population.New<Organisation>();
+            var acme = population.New<Organization>();
+            var gizmo = population.New<Organization>();
 
             var jane = population.New<Person>();
             var john = population.New<Person>();
@@ -46,11 +46,11 @@ namespace Allors.Dynamic.Tests
         {
             var meta = new DynamicMeta(new Pluralizer());
             var population = new Default.DynamicPopulation(meta);
-            var (property, owner) = meta.AddOneToOne<Organisation, Person>("Owner");
-            var (organisation, named) = meta.AddOneToOne<Organisation, Person>("Named");
+            var (property, owner) = meta.AddOneToOne<Organization, Person>("Owner");
+            var (organisation, named) = meta.AddOneToOne<Organization, Person>("Named");
 
-            dynamic acme = population.New<Organisation>();
-            dynamic gizmo = population.New<Organisation>();
+            dynamic acme = population.New<Organization>();
+            dynamic gizmo = population.New<Organization>();
 
             dynamic jane = population.New<Person>();
             dynamic john = population.New<Person>();
@@ -83,11 +83,11 @@ namespace Allors.Dynamic.Tests
         {
             var meta = new DynamicMeta(new Pluralizer());
             var population = new Default.DynamicPopulation(meta);
-            var (property, owner) = meta.AddOneToOne<Organisation, Person>("Owner");
-            var (organisation, named) = meta.AddOneToOne<Organisation, Person>("Named");
+            var (property, owner) = meta.AddOneToOne<Organization, Person>("Owner");
+            var (organisation, named) = meta.AddOneToOne<Organization, Person>("Named");
 
-            dynamic acme = population.New<Organisation>();
-            dynamic gizmo = population.New<Organisation>();
+            dynamic acme = population.New<Organization>();
+            dynamic gizmo = population.New<Organization>();
             dynamic jane = population.New<Person>();
             dynamic john = population.New<Person>();
 
@@ -119,11 +119,11 @@ namespace Allors.Dynamic.Tests
         {
             var meta = new DynamicMeta(new Pluralizer());
             var population = new Default.DynamicPopulation(meta);
-            var (property, owner) = meta.AddOneToOne<Organisation, Person>("Owner");
-            var (organisation, named) = meta.AddOneToOne<Organisation, Person>("Named");
+            var (property, owner) = meta.AddOneToOne<Organization, Person>("Owner");
+            var (organisation, named) = meta.AddOneToOne<Organization, Person>("Named");
 
-            dynamic acme = population.New<Organisation>();
-            dynamic gizmo = population.New<Organisation>();
+            dynamic acme = population.New<Organization>();
+            dynamic gizmo = population.New<Organization>();
             dynamic jane = population.New<Person>();
             dynamic john = population.New<Person>();
 

@@ -2,9 +2,9 @@ namespace Allors.Dynamic.Tests.Domain
 {
     using Allors.Dynamic.Meta;
 
-    public class Organisation : DynamicObject, Named
+    public class Organization : DynamicObject, INamed
     {
-        public Organisation(IDynamicPopulation population, DynamicObjectType objectType)
+        public Organization(IDynamicPopulation population, DynamicObjectType objectType)
             : base(population, objectType)
         {
         }

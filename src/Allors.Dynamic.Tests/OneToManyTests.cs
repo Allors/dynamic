@@ -1,8 +1,8 @@
 namespace Allors.Dynamic.Tests
 {
+    using System.Linq;
     using Allors.Dynamic.Meta;
     using Allors.Dynamic.Tests.Domain;
-    using System.Linq;
     using Xunit;
 
     public class OneToManyTests
@@ -12,9 +12,9 @@ namespace Allors.Dynamic.Tests
         {
             var population = new Default.DynamicPopulation(
                  new DynamicMeta(new Pluralizer()),
-                  v => v.AddOneToMany<Organisation, Person>("Employee"));
+                 v => v.AddOneToMany<Organization, Person>("Employee"));
 
-            dynamic acme = population.New<Organisation>();
+            dynamic acme = population.New<Organization>();
             dynamic jane = population.New<Person>();
             dynamic john = population.New<Person>();
             dynamic jenny = population.New<Person>();
@@ -37,13 +37,13 @@ namespace Allors.Dynamic.Tests
         {
             var population = new Default.DynamicPopulation(
                  new DynamicMeta(new Pluralizer()),
-                  v =>
+                 v =>
             {
-                v.AddUnit<Named, string>("Name");
-                v.AddOneToMany<Organisation, Person>("Employee");
+                v.AddUnit<INamed, string>("Name");
+                v.AddOneToMany<Organization, Person>("Employee");
             });
 
-            dynamic acme = population.New<Organisation>();
+            dynamic acme = population.New<Organization>();
 
             dynamic jane = population.New<Person>();
             jane.Name = "Jane";
@@ -56,7 +56,7 @@ namespace Allors.Dynamic.Tests
             acme.AddEmployee(john);
             acme.AddEmployee(jenny);
 
-            dynamic hooli = population.New<Organisation>();
+            dynamic hooli = population.New<Organization>();
 
             hooli.AddEmployee(jane);
 
@@ -82,9 +82,9 @@ namespace Allors.Dynamic.Tests
         {
             var population = new Default.DynamicPopulation(
                  new DynamicMeta(new Pluralizer()),
-                 v => v.AddOneToMany<Organisation, Person>("Employee"));
+                 v => v.AddOneToMany<Organization, Person>("Employee"));
 
-            dynamic acme = population.New<Organisation>();
+            dynamic acme = population.New<Organization>();
             dynamic jane = population.New<Person>();
             dynamic john = population.New<Person>();
             dynamic jenny = population.New<Person>();

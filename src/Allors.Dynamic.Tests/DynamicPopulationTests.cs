@@ -10,10 +10,10 @@ namespace Allors.Dynamic.Tests
         public void New()
         {
             var population = new Default.DynamicPopulation(new DynamicMeta(new Pluralizer()));
-            var name = population.Meta.AddUnit<Named, string>("Name");
-            var (property, owner) = population.Meta.AddOneToOne<Organisation, Person>("Owner");
+            var name = population.Meta.AddUnit<INamed, string>("Name");
+            var (property, owner) = population.Meta.AddOneToOne<Organization, Person>("Owner");
 
-            New<Organisation> newOrganisation = population.New;
+            New<Organization> newOrganisation = population.New;
             New<Person> newPerson = population.New;
 
             var acme = newOrganisation(v =>

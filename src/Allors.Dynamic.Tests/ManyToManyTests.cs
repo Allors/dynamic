@@ -11,10 +11,10 @@ namespace Allors.Dynamic.Tests
         {
             var population = new Default.DynamicPopulation(
                   new DynamicMeta(new Pluralizer()),
-                  v => v.AddManyToMany<Organisation, Person>("Employee"));
+                  v => v.AddManyToMany<Organization, Person>("Employee"));
 
-            dynamic acme = population.New<Organisation>();
-            dynamic hooli = population.New<Organisation>();
+            dynamic acme = population.New<Organization>();
+            dynamic hooli = population.New<Organization>();
 
             dynamic jane = population.New<Person>();
             dynamic john = population.New<Person>();
@@ -46,10 +46,10 @@ namespace Allors.Dynamic.Tests
         {
             var population = new Default.DynamicPopulation(
                   new DynamicMeta(new Pluralizer()),
-                   v => v.AddManyToMany<Organisation, Person>("Employee"));
+                  v => v.AddManyToMany<Organization, Person>("Employee"));
 
-            dynamic acme = population.New<Organisation>();
-            dynamic hooli = population.New<Organisation>();
+            dynamic acme = population.New<Organization>();
+            dynamic hooli = population.New<Organization>();
 
             dynamic jane = population.New<Person>();
             dynamic john = population.New<Person>();

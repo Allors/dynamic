@@ -14,6 +14,39 @@
 
         private IDictionary<string, IDynamicRoleType> derivedRoleTypeByName;
 
+        internal DynamicObjectType(DynamicMeta meta, Type type)
+        {
+            this.Meta = meta;
+            this.Type = type;
+            this.TypeCode = Type.GetTypeCode(type);
+            this.SuperTypes = new HashSet<DynamicObjectType>();
+            this.assignedAssociationTypeByName = new Dictionary<string, IDynamicAssociationType>();
+            this.assignedRoleTypeByName = new Dictionary<string, IDynamicRoleType>();
+
+            this.EmptyArray = Array.CreateInstance(type, 0);
+
+            var hierarchyChanged = false;
+            foreach (var other in meta.ObjectTypeByType.Values)
+            {
+                if (this.Type.IsAssignableFrom(other.Type))
+                {
+                    other.SuperTypes.Add(this);
+                    hierarchyChanged = true;
+                }
+
+                if (other.Type.IsAssignableFrom(this.Type))
+                {
+                    this.SuperTypes.Add(other);
+                    hierarchyChanged = true;
+                }
+            }
+
+            if (hierarchyChanged)
+            {
+                this.Meta.ResetDerivations();
+            }
+        }
+
         public DynamicMeta Meta { get; }
 
         public Type Type { get; }
@@ -21,8 +54,6 @@
         public TypeCode TypeCode { get; }
 
         public ISet<DynamicObjectType> SuperTypes { get; }
-
-        internal object EmptyArray { get; }
 
         public IDictionary<string, IDynamicAssociationType> AssociationTypeByName
         {
@@ -58,38 +89,7 @@
             }
         }
 
-        internal DynamicObjectType(DynamicMeta meta, Type type)
-        {
-            this.Meta = meta;
-            this.Type = type;
-            this.TypeCode = Type.GetTypeCode(type);
-            this.SuperTypes = new HashSet<DynamicObjectType>();
-            this.assignedAssociationTypeByName = new Dictionary<string, IDynamicAssociationType>();
-            this.assignedRoleTypeByName = new Dictionary<string, IDynamicRoleType>();
-
-            this.EmptyArray = Array.CreateInstance(type, 0);
-
-            var hierarchyChanged = false;
-            foreach (var other in meta.ObjectTypeByType.Values)
-            {
-                if (this.Type.IsAssignableFrom(other.Type))
-                {
-                    other.SuperTypes.Add(this);
-                    hierarchyChanged = true;
-                }
-
-                if (other.Type.IsAssignableFrom(this.Type))
-                {
-                    this.SuperTypes.Add(other);
-                    hierarchyChanged = true;
-                }
-            }
-
-            if (hierarchyChanged)
-            {
-                this.Meta.ResetDerivations();
-            }
-        }
+        internal object EmptyArray { get; }
 
         public DynamicUnitRoleType AddUnit(DynamicObjectType roleObjectType, string roleName)
         {

@@ -7,12 +7,16 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Allors.Dynamic", "Allors.Dy
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Allors.Dynamic.Tests", "Allors.Dynamic.Tests\Allors.Dynamic.Tests.csproj", "{40904FC9-AF76-41BD-8382-CAA02DA80162}"
 EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "_build", "..\build\_build.csproj", "{C9D429C9-6514-4BDA-A784-E5C691A822E7}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
 		Release|Any CPU = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{C9D429C9-6514-4BDA-A784-E5C691A822E7}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{C9D429C9-6514-4BDA-A784-E5C691A822E7}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{251F0C86-A91A-49EB-B658-2C0FA8BEFDB3}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{251F0C86-A91A-49EB-B658-2C0FA8BEFDB3}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{251F0C86-A91A-49EB-B658-2C0FA8BEFDB3}.Release|Any CPU.ActiveCfg = Release|Any CPU

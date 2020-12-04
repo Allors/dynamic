@@ -1,9 +1,9 @@
 namespace Allors.Dynamic.Tests
 {
-    using Allors.Dynamic.Meta;
-    using Allors.Dynamic.Tests.Domain;
     using System;
     using System.Linq;
+    using Allors.Dynamic.Meta;
+    using Allors.Dynamic.Tests.Domain;
     using Xunit;
 
     public class DerivationTests

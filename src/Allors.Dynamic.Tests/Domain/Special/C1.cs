@@ -9,11 +9,11 @@ namespace Allors.Dynamic.Tests.Domain
         {
         }
 
-        public string Same() => (string)this.GetRole(nameof(Same));
+        public string Same() => (string)this.GetRole(nameof(this.Same));
 
         public C1 Same(string value)
         {
-            this.SetRole(nameof(Same), value);
+            this.SetRole(nameof(this.Same), value);
             return this;
         }
     }

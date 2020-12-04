@@ -10,6 +10,6 @@ namespace Allors.Dynamic.Tests.Domain
             return @this;
         }
 
-        public static Organisation OrganisationWhereOwner(this Person @this) => (Organisation)@this.GetAssociation(nameof(OrganisationWhereOwner));
+        public static Organization OrganisationWhereOwner(this Person @this) => (Organization)@this.GetAssociation(nameof(OrganisationWhereOwner));
     }
 }

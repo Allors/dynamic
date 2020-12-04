@@ -26,6 +26,8 @@
 
         public Dictionary<string, IDynamicDerivation> DerivationById { get; }
 
+        public IEnumerable<dynamic> Objects => this.database.Objects;
+
         public dynamic New(Type t, params Action<dynamic>[] builders)
         {
             dynamic @new = Activator.CreateInstance(t, new object[] { this, this.Meta.GetOrAddObjectType(t) });
@@ -73,8 +75,6 @@
                 changeSet = this.Snapshot();
             }
         }
-
-        public IEnumerable<dynamic> Objects => this.database.Objects;
 
         public object GetRole(DynamicObject obj, IDynamicRoleType roleType)
         {

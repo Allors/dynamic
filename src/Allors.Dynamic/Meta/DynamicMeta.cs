@@ -38,7 +38,7 @@
 
         internal void ResetDerivations()
         {
-            foreach(var kvp in this.ObjectTypeByType)
+            foreach (var kvp in this.ObjectTypeByType)
             {
                 var objectType = kvp.Value;
                 objectType.ResetDerivations();
