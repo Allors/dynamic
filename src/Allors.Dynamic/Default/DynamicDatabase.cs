@@ -1,10 +1,10 @@
 ﻿namespace Allors.Dynamic.Default
 {
+    using Allors.Dynamic.Meta;
     using System;
     using System.Collections;
     using System.Collections.Generic;
     using System.Linq;
-    using Allors.Dynamic.Meta;
 
     internal class DynamicDatabase
     {
@@ -117,6 +117,12 @@
 
         internal void SetRole(dynamic association, IDynamicRoleType roleType, object role)
         {
+            if (role == null)
+            {
+                this.RemoveRole(association, roleType);
+                return;
+            }
+
             var normalizedRole = roleType.Normalize(role);
 
             if (roleType.IsUnit)
@@ -241,6 +247,11 @@
                     changedAssociationByRole[role] = NullableArraySet.Add(previousAssociation, association);
                 }
             }
+        }
+
+        internal void RemoveRole(dynamic association, IDynamicRoleType roleType)
+        {
+            throw new NotImplementedException();
         }
 
         internal void GetAssociation(DynamicObject role, IDynamicAssociationType associationType, out object association)
