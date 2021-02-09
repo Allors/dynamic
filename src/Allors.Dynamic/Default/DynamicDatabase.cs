@@ -70,11 +70,11 @@
                 foreach (var role in changedAssociationByRole.Keys.ToArray())
                 {
                     var changedAssociation = changedAssociationByRole[role];
-                    associationByRole.TryGetValue(role, out var originalRole);
+                    associationByRole.TryGetValue(role, out var originalAssociation);
 
-                    var areEqual = ReferenceEquals(originalRole, changedAssociation) ||
-                                   (associationType.IsOne && Equals(originalRole, changedAssociation)) ||
-                                   (associationType.IsMany && ((IStructuralEquatable)originalRole)?.Equals((IStructuralEquatable)changedAssociation) == true);
+                    var areEqual = ReferenceEquals(originalAssociation, changedAssociation) ||
+                                   (associationType.IsOne && Equals(originalAssociation, changedAssociation)) ||
+                                   (associationType.IsMany && ((IStructuralEquatable)originalAssociation)?.Equals((IStructuralEquatable)changedAssociation) == true);
 
                     if (areEqual)
                     {

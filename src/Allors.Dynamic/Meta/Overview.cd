@@ -10,7 +10,7 @@
       <Property Name="ObjectTypeByType" />
     </ShowAsCollectionAssociation>
   </Class>
-  <Class Name="Allors.Dynamic.Meta.DynamicObjectType" Collapsed="true">
+  <Class Name="Allors.Dynamic.Meta.DynamicObjectType">
     <Position X="0.5" Y="2.25" Width="1.5" />
     <TypeIdentifier>
       <HashCode>QAQEAAAAAAAQAARAAGAIABAQAYAARIgAAQAAgAAAACA=</HashCode>
