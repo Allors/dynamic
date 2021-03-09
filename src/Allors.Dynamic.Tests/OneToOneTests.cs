@@ -27,18 +27,18 @@ namespace Allors.Dynamic.Tests
             acme.Owner(jane);
 
             Assert.Equal(jane, acme.Owner());
-            Assert.Equal(acme, jane.OrganisationWhereOwner());
+            Assert.Equal(acme, jane.OrganizationWhereOwner());
 
             Assert.Null(gizmo.Owner());
-            Assert.Null(john.OrganisationWhereOwner());
+            Assert.Null(john.OrganizationWhereOwner());
 
             acme.Named(jane);
 
             Assert.Equal(jane, acme.Named());
-            Assert.Equal(acme, jane.OrganisationWhereNamed());
+            Assert.Equal(acme, jane.OrganizationWhereNamed());
 
             Assert.Null(gizmo.Named());
-            Assert.Null(john.OrganisationWhereNamed());
+            Assert.Null(john.OrganizationWhereNamed());
         }
 
         [Fact]
@@ -58,16 +58,16 @@ namespace Allors.Dynamic.Tests
             acme.Owner = jane;
 
             Assert.Equal(jane, acme.Owner);
-            Assert.Equal(acme, jane.OrganisationWhereOwner);
+            Assert.Equal(acme, jane.OrganizationWhereOwner);
             Assert.Equal(jane, acme["Owner"]);
-            Assert.Equal(acme, jane["OrganisationWhereOwner"]);
+            Assert.Equal(acme, jane["OrganizationWhereOwner"]);
             Assert.Equal(jane, acme[owner]);
             Assert.Equal(acme, jane[property]);
 
             Assert.Null(gizmo.Owner);
-            Assert.Null(john.OrganisationWhereOwner);
+            Assert.Null(john.OrganizationWhereOwner);
             Assert.Null(gizmo["Owner"]);
-            Assert.Null(john["OrganisationWhereOwner"]);
+            Assert.Null(john["OrganizationWhereOwner"]);
             Assert.Null(gizmo[owner]);
             Assert.Null(john[property]);
 
@@ -94,16 +94,16 @@ namespace Allors.Dynamic.Tests
             acme["Owner"] = jane;
 
             Assert.Equal(jane, acme.Owner);
-            Assert.Equal(acme, jane.OrganisationWhereOwner);
+            Assert.Equal(acme, jane.OrganizationWhereOwner);
             Assert.Equal(jane, acme["Owner"]);
-            Assert.Equal(acme, jane["OrganisationWhereOwner"]);
+            Assert.Equal(acme, jane["OrganizationWhereOwner"]);
             Assert.Equal(jane, acme[owner]);
             Assert.Equal(acme, jane[property]);
 
             Assert.Null(gizmo.Owner);
-            Assert.Null(john.OrganisationWhereOwner);
+            Assert.Null(john.OrganizationWhereOwner);
             Assert.Null(gizmo["Owner"]);
-            Assert.Null(john["OrganisationWhereOwner"]);
+            Assert.Null(john["OrganizationWhereOwner"]);
             Assert.Null(gizmo[owner]);
             Assert.Null(john[property]);
 
@@ -130,16 +130,16 @@ namespace Allors.Dynamic.Tests
             acme[owner] = jane;
 
             Assert.Equal(jane, acme.Owner);
-            Assert.Equal(acme, jane.OrganisationWhereOwner);
+            Assert.Equal(acme, jane.OrganizationWhereOwner);
             Assert.Equal(jane, acme["Owner"]);
-            Assert.Equal(acme, jane["OrganisationWhereOwner"]);
+            Assert.Equal(acme, jane["OrganizationWhereOwner"]);
             Assert.Equal(jane, acme[owner]);
             Assert.Equal(acme, jane[property]);
 
             Assert.Null(gizmo.Owner);
-            Assert.Null(john.OrganisationWhereOwner);
+            Assert.Null(john.OrganizationWhereOwner);
             Assert.Null(gizmo["Owner"]);
-            Assert.Null(john["OrganisationWhereOwner"]);
+            Assert.Null(john["OrganizationWhereOwner"]);
             Assert.Null(gizmo[owner]);
             Assert.Null(john[property]);
 

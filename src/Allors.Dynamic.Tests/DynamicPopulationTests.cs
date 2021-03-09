@@ -13,10 +13,10 @@ namespace Allors.Dynamic.Tests
             var name = population.Meta.AddUnit<INamed, string>("Name");
             var (property, owner) = population.Meta.AddOneToOne<Organization, Person>("Owner");
 
-            New<Organization> newOrganisation = population.New;
+            New<Organization> newOrganization = population.New;
             New<Person> newPerson = population.New;
 
-            var acme = newOrganisation(v =>
+            var acme = newOrganization(v =>
             {
                 v.Name("Acme");
                 v.Owner(newPerson(v => v.Name("Jane")));
@@ -27,7 +27,7 @@ namespace Allors.Dynamic.Tests
             Assert.Equal("Acme", acme.Name());
             Assert.Equal("Jane", jane.Name());
 
-            Assert.Equal(acme, jane.OrganisationWhereOwner());
+            Assert.Equal(acme, jane.OrganizationWhereOwner());
         }
     }
 }

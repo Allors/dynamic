@@ -45,7 +45,7 @@
 
                     var areEqual = ReferenceEquals(originalRole, role) ||
                                    (roleType.IsOne && Equals(originalRole, role)) ||
-                                   (roleType.IsMany && ((IStructuralEquatable)originalRole)?.Equals((IStructuralEquatable)role) == true);
+                                   (roleType.IsMany && NullableArraySet.Same(originalRole, role));
 
                     if (areEqual)
                     {
@@ -74,7 +74,7 @@
 
                     var areEqual = ReferenceEquals(originalAssociation, changedAssociation) ||
                                    (associationType.IsOne && Equals(originalAssociation, changedAssociation)) ||
-                                   (associationType.IsMany && ((IStructuralEquatable)originalAssociation)?.Equals((IStructuralEquatable)changedAssociation) == true);
+                                   (associationType.IsMany && NullableArraySet.Same(originalAssociation, changedAssociation));
 
                     if (areEqual)
                     {
@@ -92,6 +92,36 @@
             }
 
             var snapshot = new DynamicChangeSet(this.meta, this.changedRoleByAssociationByRoleType, this.changedAssociationByRoleByAssociationType);
+
+            foreach (var kvp in this.changedRoleByAssociationByRoleType)
+            {
+                var roleType = kvp.Key;
+                var changedRoleByAssociation = kvp.Value;
+
+                var roleByAssociation = this.RoleByAssociation(roleType);
+
+                foreach (var kvp2 in changedRoleByAssociation)
+                {
+                    var association = kvp2.Key;
+                    var changedRole = kvp2.Value;
+                    roleByAssociation[association] = changedRole;
+                }
+            }
+
+            foreach (var kvp in this.changedAssociationByRoleByAssociationType)
+            {
+                var associationType = kvp.Key;
+                var changedAssociationByRole = kvp.Value;
+
+                var associationByRole = this.AssociationByRole(associationType);
+
+                foreach (var kvp2 in changedAssociationByRole)
+                {
+                    var role = kvp2.Key;
+                    var changedAssociation = kvp2.Value;
+                    associationByRole[role] = changedAssociation;
+                }
+            }
 
             this.changedRoleByAssociationByRoleType = new Dictionary<IDynamicRoleType, Dictionary<DynamicObject, object>>();
             this.changedAssociationByRoleByAssociationType = new Dictionary<IDynamicAssociationType, Dictionary<DynamicObject, object>>();
@@ -169,7 +199,7 @@
                 }
                 else
                 {
-                    var roles = ((IEnumerable<DynamicObject>)normalizedRole)?.ToArray() ?? Array.Empty<DynamicObject>();
+                    var roles = ((IEnumerable)normalizedRole)?.Cast<DynamicObject>().ToArray() ?? Array.Empty<DynamicObject>();
                     var previousRoles = (DynamicObject[])previousRole ?? Array.Empty<DynamicObject>();
 
                     // Use Diff (Add/Remove)
@@ -244,7 +274,7 @@
                 else
                 {
                     // Many to Many
-                    changedAssociationByRole[role] = NullableArraySet.Add(previousAssociation, association);
+                    changedAssociationByRole[role] = NullableArraySet.Remove(previousAssociation, association);
                 }
             }
         }

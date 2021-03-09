@@ -1,6 +1,6 @@
 namespace Allors.Dynamic.Tests.Domain
 {
-    public static class OrganisationExtensions
+    public static class OrganizationExtensions
     {
         public static string Name(this Organization @this) => (string)@this.GetRole(nameof(Name));
 

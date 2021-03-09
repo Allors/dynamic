@@ -1,3 +1,5 @@
+using System;
+
 namespace Allors.Dynamic.Tests
 {
     using Allors.Dynamic.Meta;
@@ -7,7 +9,7 @@ namespace Allors.Dynamic.Tests
     public class SnapshotTests
     {
         [Fact]
-        public void Snapshot()
+        public void Unit()
         {
             var population = new Default.DynamicPopulation(
                 new DynamicMeta(new Pluralizer()),
@@ -45,6 +47,56 @@ namespace Allors.Dynamic.Tests
             Assert.Single(changedLastNames.Keys);
             Assert.Contains(jane, changedFirstNames.Keys);
             Assert.Contains(jane, changedLastNames.Keys);
+        }
+
+
+        [Fact]
+        public void Composites()
+        {
+            var population = new Default.DynamicPopulation(
+                new DynamicMeta(new Pluralizer()),
+                v =>
+                {
+                    v.AddUnit<Person, string>("FirstName");
+                    v.AddUnit<Person, string>("LastName");
+                    v.AddUnit<Organization, string>("Name");
+                    v.AddManyToMany<Organization, Person>("Employee");
+                });
+
+            dynamic john = population.New<Person>();
+            dynamic jane = population.New<Person>();
+
+            john.FirstName = "John";
+            john.LastName = "Doe";
+
+            jane.FirstName = "Jane";
+            jane.LastName = "Doe";
+
+            dynamic acme = population.New<Organization>();
+
+            acme.Name = "Acme";
+
+            acme.Employees = new[] { john, jane };
+
+            var snapshot = population.Snapshot();
+            var changedEmployees = snapshot.ChangedRoles<Organization>("Employee");
+            Assert.Single(changedEmployees);
+
+            acme.Employees = new[] { jane, john };
+
+            snapshot = population.Snapshot();
+            changedEmployees = snapshot.ChangedRoles<Organization>("Employee");
+            Assert.Empty(changedEmployees);
+
+            acme.Employees = Array.Empty<DynamicObject>();
+
+            var x = acme.Employees;
+
+            acme.Employees = new[] { jane, john };
+
+            snapshot = population.Snapshot();
+            changedEmployees = snapshot.ChangedRoles<Organization>("Employee");
+            Assert.Empty(changedEmployees);
         }
     }
 }

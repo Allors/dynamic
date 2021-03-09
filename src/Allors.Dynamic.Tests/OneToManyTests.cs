@@ -27,9 +27,9 @@ namespace Allors.Dynamic.Tests
             Assert.Contains(john, acme.Employees);
             Assert.Contains(jenny, acme.Employees);
 
-            Assert.Equal(acme, jane.OrganisationWhereEmployee);
-            Assert.Equal(acme, john.OrganisationWhereEmployee);
-            Assert.Equal(acme, jenny.OrganisationWhereEmployee);
+            Assert.Equal(acme, jane.OrganizationWhereEmployee);
+            Assert.Equal(acme, john.OrganizationWhereEmployee);
+            Assert.Equal(acme, jenny.OrganizationWhereEmployee);
         }
 
         [Fact]
@@ -70,11 +70,11 @@ namespace Allors.Dynamic.Tests
             Assert.Contains(john, acme.Employees);
             Assert.Contains(jenny, acme.Employees);
 
-            Assert.Equal(hooli, jane.OrganisationWhereEmployee);
+            Assert.Equal(hooli, jane.OrganizationWhereEmployee);
 
-            Assert.NotEqual(acme, jane.OrganisationWhereEmployee);
-            Assert.Equal(acme, john.OrganisationWhereEmployee);
-            Assert.Equal(acme, jenny.OrganisationWhereEmployee);
+            Assert.NotEqual(acme, jane.OrganizationWhereEmployee);
+            Assert.Equal(acme, john.OrganizationWhereEmployee);
+            Assert.Equal(acme, jenny.OrganizationWhereEmployee);
         }
 
         [Fact]
@@ -99,9 +99,9 @@ namespace Allors.Dynamic.Tests
             Assert.Contains(john, acme.Employees);
             Assert.Contains(jenny, acme.Employees);
 
-            Assert.NotEqual(acme, jane.OrganisationWhereEmployee);
-            Assert.Equal(acme, john.OrganisationWhereEmployee);
-            Assert.Equal(acme, jenny.OrganisationWhereEmployee);
+            Assert.NotEqual(acme, jane.OrganizationWhereEmployee);
+            Assert.Equal(acme, john.OrganizationWhereEmployee);
+            Assert.Equal(acme, jenny.OrganizationWhereEmployee);
 
             acme.RemoveEmployee(john);
 
@@ -109,9 +109,9 @@ namespace Allors.Dynamic.Tests
             Assert.DoesNotContain(john, acme.Employees);
             Assert.Contains(jenny, acme.Employees);
 
-            Assert.NotEqual(acme, jane.OrganisationWhereEmployee);
-            Assert.NotEqual(acme, john.OrganisationWhereEmployee);
-            Assert.Equal(acme, jenny.OrganisationWhereEmployee);
+            Assert.NotEqual(acme, jane.OrganizationWhereEmployee);
+            Assert.NotEqual(acme, john.OrganizationWhereEmployee);
+            Assert.Equal(acme, jenny.OrganizationWhereEmployee);
 
             acme.RemoveEmployee(jenny);
 
@@ -119,9 +119,9 @@ namespace Allors.Dynamic.Tests
             Assert.DoesNotContain(john, acme.Employees);
             Assert.DoesNotContain(jenny, acme.Employees);
 
-            Assert.NotEqual(acme, jane.OrganisationWhereEmployee);
-            Assert.NotEqual(acme, john.OrganisationWhereEmployee);
-            Assert.NotEqual(acme, jenny.OrganisationWhereEmployee);
+            Assert.NotEqual(acme, jane.OrganizationWhereEmployee);
+            Assert.NotEqual(acme, john.OrganizationWhereEmployee);
+            Assert.NotEqual(acme, jenny.OrganizationWhereEmployee);
         }
     }
 }
