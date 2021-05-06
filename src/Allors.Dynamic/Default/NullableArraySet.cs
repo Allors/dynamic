@@ -37,7 +37,13 @@ namespace Allors.Dynamic.Default
 
         internal static DynamicObject[] Remove(object set, DynamicObject item)
         {
+
             var sourceArray = (DynamicObject[])set;
+
+            if (sourceArray == null)
+            {
+                return null;
+            }
 
             var index = Array.IndexOf(sourceArray, item);
 
