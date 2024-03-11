@@ -16,17 +16,14 @@ using static Nuke.Common.IO.FileSystemTasks;
 using static Nuke.Common.IO.PathConstruction;
 using static Nuke.Common.Tools.DotNet.DotNetTasks;
 
-[CheckBuildProjectConfigurations]
-[ShutdownDotNetAfterServerBuild]
 class Build : NukeBuild
 {
     const string ProjectName = "Allors.Dynamic";
 
-    public static int Main() => Execute<Build>(x => x.Compile);
+    public static int Main() => Execute<Build>(x => x.Ci);
 
     [Parameter("Configuration to build - Default is 'Debug' (local) or 'Release' (server)")]
     readonly Configuration Configuration = IsLocalBuild ? Configuration.Debug : Configuration.Release;
-
     [Parameter("Collect code coverage. Default is 'true'")] readonly bool Cover = true;
 
     [Solution] readonly Solution Solution;
@@ -43,8 +40,8 @@ class Build : NukeBuild
         .Before(Restore)
         .Executes(() =>
         {
-            SourceDirectory.GlobDirectories("**/bin", "**/obj").ForEach(DeleteDirectory);
-            EnsureCleanDirectory(ArtifactsDirectory);
+            DotNetClean(v => v.SetProject(SourceDirectory));
+            ArtifactsDirectory.CreateOrCleanDirectory();
         });
 
     Target Restore => _ => _
@@ -77,7 +74,7 @@ class Build : NukeBuild
                 .SetConfiguration(Configuration)
                 .EnableNoBuild()
                 .EnableNoRestore()
-                .SetLogger("trx")
+                .AddLoggers("trx;LogFileName=AllorsDynamicTests.trx")
                 .EnableProcessLogOutput()
                 .SetResultsDirectory(TestsDirectory)
                 .When(Cover, _ => _

@@ -1,13 +1,10 @@
 <Project>
-  <PropertyGroup>
-    <LangVersion>8</LangVersion>
-  </PropertyGroup>
+	<PropertyGroup>
+		<LangVersion>default</LangVersion>
+		<!-- <LangVersion>latest</LangVersion> -->
+		<!-- <Nullable>enable</Nullable> -->
+		<!-- <WarningsAsErrors>nullable</WarningsAsErrors> -->
+		<AnalysisMode>Recommended</AnalysisMode>
+	</PropertyGroup>
 
-  <ItemGroup>
-    <PackageReference Include="AsyncUsageAnalyzers" Version="1.0.0-alpha003" PrivateAssets="all" />
-    <PackageReference Include="DotNetAnalyzers.DocumentationAnalyzers" Version="1.0.0-beta.59" PrivateAssets="all" />
-    <PackageReference Include="StyleCop.Analyzers" Version="1.2.0-beta.261" PrivateAssets="all" />
-    <PackageReference Include="Microsoft.CodeAnalysis.CSharp.CodeStyle" Version="3.8.0" PrivateAssets="all" />
-    <PackageReference Include="Roslynator.Analyzers" Version="3.0.0" PrivateAssets="all"/>
-  </ItemGroup>
 </Project>
