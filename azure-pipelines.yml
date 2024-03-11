@@ -65,7 +65,7 @@ jobs:
         summaryFileLocation: "$(Build.SourcesDirectory)/artifacts/coverage/*.xml"
         failIfCoverageEmpty: true
       displayName: 'Publish Code Coverage'
-    - task: NuGetAuthenticate@0
+    - task: NuGetAuthenticate@1
       displayName: 'NuGet Authenticate'
     - task: NuGetCommand@2
       displayName: 'NuGet push'
