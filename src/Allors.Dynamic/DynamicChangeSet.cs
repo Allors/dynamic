@@ -9,10 +9,10 @@
     {
         private static readonly IReadOnlyDictionary<DynamicObject, object> Empty = new ReadOnlyDictionary<DynamicObject, object>(new Dictionary<DynamicObject, object>());
 
-        private readonly IReadOnlyDictionary<IDynamicRoleType, Dictionary<DynamicObject, object>> roleByAssociationByRoleType;
-        private readonly IReadOnlyDictionary<IDynamicAssociationType, Dictionary<DynamicObject, object>> associationByRoleByRoleType;
+        private readonly IReadOnlyDictionary<DynamicRoleType, Dictionary<DynamicObject, object>> roleByAssociationByRoleType;
+        private readonly IReadOnlyDictionary<DynamicAssociationType, Dictionary<DynamicObject, object>> associationByRoleByRoleType;
 
-        public DynamicChangeSet(DynamicMeta meta, IReadOnlyDictionary<IDynamicRoleType, Dictionary<DynamicObject, object>> roleByAssociationByRoleType, IReadOnlyDictionary<IDynamicAssociationType, Dictionary<DynamicObject, object>> associationByRoleByAssociationType)
+        public DynamicChangeSet(DynamicMeta meta, IReadOnlyDictionary<DynamicRoleType, Dictionary<DynamicObject, object>> roleByAssociationByRoleType, IReadOnlyDictionary<DynamicAssociationType, Dictionary<DynamicObject, object>> associationByRoleByAssociationType)
         {
             this.Meta = meta;
             this.roleByAssociationByRoleType = roleByAssociationByRoleType;
@@ -38,7 +38,7 @@
             return this.ChangedRoles(roleType) ?? Empty;
         }
 
-        public IReadOnlyDictionary<DynamicObject, object> ChangedRoles(IDynamicRoleType roleType)
+        public IReadOnlyDictionary<DynamicObject, object> ChangedRoles(DynamicRoleType roleType)
         {
             this.roleByAssociationByRoleType.TryGetValue(roleType, out var changedRelations);
             return changedRelations?? Empty;

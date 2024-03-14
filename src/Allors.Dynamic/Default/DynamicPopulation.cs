@@ -76,28 +76,28 @@
             }
         }
 
-        public object GetRole(DynamicObject obj, IDynamicRoleType roleType)
+        public object GetRole(DynamicObject obj, DynamicRoleType roleType)
         {
             this.database.GetRole(obj, roleType, out var result);
             return result;
         }
 
-        public void SetRole(DynamicObject obj, IDynamicRoleType roleType, object value)
+        public void SetRole(DynamicObject obj, DynamicRoleType roleType, object value)
         {
             this.database.SetRole(obj, roleType, value);
         }
 
-        public void AddRole(DynamicObject obj, IDynamicRoleType roleType, IDynamicObject role)
+        public void AddRole(DynamicObject obj, DynamicRoleType roleType, IDynamicObject role)
         {
             this.database.AddRole(obj, roleType, (DynamicObject)role);
         }
 
-        public void RemoveRole(DynamicObject obj, IDynamicRoleType roleType, IDynamicObject role)
+        public void RemoveRole(DynamicObject obj, DynamicRoleType roleType, IDynamicObject role)
         {
             this.database.RemoveRole(obj, roleType, (DynamicObject)role);
         }
 
-        public object GetAssociation(DynamicObject obj, IDynamicAssociationType associationType)
+        public object GetAssociation(DynamicObject obj, DynamicAssociationType associationType)
         {
             this.database.GetAssociation(obj, associationType, out var result);
             return result;

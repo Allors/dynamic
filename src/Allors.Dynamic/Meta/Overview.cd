@@ -1,45 +1,48 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <ClassDiagram MajorVersion="1" MinorVersion="1">
-  <Class Name="Allors.Dynamic.Meta.DynamicMeta" Collapsed="true">
-    <Position X="0.5" Y="0.5" Width="1.5" />
+  <Class Name="Allors.Embedded.Meta.EmbeddedMeta">
+    <Position X="0.5" Y="0.5" Width="3" />
     <TypeIdentifier>
-      <HashCode>AAAAAAAAAAAQAAAAAAAAAAAASYAABAgAAAAAAAACACA=</HashCode>
-      <FileName>Meta\DynamicMeta.cs</FileName>
+      <HashCode>AAAAAAAAAAAQAAAAAAAAAAJABYAABAgAAAAAAQAAACA=</HashCode>
+      <FileName>Meta\EmbeddedMeta.cs</FileName>
     </TypeIdentifier>
     <ShowAsCollectionAssociation>
-      <Property Name="ObjectTypeByType" />
+      <Property Name="EmbeddedObjectTypeByType" />
     </ShowAsCollectionAssociation>
   </Class>
-  <Class Name="Allors.Dynamic.Meta.DynamicObjectType">
-    <Position X="0.5" Y="2.25" Width="1.5" />
+  <Class Name="Allors.Embedded.Meta.EmbeddedObjectType">
+    <Position X="5.75" Y="0.5" Width="2.5" />
     <TypeIdentifier>
-      <HashCode>QAQEAAAAAAAQAARAAGAIABAQAYAARIgAAQAAgAAAACA=</HashCode>
-      <FileName>Meta\DynamicObjectType.cs</FileName>
+      <HashCode>AAAAAACCAAAQAAhCAGgAgBAAAYAABAgAAQAAAAAACCA=</HashCode>
+      <FileName>Meta\EmbeddedObjectType.cs</FileName>
     </TypeIdentifier>
+    <ShowAsAssociation>
+      <Property Name="Type" />
+    </ShowAsAssociation>
     <ShowAsCollectionAssociation>
-      <Property Name="AssociationTypeByName" />
-      <Property Name="RoleTypeByName" />
+      <Property Name="SuperTypes" />
+      <Property Name="EmbeddedAssociationTypeByName" />
+      <Property Name="EmbeddedRoleTypeByName" />
     </ShowAsCollectionAssociation>
   </Class>
-  <Interface Name="Allors.Dynamic.Meta.IDynamicAssociationType">
-    <Position X="4" Y="1.75" Width="2" />
+  <Class Name="Allors.Embedded.Meta.EmbeddedAssociationType">
+    <Position X="11" Y="0.5" Width="2.25" />
     <TypeIdentifier>
-      <HashCode>AAIAiAAAAAAAAAIAAAAAAAQAAAAAAAACAIAAAAAAAAA=</HashCode>
-      <FileName>Meta\IDynamicAssociationType.cs</FileName>
+      <HashCode>AIAAiAAAAAAAAAIAAAAAAAQAAAAAAAACAABAAAAAAAA=</HashCode>
+      <FileName>Meta\EmbeddedAssociationType.cs</FileName>
     </TypeIdentifier>
-    <ShowAsAssociation>
-      <Property Name="RoleType" />
-    </ShowAsAssociation>
-  </Interface>
-  <Interface Name="Allors.Dynamic.Meta.IDynamicRoleType">
-    <Position X="8.25" Y="2.25" Width="1.75" />
+  </Class>
+  <Class Name="Allors.Embedded.Meta.EmbeddedRoleType">
+    <Position X="11" Y="4" Width="2.5" />
     <TypeIdentifier>
-      <HashCode>AAAAiAAAAAAAAAIAEAAAAAQAgCAAAAACAIAAAAAAAAA=</HashCode>
-      <FileName>Meta\IDynamicRoleType.cs</FileName>
+      <HashCode>AAAQiAAAAABAgAIEAAAAAAQAACAAAAACAABAAAAAAAA=</HashCode>
+      <FileName>Meta\EmbeddedRoleType.cs</FileName>
     </TypeIdentifier>
-    <ShowAsAssociation>
-      <Property Name="AssociationType" />
-    </ShowAsAssociation>
-  </Interface>
+  </Class>
+  <Class Name="System.Type" Collapsed="true">
+    <Position X="9" Y="2.75" Width="1.5" />
+    <TypeIdentifier />
+    <Lollipop Position="0.2" />
+  </Class>
   <Font Name="Segoe UI" Size="9" />
 </ClassDiagram>

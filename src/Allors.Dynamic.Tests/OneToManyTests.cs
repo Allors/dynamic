@@ -11,7 +11,7 @@ namespace Allors.Dynamic.Tests
         public void AddSameAssociation()
         {
             var population = new Default.DynamicPopulation(
-                 new DynamicMeta(new Pluralizer()),
+                 new DynamicMeta(),
                  v => v.AddOneToMany<Organization, Person>("Employee"));
 
             dynamic acme = population.New<Organization>();
@@ -36,7 +36,7 @@ namespace Allors.Dynamic.Tests
         public void AddDifferentAssociation()
         {
             var population = new Default.DynamicPopulation(
-                 new DynamicMeta(new Pluralizer()),
+                 new DynamicMeta(),
                  v =>
             {
                 v.AddUnit<INamed, string>("Name");
@@ -81,7 +81,7 @@ namespace Allors.Dynamic.Tests
         public void Remove()
         {
             var population = new Default.DynamicPopulation(
-                 new DynamicMeta(new Pluralizer()),
+                 new DynamicMeta(),
                  v => v.AddOneToMany<Organization, Person>("Employee"));
 
             dynamic acme = population.New<Organization>();

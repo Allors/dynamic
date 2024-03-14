@@ -108,10 +108,10 @@
 
                     break;
 
-                case IDynamicRoleType roleType:
+                case DynamicRoleType roleType:
                     return this.TryGetRole(roleType, out result);
 
-                case IDynamicAssociationType associationType:
+                case DynamicAssociationType associationType:
                     return this.TryGetAssociation(associationType, out result);
             }
 
@@ -119,7 +119,7 @@
             return false;
         }
 
-        private bool TryGetRole(IDynamicRoleType roleType, out object result)
+        private bool TryGetRole(DynamicRoleType roleType, out object result)
         {
             result = this.Population.GetRole(this, roleType);
             if (result == null && roleType.IsMany)
@@ -130,7 +130,7 @@
             return true;
         }
 
-        private bool TryGetAssociation(IDynamicAssociationType associationType, out object result)
+        private bool TryGetAssociation(DynamicAssociationType associationType, out object result)
         {
             result = this.Population.GetAssociation(this, associationType);
             if (result == null && associationType.IsMany)
@@ -156,7 +156,7 @@
 
                     break;
 
-                case IDynamicRoleType roleType:
+                case DynamicRoleType roleType:
                     this.Population.SetRole(this, roleType, value);
                     return true;
             }

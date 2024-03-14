@@ -10,7 +10,7 @@ namespace Allors.Dynamic.Tests
         public void PropertySet()
         {
             var population = new Default.DynamicPopulation(
-                new DynamicMeta(new Pluralizer()),
+                new DynamicMeta(),
                 v => v.AddUnit<Person, string>("FirstName"));
 
             dynamic jubayer = population.New<Person>();
@@ -26,7 +26,7 @@ namespace Allors.Dynamic.Tests
         [Fact]
         public void IndexSet()
         {
-            var meta = new DynamicMeta(new Pluralizer());
+            var meta = new DynamicMeta();
             meta.AddUnit<Person, string>("FirstName");
             var population = new Default.DynamicPopulation(meta);
 

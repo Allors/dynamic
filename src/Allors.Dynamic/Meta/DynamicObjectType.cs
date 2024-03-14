@@ -6,26 +6,27 @@
 
     public class DynamicObjectType
     {
-        private readonly IDictionary<string, IDynamicAssociationType> assignedAssociationTypeByName;
+        private readonly Dictionary<string, DynamicAssociationType> assignedEmbeddedAssociationTypeByName;
 
-        private readonly IDictionary<string, IDynamicRoleType> assignedRoleTypeByName;
+        private readonly Dictionary<string, DynamicRoleType> assignedEmbeddedRoleTypeByName;
 
-        private IDictionary<string, IDynamicAssociationType> derivedAssociationTypeByName;
+        private IDictionary<string, DynamicAssociationType>? derivedEmbeddedAssociationTypeByName;
 
-        private IDictionary<string, IDynamicRoleType> derivedRoleTypeByName;
+        private IDictionary<string, DynamicRoleType>? derivedEmbeddedRoleTypeByName;
 
-        internal DynamicObjectType(DynamicMeta meta, Type type)
+        internal DynamicObjectType(DynamicMeta dynamicMeta, Type type)
         {
-            this.Meta = meta;
+            this.DynamicMeta = dynamicMeta;
             this.Type = type;
             this.TypeCode = Type.GetTypeCode(type);
             this.SuperTypes = new HashSet<DynamicObjectType>();
-            this.assignedAssociationTypeByName = new Dictionary<string, IDynamicAssociationType>();
-            this.assignedRoleTypeByName = new Dictionary<string, IDynamicRoleType>();
+            this.assignedEmbeddedAssociationTypeByName = new Dictionary<string, DynamicAssociationType>();
+            this.assignedEmbeddedRoleTypeByName = new Dictionary<string, DynamicRoleType>();
 
+            this.EmptyArray = Array.CreateInstance(type, 0);
 
             var hierarchyChanged = false;
-            foreach (var other in meta.ObjectTypeByType.Values)
+            foreach (var other in dynamicMeta.ObjectTypeByType.Values)
             {
                 if (this.Type.IsAssignableFrom(other.Type))
                 {
@@ -42,139 +43,300 @@
 
             if (hierarchyChanged)
             {
-                this.Meta.ResetDerivations();
+                this.DynamicMeta.ResetDerivations();
             }
         }
 
-        public DynamicMeta Meta { get; }
-
-        public Type Type { get; }
+        public DynamicMeta DynamicMeta { get; }
 
         public TypeCode TypeCode { get; }
 
         public ISet<DynamicObjectType> SuperTypes { get; }
 
-        public IDictionary<string, IDynamicAssociationType> AssociationTypeByName
+        public Type Type { get; }
+
+        public IDictionary<string, DynamicAssociationType> AssociationTypeByName
         {
             get
             {
-                if (this.derivedAssociationTypeByName == null)
+                if (this.derivedEmbeddedAssociationTypeByName == null)
                 {
-                    this.derivedAssociationTypeByName = new Dictionary<string, IDynamicAssociationType>(this.assignedAssociationTypeByName);
-                    foreach (var item in this.SuperTypes.SelectMany(v => v.assignedAssociationTypeByName))
+                    this.derivedEmbeddedAssociationTypeByName = new Dictionary<string, DynamicAssociationType>(this.assignedEmbeddedAssociationTypeByName);
+                    foreach (var item in this.SuperTypes.SelectMany(v => v.assignedEmbeddedAssociationTypeByName))
                     {
-                        this.derivedAssociationTypeByName[item.Key] = item.Value;
+                        this.derivedEmbeddedAssociationTypeByName[item.Key] = item.Value;
                     }
                 }
 
-                return this.derivedAssociationTypeByName;
+                return this.derivedEmbeddedAssociationTypeByName;
             }
         }
 
-        public IDictionary<string, IDynamicRoleType> RoleTypeByName
+        public IDictionary<string, DynamicRoleType> RoleTypeByName
         {
             get
             {
-                if (this.derivedRoleTypeByName == null)
+                if (this.derivedEmbeddedRoleTypeByName == null)
                 {
-                    this.derivedRoleTypeByName = new Dictionary<string, IDynamicRoleType>(this.assignedRoleTypeByName);
-                    foreach (var item in this.SuperTypes.SelectMany(v => v.assignedRoleTypeByName))
+                    this.derivedEmbeddedRoleTypeByName = new Dictionary<string, DynamicRoleType>(this.assignedEmbeddedRoleTypeByName);
+                    foreach (var item in this.SuperTypes.SelectMany(v => v.assignedEmbeddedRoleTypeByName))
                     {
-                        this.derivedRoleTypeByName[item.Key] = item.Value;
+                        this.derivedEmbeddedRoleTypeByName[item.Key] = item.Value;
                     }
                 }
 
-                return this.derivedRoleTypeByName;
+                return this.derivedEmbeddedRoleTypeByName;
             }
         }
 
         internal object EmptyArray { get; }
 
-        public DynamicUnitRoleType AddUnit(DynamicObjectType roleObjectType, string roleName)
+        internal DynamicRoleType AddUnit(DynamicObjectType objectType, string? roleSingularName, string? associationSingularName)
         {
-            var roleType = new DynamicUnitRoleType(roleObjectType, roleName);
+            roleSingularName ??= objectType.Type.Name;
+            string rolePluralName = this.DynamicMeta.Pluralize(roleSingularName);
+
+            var roleType = new DynamicRoleType
+            (
+                objectType,
+                roleSingularName,
+                rolePluralName,
+                roleSingularName,
+                true,
+                false,
+                true
+            );
+
+            string associationPluralName;
+            if (associationSingularName != null)
+            {
+                associationPluralName = this.DynamicMeta.Pluralize(associationSingularName);
+            }
+            else
+            {
+                associationSingularName = roleType.SingularNameForEmbeddedAssociationType(this);
+                associationPluralName = roleType.PluralNameForEmbeddedAssociationType(this);
+            }
+
+            roleType.AssociationType = new DynamicAssociationType(
+                this,
+                roleType,
+                associationSingularName,
+                associationPluralName,
+                associationSingularName,
+                true,
+                false
+            );
+
             this.AddRoleType(roleType);
+            objectType.AddAssociationType(roleType.AssociationType);
 
-            var associationType = new DynamicUnitAssociationType(this, roleType);
-            roleObjectType.AddAssociationType(associationType);
-
-            this.Meta.ResetDerivations();
+            this.DynamicMeta.ResetDerivations();
 
             return roleType;
         }
 
-        public DynamicOneToOneRoleType AddOneToOne(DynamicObjectType roleObjectType, string roleName)
+        internal DynamicRoleType AddOneToOne(DynamicObjectType objectType, string? roleSingularName, string? associationSingularName)
         {
-            var roleType = new DynamicOneToOneRoleType(roleObjectType, roleName);
+            roleSingularName ??= objectType.Type.Name;
+            string rolePluralName = this.DynamicMeta.Pluralize(roleSingularName);
+
+            var roleType = new DynamicRoleType
+            (
+                objectType,
+                roleSingularName,
+                rolePluralName,
+                roleSingularName,
+                true,
+                false,
+                false
+            );
+
+            string associationPluralName;
+            if (associationSingularName != null)
+            {
+                associationPluralName = this.DynamicMeta.Pluralize(associationSingularName);
+            }
+            else
+            {
+                associationSingularName = roleType.SingularNameForEmbeddedAssociationType(this);
+                associationPluralName = roleType.PluralNameForEmbeddedAssociationType(this);
+            }
+
+            roleType.AssociationType = new DynamicAssociationType(
+                this,
+                roleType,
+                associationSingularName,
+                associationPluralName,
+                associationSingularName,
+                true,
+                false
+            );
+
             this.AddRoleType(roleType);
+            objectType.AddAssociationType(roleType.AssociationType);
 
-            var associationType = new DynamicOneToOneAssociationType(this, roleType);
-            roleObjectType.AddAssociationType(associationType);
-
-            this.Meta.ResetDerivations();
+            this.DynamicMeta.ResetDerivations();
 
             return roleType;
         }
 
-        public DynamicManyToOneRoleType AddManyToOne(DynamicObjectType roleObjectType, string roleName)
+        internal DynamicRoleType AddManyToOne(DynamicObjectType objectType, string? roleSingularName, string? associationSingularName)
         {
-            var roleType = new DynamicManyToOneRoleType(roleObjectType, roleName);
+            roleSingularName ??= objectType.Type.Name;
+            string rolePluralName = this.DynamicMeta.Pluralize(roleSingularName);
+
+            var roleType = new DynamicRoleType
+            (
+                objectType,
+                roleSingularName,
+                rolePluralName,
+                roleSingularName,
+                true,
+                false,
+                false
+            );
+
+            string associationPluralName;
+            if (associationSingularName != null)
+            {
+                associationPluralName = this.DynamicMeta.Pluralize(associationSingularName);
+            }
+            else
+            {
+                associationSingularName = roleType.SingularNameForEmbeddedAssociationType(this);
+                associationPluralName = roleType.PluralNameForEmbeddedAssociationType(this);
+            }
+
+            roleType.AssociationType = new DynamicAssociationType
+            (
+                this,
+                roleType,
+                associationSingularName,
+                associationPluralName,
+                associationPluralName,
+                false,
+                true
+            );
+
             this.AddRoleType(roleType);
+            objectType.AddAssociationType(roleType.AssociationType);
 
-            var associationType = new DynamicManyToOneAssociationType(this, roleType);
-            roleObjectType.AddAssociationType(associationType);
-
-            this.Meta.ResetDerivations();
+            this.DynamicMeta.ResetDerivations();
 
             return roleType;
         }
 
-        public DynamicOneToManyRoleType AddOneToMany(DynamicObjectType roleObjectType, string roleName)
+        internal DynamicRoleType AddOneToMany(DynamicObjectType objectType, string? roleSingularName, string? associationSingularName)
         {
-            var roleType = new DynamicOneToManyRoleType(roleObjectType, roleName);
+            roleSingularName ??= objectType.Type.Name;
+            string rolePluralName = this.DynamicMeta.Pluralize(roleSingularName);
+
+            var roleType = new DynamicRoleType
+            (
+                objectType,
+                roleSingularName,
+                rolePluralName,
+                rolePluralName,
+                false,
+                true,
+                false
+            );
+
+            string associationPluralName;
+            if (associationSingularName != null)
+            {
+                associationPluralName = this.DynamicMeta.Pluralize(associationSingularName);
+            }
+            else
+            {
+                associationSingularName = roleType.SingularNameForEmbeddedAssociationType(this);
+                associationPluralName = roleType.PluralNameForEmbeddedAssociationType(this);
+            }
+
+            roleType.AssociationType = new DynamicAssociationType(
+                this,
+                roleType,
+                associationSingularName,
+                associationPluralName,
+                associationSingularName,
+                true,
+                false
+            );
+
             this.AddRoleType(roleType);
+            objectType.AddAssociationType(roleType.AssociationType);
 
-            var associationType = new DynamicOneToManyAssociationType(this, roleType);
-            roleObjectType.AddAssociationType(associationType);
-
-            this.Meta.ResetDerivations();
+            this.DynamicMeta.ResetDerivations();
 
             return roleType;
         }
 
-        public DynamicManyToManyRoleType AddManyToMany(DynamicObjectType roleObjectType, string roleName)
+        internal DynamicRoleType AddManyToMany(DynamicObjectType objectType, string? roleSingularName, string? associationSingularName)
         {
-            var roleType = new DynamicManyToManyRoleType(roleObjectType, roleName);
+            roleSingularName ??= objectType.Type.Name;
+            string rolePluralName = this.DynamicMeta.Pluralize(roleSingularName);
+
+            var roleType = new DynamicRoleType(
+                objectType,
+                roleSingularName,
+                rolePluralName,
+                rolePluralName,
+                false,
+                true,
+                false
+            );
+            
+            string associationPluralName;
+            if (associationSingularName != null)
+            {
+                associationPluralName = this.DynamicMeta.Pluralize(associationSingularName);
+            }
+            else
+            {
+                associationSingularName = roleType.SingularNameForEmbeddedAssociationType(this);
+                associationPluralName = roleType.PluralNameForEmbeddedAssociationType(this);
+            }
+
+            roleType.AssociationType = new DynamicAssociationType
+            (
+                this,
+                roleType,
+                associationSingularName,
+                associationPluralName,
+                associationPluralName,
+                false,
+                true
+            );
+
             this.AddRoleType(roleType);
+            objectType.AddAssociationType(roleType.AssociationType);
 
-            var associationType = new DynamicManyToManyAssociationType(this, roleType);
-            roleObjectType.AddAssociationType(associationType);
-
-            this.Meta.ResetDerivations();
+            this.DynamicMeta.ResetDerivations();
 
             return roleType;
         }
 
         internal void ResetDerivations()
         {
-            this.derivedAssociationTypeByName = null;
-            this.derivedRoleTypeByName = null;
+            this.derivedEmbeddedAssociationTypeByName = null;
+            this.derivedEmbeddedRoleTypeByName = null;
         }
 
-        private void AddAssociationType(IDynamicAssociationType associationType)
+        private void AddAssociationType(DynamicAssociationType associationType)
         {
             this.CheckNames(associationType.SingularName, associationType.PluralName);
 
-            this.assignedAssociationTypeByName.Add(associationType.SingularName, associationType);
-            this.assignedAssociationTypeByName.Add(associationType.PluralName, associationType);
+            this.assignedEmbeddedAssociationTypeByName.Add(associationType.SingularName, associationType);
+            this.assignedEmbeddedAssociationTypeByName.Add(associationType.PluralName, associationType);
         }
 
-        private void AddRoleType(IDynamicRoleType roleType)
+        private void AddRoleType(DynamicRoleType roleType)
         {
             this.CheckNames(roleType.SingularName, roleType.PluralName);
 
-            this.assignedRoleTypeByName.Add(roleType.SingularName, roleType);
-            this.assignedRoleTypeByName.Add(roleType.PluralName, roleType);
+            this.assignedEmbeddedRoleTypeByName.Add(roleType.SingularName, roleType);
+            this.assignedEmbeddedRoleTypeByName.Add(roleType.PluralName, roleType);
         }
 
         private void CheckNames(string singularName, string pluralName)
@@ -182,13 +344,13 @@
             if (this.RoleTypeByName.ContainsKey(singularName) ||
                 this.AssociationTypeByName.ContainsKey(singularName))
             {
-                throw new Exception($"{singularName} is not unique");
+                throw new ArgumentException($"{singularName} is not unique");
             }
 
             if (this.RoleTypeByName.ContainsKey(pluralName) ||
                 this.AssociationTypeByName.ContainsKey(pluralName))
             {
-                throw new Exception($"{pluralName} is not unique");
+                throw new ArgumentException($"{pluralName} is not unique");
             }
         }
     }

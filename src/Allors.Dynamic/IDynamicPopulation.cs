@@ -19,15 +19,15 @@
 
         dynamic New(Type t, params Action<dynamic>[] builders);
 
-        object GetRole(DynamicObject dynamicObject, IDynamicRoleType roleType);
+        object GetRole(DynamicObject dynamicObject, DynamicRoleType roleType);
 
-        void SetRole(DynamicObject dynamicObject, IDynamicRoleType roleType, object value);
+        void SetRole(DynamicObject dynamicObject, DynamicRoleType roleType, object value);
 
-        void AddRole(DynamicObject obj, IDynamicRoleType roleType, IDynamicObject dynamicObject);
+        void AddRole(DynamicObject obj, DynamicRoleType roleType, IDynamicObject dynamicObject);
 
-        void RemoveRole(DynamicObject obj, IDynamicRoleType roleType, IDynamicObject dynamicObject);
+        void RemoveRole(DynamicObject obj, DynamicRoleType roleType, IDynamicObject dynamicObject);
 
-        object GetAssociation(DynamicObject dynamicObject, IDynamicAssociationType associationType);
+        object GetAssociation(DynamicObject dynamicObject, DynamicAssociationType associationType);
 
         DynamicChangeSet Snapshot();
 

@@ -11,7 +11,7 @@ namespace Allors.Dynamic.Tests
         public void StaticPropertySet()
         {
             var population = new Default.DynamicPopulation(
-                 new DynamicMeta(new Pluralizer()),
+                 new DynamicMeta(),
                  v =>
             {
                 v.AddOneToOne<Organization, INamed>("Named");
@@ -44,7 +44,7 @@ namespace Allors.Dynamic.Tests
         [Fact]
         public void DynamicPropertySet()
         {
-            var meta = new DynamicMeta(new Pluralizer());
+            var meta = new DynamicMeta();
             var population = new Default.DynamicPopulation(meta);
             var (property, owner) = meta.AddOneToOne<Organization, Person>("Owner");
             var (organisation, named) = meta.AddOneToOne<Organization, Person>("Named");
@@ -81,7 +81,7 @@ namespace Allors.Dynamic.Tests
         [Fact]
         public void IndexByNameSet()
         {
-            var meta = new DynamicMeta(new Pluralizer());
+            var meta = new DynamicMeta();
             var population = new Default.DynamicPopulation(meta);
             var (property, owner) = meta.AddOneToOne<Organization, Person>("Owner");
             var (organisation, named) = meta.AddOneToOne<Organization, Person>("Named");
@@ -117,7 +117,7 @@ namespace Allors.Dynamic.Tests
         [Fact]
         public void IndexByRoleSet()
         {
-            var meta = new DynamicMeta(new Pluralizer());
+            var meta = new DynamicMeta();
             var population = new Default.DynamicPopulation(meta);
             var (property, owner) = meta.AddOneToOne<Organization, Person>("Owner");
             var (organisation, named) = meta.AddOneToOne<Organization, Person>("Named");

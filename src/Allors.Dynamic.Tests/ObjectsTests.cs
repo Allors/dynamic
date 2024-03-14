@@ -12,7 +12,7 @@ namespace Allors.Dynamic.Tests
         public void Filter()
         {
             var population = new Default.DynamicPopulation(
-                 new DynamicMeta(new Pluralizer()),
+                 new DynamicMeta(),
                  v =>
             {
                 v.AddUnit<Person, string>("FirstName");
