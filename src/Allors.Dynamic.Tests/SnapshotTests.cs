@@ -11,7 +11,7 @@ namespace Allors.Dynamic.Tests
         [Fact]
         public void Unit()
         {
-            var population = new Default.DynamicPopulation(
+            var population = new DynamicPopulation(
                 new DynamicMeta(),
                 v =>
             {
@@ -53,7 +53,7 @@ namespace Allors.Dynamic.Tests
         [Fact]
         public void Composites()
         {
-            var population = new Default.DynamicPopulation(
+            var population = new DynamicPopulation(
                 new DynamicMeta(),
                 v =>
                 {

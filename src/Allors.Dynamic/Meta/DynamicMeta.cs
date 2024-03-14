@@ -6,14 +6,14 @@
 
     public class DynamicMeta
     {
-        private readonly IDictionary<Type, DynamicObjectType> embeddedObjectTypeByType;
+        private readonly IDictionary<Type, DynamicObjectType> objectTypeByType;
 
         public DynamicMeta()
         {
-            this.embeddedObjectTypeByType = new Dictionary<Type, DynamicObjectType>();
+            this.objectTypeByType = new Dictionary<Type, DynamicObjectType>();
         }
 
-        public IReadOnlyDictionary<Type, DynamicObjectType> ObjectTypeByType => new ReadOnlyDictionary<Type, DynamicObjectType>(this.embeddedObjectTypeByType);
+        public IReadOnlyDictionary<Type, DynamicObjectType> ObjectTypeByType => new ReadOnlyDictionary<Type, DynamicObjectType>(this.objectTypeByType);
 
         public DynamicRoleType AddUnit<TAssociation, TRole>(string roleName, string? associationName = null) => this.GetOrAddObjectType(typeof(TAssociation)).AddUnit(this.GetOrAddObjectType(typeof(TRole)), roleName, associationName);
 
@@ -30,7 +30,7 @@
             if (!this.ObjectTypeByType.TryGetValue(type, out var objectType))
             {
                 objectType = new DynamicObjectType(this, type);
-                this.embeddedObjectTypeByType.Add(type, objectType);
+                this.objectTypeByType.Add(type, objectType);
             }
 
             return objectType;

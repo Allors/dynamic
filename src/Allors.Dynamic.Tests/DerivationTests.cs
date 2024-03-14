@@ -11,7 +11,7 @@ namespace Allors.Dynamic.Tests
         [Fact]
         public void Derivation()
         {
-            var population = new Default.DynamicPopulation(
+            var population = new DynamicPopulation(
                  new DynamicMeta(),
                  v =>
             {

@@ -7,13 +7,13 @@
 
     public abstract class DynamicObject : System.Dynamic.DynamicObject, IDynamicObject
     {
-        protected DynamicObject(IDynamicPopulation population, DynamicObjectType objectType)
+        protected DynamicObject(DynamicPopulation population, DynamicObjectType objectType)
         {
             this.Population = population;
             this.ObjectType = objectType;
         }
 
-        public IDynamicPopulation Population { get; }
+        public DynamicPopulation Population { get; }
 
         public DynamicObjectType ObjectType { get; }
 

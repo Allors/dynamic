@@ -6,13 +6,13 @@
 
     public class DynamicObjectType
     {
-        private readonly Dictionary<string, DynamicAssociationType> assignedEmbeddedAssociationTypeByName;
+        private readonly Dictionary<string, DynamicAssociationType> assignedAssociationTypeByName;
 
-        private readonly Dictionary<string, DynamicRoleType> assignedEmbeddedRoleTypeByName;
+        private readonly Dictionary<string, DynamicRoleType> assignedRoleTypeByName;
 
-        private IDictionary<string, DynamicAssociationType>? derivedEmbeddedAssociationTypeByName;
+        private IDictionary<string, DynamicAssociationType>? derivedAssociationTypeByName;
 
-        private IDictionary<string, DynamicRoleType>? derivedEmbeddedRoleTypeByName;
+        private IDictionary<string, DynamicRoleType>? derivedRoleTypeByName;
 
         internal DynamicObjectType(DynamicMeta dynamicMeta, Type type)
         {
@@ -20,8 +20,8 @@
             this.Type = type;
             this.TypeCode = Type.GetTypeCode(type);
             this.SuperTypes = new HashSet<DynamicObjectType>();
-            this.assignedEmbeddedAssociationTypeByName = new Dictionary<string, DynamicAssociationType>();
-            this.assignedEmbeddedRoleTypeByName = new Dictionary<string, DynamicRoleType>();
+            this.assignedAssociationTypeByName = new Dictionary<string, DynamicAssociationType>();
+            this.assignedRoleTypeByName = new Dictionary<string, DynamicRoleType>();
 
             this.EmptyArray = Array.CreateInstance(type, 0);
 
@@ -59,16 +59,16 @@
         {
             get
             {
-                if (this.derivedEmbeddedAssociationTypeByName == null)
+                if (this.derivedAssociationTypeByName == null)
                 {
-                    this.derivedEmbeddedAssociationTypeByName = new Dictionary<string, DynamicAssociationType>(this.assignedEmbeddedAssociationTypeByName);
-                    foreach (var item in this.SuperTypes.SelectMany(v => v.assignedEmbeddedAssociationTypeByName))
+                    this.derivedAssociationTypeByName = new Dictionary<string, DynamicAssociationType>(this.assignedAssociationTypeByName);
+                    foreach (var item in this.SuperTypes.SelectMany(v => v.assignedAssociationTypeByName))
                     {
-                        this.derivedEmbeddedAssociationTypeByName[item.Key] = item.Value;
+                        this.derivedAssociationTypeByName[item.Key] = item.Value;
                     }
                 }
 
-                return this.derivedEmbeddedAssociationTypeByName;
+                return this.derivedAssociationTypeByName;
             }
         }
 
@@ -76,16 +76,16 @@
         {
             get
             {
-                if (this.derivedEmbeddedRoleTypeByName == null)
+                if (this.derivedRoleTypeByName == null)
                 {
-                    this.derivedEmbeddedRoleTypeByName = new Dictionary<string, DynamicRoleType>(this.assignedEmbeddedRoleTypeByName);
-                    foreach (var item in this.SuperTypes.SelectMany(v => v.assignedEmbeddedRoleTypeByName))
+                    this.derivedRoleTypeByName = new Dictionary<string, DynamicRoleType>(this.assignedRoleTypeByName);
+                    foreach (var item in this.SuperTypes.SelectMany(v => v.assignedRoleTypeByName))
                     {
-                        this.derivedEmbeddedRoleTypeByName[item.Key] = item.Value;
+                        this.derivedRoleTypeByName[item.Key] = item.Value;
                     }
                 }
 
-                return this.derivedEmbeddedRoleTypeByName;
+                return this.derivedRoleTypeByName;
             }
         }
 
@@ -319,24 +319,24 @@
 
         internal void ResetDerivations()
         {
-            this.derivedEmbeddedAssociationTypeByName = null;
-            this.derivedEmbeddedRoleTypeByName = null;
+            this.derivedAssociationTypeByName = null;
+            this.derivedRoleTypeByName = null;
         }
 
         private void AddAssociationType(DynamicAssociationType associationType)
         {
             this.CheckNames(associationType.SingularName, associationType.PluralName);
 
-            this.assignedEmbeddedAssociationTypeByName.Add(associationType.SingularName, associationType);
-            this.assignedEmbeddedAssociationTypeByName.Add(associationType.PluralName, associationType);
+            this.assignedAssociationTypeByName.Add(associationType.SingularName, associationType);
+            this.assignedAssociationTypeByName.Add(associationType.PluralName, associationType);
         }
 
         private void AddRoleType(DynamicRoleType roleType)
         {
             this.CheckNames(roleType.SingularName, roleType.PluralName);
 
-            this.assignedEmbeddedRoleTypeByName.Add(roleType.SingularName, roleType);
-            this.assignedEmbeddedRoleTypeByName.Add(roleType.PluralName, roleType);
+            this.assignedRoleTypeByName.Add(roleType.SingularName, roleType);
+            this.assignedRoleTypeByName.Add(roleType.PluralName, roleType);
         }
 
         private void CheckNames(string singularName, string pluralName)

@@ -10,7 +10,7 @@ namespace Allors.Dynamic.Tests
         [Fact]
         public void AddSameAssociation()
         {
-            var population = new Default.DynamicPopulation(
+            var population = new DynamicPopulation(
                  new DynamicMeta(),
                  v => v.AddOneToMany<Organization, Person>("Employee"));
 
@@ -35,7 +35,7 @@ namespace Allors.Dynamic.Tests
         [Fact]
         public void AddDifferentAssociation()
         {
-            var population = new Default.DynamicPopulation(
+            var population = new DynamicPopulation(
                  new DynamicMeta(),
                  v =>
             {
@@ -80,7 +80,7 @@ namespace Allors.Dynamic.Tests
         [Fact]
         public void Remove()
         {
-            var population = new Default.DynamicPopulation(
+            var population = new DynamicPopulation(
                  new DynamicMeta(),
                  v => v.AddOneToMany<Organization, Person>("Employee"));
 

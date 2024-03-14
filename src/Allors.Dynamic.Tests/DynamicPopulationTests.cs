@@ -9,7 +9,7 @@ namespace Allors.Dynamic.Tests
         [Fact]
         public void New()
         {
-            var population = new Default.DynamicPopulation(new DynamicMeta());
+            var population = new DynamicPopulation(new DynamicMeta());
             var name = population.Meta.AddUnit<INamed, string>("Name");
             var (property, owner) = population.Meta.AddOneToOne<Organization, Person>("Owner");
 

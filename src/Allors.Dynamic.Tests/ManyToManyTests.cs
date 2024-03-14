@@ -9,7 +9,7 @@ namespace Allors.Dynamic.Tests
         [Fact]
         public void AddSingleActiveLink()
         {
-            var population = new Default.DynamicPopulation(
+            var population = new DynamicPopulation(
                   new DynamicMeta(),
                   v => v.AddUnit<Organization, string>("Name"),
                   v => v.AddManyToMany<Organization, Person>("Employee"));
@@ -45,7 +45,7 @@ namespace Allors.Dynamic.Tests
         [Fact]
         public void SetSingleActiveLink()
         {
-            var population = new Default.DynamicPopulation(
+            var population = new DynamicPopulation(
                 new DynamicMeta(),
                 v => v.AddUnit<Organization, string>("Name"),
                 v => v.AddManyToMany<Organization, Person>("Employee"));
@@ -118,7 +118,7 @@ namespace Allors.Dynamic.Tests
         [Fact]
         public void RemoveSingleActiveLink()
         {
-            var population = new Default.DynamicPopulation(
+            var population = new DynamicPopulation(
                 new DynamicMeta(),
                 v => v.AddUnit<Organization, string>("Name"),
                 v => v.AddManyToMany<Organization, Person>("Employee"));
@@ -175,7 +175,7 @@ namespace Allors.Dynamic.Tests
         [Fact]
         public void MultipeleActiveLinks()
         {
-            var population = new Default.DynamicPopulation(
+            var population = new DynamicPopulation(
                   new DynamicMeta(),
                   v => v.AddUnit<Organization, string>("Name"),
                   v => v.AddManyToMany<Organization, Person>("Employee"));

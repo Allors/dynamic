@@ -9,18 +9,18 @@ namespace Allors.Dynamic.Tests
         [Fact]
         public void PropertySet()
         {
-            var population = new Default.DynamicPopulation(
+            var population = new DynamicPopulation(
                 new DynamicMeta(),
                 v => v.AddUnit<Person, string>("FirstName"));
 
-            dynamic jubayer = population.New<Person>();
-            dynamic walter = population.New<Person>();
+            dynamic john = population.New<Person>();
+            dynamic jane = population.New<Person>();
 
-            jubayer.FirstName = "Jubayer";
-            walter.FirstName = "Walter";
+            john.FirstName = "John";
+            jane.FirstName = "Jane";
 
-            Assert.Equal("Jubayer", jubayer.FirstName);
-            Assert.Equal("Walter", walter.FirstName);
+            Assert.Equal("John", john.FirstName);
+            Assert.Equal("Jane", jane.FirstName);
         }
 
         [Fact]
@@ -28,16 +28,16 @@ namespace Allors.Dynamic.Tests
         {
             var meta = new DynamicMeta();
             meta.AddUnit<Person, string>("FirstName");
-            var population = new Default.DynamicPopulation(meta);
+            var population = new DynamicPopulation(meta);
 
-            dynamic jubayer = population.New<Person>();
-            dynamic walter = population.New<Person>();
+            dynamic john = population.New<Person>();
+            dynamic jane = population.New<Person>();
 
-            jubayer.FirstName = "Jubayer";
-            walter.FirstName = "Walter";
+            john.FirstName = "John";
+            jane.FirstName = "Jane";
 
-            Assert.Equal("Jubayer", jubayer.FirstName);
-            Assert.Equal("Walter", walter.FirstName);
+            Assert.Equal("John", john.FirstName);
+            Assert.Equal("Jane", jane.FirstName);
         }
     }
 }

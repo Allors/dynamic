@@ -1,12 +1,13 @@
-﻿namespace Allors.Dynamic.Default
+﻿namespace Allors.Dynamic
 {
     using System;
     using System.Collections.Generic;
     using System.Dynamic;
     using Allors.Dynamic.Meta;
-    using DynamicObject = Allors.Dynamic.DynamicObject;
 
-    public class DynamicPopulation : IDynamicPopulation
+    public delegate T New<T>(params Action<T>[] builders);
+
+    public class DynamicPopulation
     {
         private readonly DynamicDatabase database;
 
@@ -42,7 +43,7 @@
         }
 
         public T New<T>(params Action<T>[] builders)
-              where T : DynamicObject
+              where T : Dynamic.DynamicObject
         {
             var @new = (T)Activator.CreateInstance(typeof(T), new object[] { this, this.Meta.GetOrAddObjectType(typeof(T)) });
             this.database.AddObject(@new);
@@ -76,28 +77,28 @@
             }
         }
 
-        public object GetRole(DynamicObject obj, DynamicRoleType roleType)
+        public object GetRole(Dynamic.DynamicObject obj, DynamicRoleType roleType)
         {
             this.database.GetRole(obj, roleType, out var result);
             return result;
         }
 
-        public void SetRole(DynamicObject obj, DynamicRoleType roleType, object value)
+        public void SetRole(Dynamic.DynamicObject obj, DynamicRoleType roleType, object value)
         {
             this.database.SetRole(obj, roleType, value);
         }
 
-        public void AddRole(DynamicObject obj, DynamicRoleType roleType, IDynamicObject role)
+        public void AddRole(Dynamic.DynamicObject obj, DynamicRoleType roleType, IDynamicObject role)
         {
-            this.database.AddRole(obj, roleType, (DynamicObject)role);
+            this.database.AddRole(obj, roleType, (Dynamic.DynamicObject)role);
         }
 
-        public void RemoveRole(DynamicObject obj, DynamicRoleType roleType, IDynamicObject role)
+        public void RemoveRole(Dynamic.DynamicObject obj, DynamicRoleType roleType, IDynamicObject role)
         {
-            this.database.RemoveRole(obj, roleType, (DynamicObject)role);
+            this.database.RemoveRole(obj, roleType, (Dynamic.DynamicObject)role);
         }
 
-        public object GetAssociation(DynamicObject obj, DynamicAssociationType associationType)
+        public object GetAssociation(Dynamic.DynamicObject obj, DynamicAssociationType associationType)
         {
             this.database.GetAssociation(obj, associationType, out var result);
             return result;

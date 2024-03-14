@@ -4,7 +4,7 @@ namespace Allors.Dynamic.Tests.Domain
 
     public class C2 : DynamicObject
     {
-        public C2(IDynamicPopulation population, DynamicObjectType objectType)
+        public C2(DynamicPopulation population, DynamicObjectType objectType)
            : base(population, objectType)
         {
         }

@@ -9,7 +9,7 @@ namespace Allors.Dynamic.Tests
         [Fact]
         public void SameUnitTypeName()
         {
-            var population = new Default.DynamicPopulation(new DynamicMeta());
+            var population = new DynamicPopulation(new DynamicMeta());
             var c1Same = population.Meta.AddUnit<C1, string>("Same");
             var c2Same = population.Meta.AddUnit<C2, string>("Same");
 

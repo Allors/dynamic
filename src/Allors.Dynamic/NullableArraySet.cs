@@ -1,6 +1,6 @@
 ﻿using System.Diagnostics;
 
-namespace Allors.Dynamic.Default
+namespace Allors.Dynamic
 {
     using System;
 

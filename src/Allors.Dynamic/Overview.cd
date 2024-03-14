@@ -7,7 +7,6 @@
       <FileName>DynamicObject.cs</FileName>
     </TypeIdentifier>
     <ShowAsAssociation>
-      <Property Name="Population" />
       <Property Name="ObjectType" />
     </ShowAsAssociation>
     <Lollipop Position="0.2" />
@@ -15,7 +14,7 @@
   <Class Name="Allors.Dynamic.Meta.DynamicObjectType" Collapsed="true">
     <Position X="4.75" Y="3.25" Width="1.75" />
     <TypeIdentifier>
-      <HashCode>QAQEAAAAAAAQAARAAGAIABAQAYAARIgAAQAAgAAAACA=</HashCode>
+      <HashCode>QAQEAAAAAAAQAARAAGAIABAQAYAARAgAAQAAgAABACA=</HashCode>
       <FileName>Meta\DynamicObjectType.cs</FileName>
     </TypeIdentifier>
   </Class>
@@ -24,13 +23,6 @@
     <TypeIdentifier>
       <HashCode>ABAAAAEAAAAAAAAAgAAAAAAAAAAAAAAAAAAQAAAAAAA=</HashCode>
       <FileName>IDynamicObject.cs</FileName>
-    </TypeIdentifier>
-  </Interface>
-  <Interface Name="Allors.Dynamic.IDynamicPopulation">
-    <Position X="7.25" Y="3.75" Width="1.75" />
-    <TypeIdentifier>
-      <HashCode>ABAAAAEAAAAgACAAgAAAAAAAAAAAAIEAAAQQAAAAAAE=</HashCode>
-      <FileName>IDynamicPopulation.cs</FileName>
     </TypeIdentifier>
   </Interface>
   <Font Name="Segoe UI" Size="9" />

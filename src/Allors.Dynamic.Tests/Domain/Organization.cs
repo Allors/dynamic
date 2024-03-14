@@ -4,7 +4,7 @@ namespace Allors.Dynamic.Tests.Domain
 
     public class Organization : DynamicObject, INamed
     {
-        public Organization(IDynamicPopulation population, DynamicObjectType objectType)
+        public Organization(DynamicPopulation population, DynamicObjectType objectType)
             : base(population, objectType)
         {
         }
