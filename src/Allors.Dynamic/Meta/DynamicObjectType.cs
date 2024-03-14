@@ -23,7 +23,6 @@
             this.assignedAssociationTypeByName = new Dictionary<string, IDynamicAssociationType>();
             this.assignedRoleTypeByName = new Dictionary<string, IDynamicRoleType>();
 
-            this.EmptyArray = Array.CreateInstance(type, 0);
 
             var hierarchyChanged = false;
             foreach (var other in meta.ObjectTypeByType.Values)
