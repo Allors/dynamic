@@ -1,11 +1,11 @@
-﻿namespace Allors.Dynamic
-{
-    using Allors.Dynamic.Meta;
-    using System;
-    using System.Collections;
-    using System.Collections.Generic;
-    using System.Linq;
+﻿using System;
+using System.Collections;
+using System.Collections.Generic;
+using System.Linq;
+using Allors.Dynamic.Meta;
 
+namespace Allors.Dynamic
+{
     internal class DynamicDatabase
     {
         private readonly DynamicMeta meta;
@@ -20,23 +20,23 @@
         {
             this.meta = meta;
 
-            this.roleByAssociationByRoleType = new Dictionary<DynamicRoleType, Dictionary<DynamicObject, object>>();
-            this.associationByRoleByAssociationType = new Dictionary<DynamicAssociationType, Dictionary<DynamicObject, object>>();
+            roleByAssociationByRoleType = [];
+            associationByRoleByAssociationType = [];
 
-            this.changedRoleByAssociationByRoleType =
-                new Dictionary<DynamicRoleType, Dictionary<DynamicObject, object>>();
-            this.changedAssociationByRoleByAssociationType =
-                new Dictionary<DynamicAssociationType, Dictionary<DynamicObject, object>>();
+            changedRoleByAssociationByRoleType =
+                [];
+            changedAssociationByRoleByAssociationType =
+                [];
         }
 
         internal DynamicObject[] Objects { get; private set; }
 
         internal DynamicChangeSet Snapshot()
         {
-            foreach (var roleType in this.changedRoleByAssociationByRoleType.Keys.ToArray())
+            foreach (var roleType in changedRoleByAssociationByRoleType.Keys.ToArray())
             {
-                var changedRoleByAssociation = this.changedRoleByAssociationByRoleType[roleType];
-                var roleByAssociation = this.RoleByAssociation(roleType);
+                var changedRoleByAssociation = changedRoleByAssociationByRoleType[roleType];
+                var roleByAssociation = RoleByAssociation(roleType);
 
                 foreach (var association in changedRoleByAssociation.Keys.ToArray())
                 {
@@ -58,14 +58,14 @@
 
                 if (roleByAssociation.Count == 0)
                 {
-                    this.changedRoleByAssociationByRoleType.Remove(roleType);
+                    changedRoleByAssociationByRoleType.Remove(roleType);
                 }
             }
 
-            foreach (var associationType in this.changedAssociationByRoleByAssociationType.Keys.ToArray())
+            foreach (var associationType in changedAssociationByRoleByAssociationType.Keys.ToArray())
             {
-                var changedAssociationByRole = this.changedAssociationByRoleByAssociationType[associationType];
-                var associationByRole = this.AssociationByRole(associationType);
+                var changedAssociationByRole = changedAssociationByRoleByAssociationType[associationType];
+                var associationByRole = AssociationByRole(associationType);
 
                 foreach (var role in changedAssociationByRole.Keys.ToArray())
                 {
@@ -87,18 +87,18 @@
 
                 if (associationByRole.Count == 0)
                 {
-                    this.changedAssociationByRoleByAssociationType.Remove(associationType);
+                    changedAssociationByRoleByAssociationType.Remove(associationType);
                 }
             }
 
-            var snapshot = new DynamicChangeSet(this.meta, this.changedRoleByAssociationByRoleType, this.changedAssociationByRoleByAssociationType);
+            var snapshot = new DynamicChangeSet(meta, changedRoleByAssociationByRoleType, changedAssociationByRoleByAssociationType);
 
-            foreach (var kvp in this.changedRoleByAssociationByRoleType)
+            foreach (var kvp in changedRoleByAssociationByRoleType)
             {
                 var roleType = kvp.Key;
                 var changedRoleByAssociation = kvp.Value;
 
-                var roleByAssociation = this.RoleByAssociation(roleType);
+                var roleByAssociation = RoleByAssociation(roleType);
 
                 foreach (var kvp2 in changedRoleByAssociation)
                 {
@@ -108,12 +108,12 @@
                 }
             }
 
-            foreach (var kvp in this.changedAssociationByRoleByAssociationType)
+            foreach (var kvp in changedAssociationByRoleByAssociationType)
             {
                 var associationType = kvp.Key;
                 var changedAssociationByRole = kvp.Value;
 
-                var associationByRole = this.AssociationByRole(associationType);
+                var associationByRole = AssociationByRole(associationType);
 
                 foreach (var kvp2 in changedAssociationByRole)
                 {
@@ -123,26 +123,26 @@
                 }
             }
 
-            this.changedRoleByAssociationByRoleType = new Dictionary<DynamicRoleType, Dictionary<DynamicObject, object>>();
-            this.changedAssociationByRoleByAssociationType = new Dictionary<DynamicAssociationType, Dictionary<DynamicObject, object>>();
+            changedRoleByAssociationByRoleType = [];
+            changedAssociationByRoleByAssociationType = [];
 
             return snapshot;
         }
 
         internal void AddObject(DynamicObject newObject)
         {
-            this.Objects = NullableArraySet.Add(this.Objects, newObject);
+            Objects = NullableArraySet.Add(Objects, newObject);
         }
 
         internal void GetRole(DynamicObject association, DynamicRoleType roleType, out object role)
         {
-            if (this.changedRoleByAssociationByRoleType.TryGetValue(roleType, out var changedRoleByAssociation) &&
+            if (changedRoleByAssociationByRoleType.TryGetValue(roleType, out var changedRoleByAssociation) &&
                 changedRoleByAssociation.TryGetValue(association, out role))
             {
                 return;
             }
 
-            this.RoleByAssociation(roleType).TryGetValue(association, out role);
+            RoleByAssociation(roleType).TryGetValue(association, out role);
         }
 
         internal void SetRole(dynamic association, DynamicRoleType roleType, object role)
@@ -158,7 +158,7 @@
             if (roleType.IsUnit)
             {
                 // Role
-                this.ChangedRoleByAssociation(roleType)[association] = normalizedRole;
+                ChangedRoleByAssociation(roleType)[association] = normalizedRole;
             }
             else
             {
@@ -167,14 +167,14 @@
                 if (roleType.IsOne)
                 {
                     var roleObject = (DynamicObject)normalizedRole;
-                    this.GetAssociation(roleObject, associationType, out var previousAssociation);
+                    GetAssociation(roleObject, associationType, out var previousAssociation);
 
                     // Role
-                    var changedRoleByAssociation = this.ChangedRoleByAssociation(roleType);
+                    var changedRoleByAssociation = ChangedRoleByAssociation(roleType);
                     changedRoleByAssociation[association] = roleObject;
 
                     // Association
-                    var changedAssociationByRole = this.ChangedAssociationByRole(associationType);
+                    var changedAssociationByRole = ChangedAssociationByRole(associationType);
                     if (associationType.IsOne)
                     {
                         // One to One
@@ -222,24 +222,24 @@
         internal void AddRole(DynamicObject association, DynamicRoleType roleType, DynamicObject role)
         {
             var associationType = roleType.AssociationType;
-            this.GetAssociation(role, associationType, out var previousAssociation);
+            GetAssociation(role, associationType, out var previousAssociation);
 
             // Role
-            var changedRoleByAssociation = this.ChangedRoleByAssociation(roleType);
-            this.GetRole(association, roleType, out var previousRole);
+            var changedRoleByAssociation = ChangedRoleByAssociation(roleType);
+            GetRole(association, roleType, out var previousRole);
             var roleArray = (DynamicObject[])previousRole;
             roleArray = NullableArraySet.Add(roleArray, role);
             changedRoleByAssociation[association] = roleArray;
 
             // Association
-            var changedAssociationByRole = this.ChangedAssociationByRole(associationType);
+            var changedAssociationByRole = ChangedAssociationByRole(associationType);
             if (associationType.IsOne)
             {
                 // One to Many
                 var previousAssociationObject = (DynamicObject)previousAssociation;
                 if (previousAssociationObject != null)
                 {
-                    this.GetRole(previousAssociationObject, roleType, out var previousAssociationRole);
+                    GetRole(previousAssociationObject, roleType, out var previousAssociationRole);
                     changedRoleByAssociation[previousAssociationObject] = NullableArraySet.Remove(previousAssociationRole, role);
                 }
 
@@ -255,17 +255,17 @@
         internal void RemoveRole(DynamicObject association, DynamicRoleType roleType, DynamicObject role)
         {
             var associationType = roleType.AssociationType;
-            this.GetAssociation(role, associationType, out var previousAssociation);
+            GetAssociation(role, associationType, out var previousAssociation);
 
-            this.GetRole(association, roleType, out var previousRole);
+            GetRole(association, roleType, out var previousRole);
             if (previousRole != null)
             {
                 // Role
-                var changedRoleByAssociation = this.ChangedRoleByAssociation(roleType);
+                var changedRoleByAssociation = ChangedRoleByAssociation(roleType);
                 changedRoleByAssociation[association] = NullableArraySet.Remove(previousRole, role);
 
                 // Association
-                var changedAssociationByRole = this.ChangedAssociationByRole(associationType);
+                var changedAssociationByRole = ChangedAssociationByRole(associationType);
                 if (associationType.IsOne)
                 {
                     // One to Many
@@ -286,21 +286,21 @@
 
         internal void GetAssociation(DynamicObject role, DynamicAssociationType associationType, out object association)
         {
-            if (this.changedAssociationByRoleByAssociationType.TryGetValue(associationType, out var changedAssociationByRole) &&
+            if (changedAssociationByRoleByAssociationType.TryGetValue(associationType, out var changedAssociationByRole) &&
                 changedAssociationByRole.TryGetValue(role, out association))
             {
                 return;
             }
 
-            this.AssociationByRole(associationType).TryGetValue(role, out association);
+            AssociationByRole(associationType).TryGetValue(role, out association);
         }
 
         private Dictionary<DynamicObject, object> AssociationByRole(DynamicAssociationType asscociationType)
         {
-            if (!this.associationByRoleByAssociationType.TryGetValue(asscociationType, out var associationByRole))
+            if (!associationByRoleByAssociationType.TryGetValue(asscociationType, out var associationByRole))
             {
-                associationByRole = new Dictionary<DynamicObject, object>();
-                this.associationByRoleByAssociationType[asscociationType] = associationByRole;
+                associationByRole = [];
+                associationByRoleByAssociationType[asscociationType] = associationByRole;
             }
 
             return associationByRole;
@@ -308,10 +308,10 @@
 
         private Dictionary<DynamicObject, object> RoleByAssociation(DynamicRoleType roleType)
         {
-            if (!this.roleByAssociationByRoleType.TryGetValue(roleType, out var roleByAssociation))
+            if (!roleByAssociationByRoleType.TryGetValue(roleType, out var roleByAssociation))
             {
-                roleByAssociation = new Dictionary<DynamicObject, object>();
-                this.roleByAssociationByRoleType[roleType] = roleByAssociation;
+                roleByAssociation = [];
+                roleByAssociationByRoleType[roleType] = roleByAssociation;
             }
 
             return roleByAssociation;
@@ -319,10 +319,10 @@
 
         private Dictionary<DynamicObject, object> ChangedAssociationByRole(DynamicAssociationType associationType)
         {
-            if (!this.changedAssociationByRoleByAssociationType.TryGetValue(associationType, out var changedAssociationByRole))
+            if (!changedAssociationByRoleByAssociationType.TryGetValue(associationType, out var changedAssociationByRole))
             {
-                changedAssociationByRole = new Dictionary<DynamicObject, object>();
-                this.changedAssociationByRoleByAssociationType[associationType] = changedAssociationByRole;
+                changedAssociationByRole = [];
+                changedAssociationByRoleByAssociationType[associationType] = changedAssociationByRole;
             }
 
             return changedAssociationByRole;
@@ -330,10 +330,10 @@
 
         private Dictionary<DynamicObject, object> ChangedRoleByAssociation(DynamicRoleType roleType)
         {
-            if (!this.changedRoleByAssociationByRoleType.TryGetValue(roleType, out var changedRoleByAssociation))
+            if (!changedRoleByAssociationByRoleType.TryGetValue(roleType, out var changedRoleByAssociation))
             {
-                changedRoleByAssociation = new Dictionary<DynamicObject, object>();
-                this.changedRoleByAssociationByRoleType[roleType] = changedRoleByAssociation;
+                changedRoleByAssociation = [];
+                changedRoleByAssociationByRoleType[roleType] = changedRoleByAssociation;
             }
 
             return changedRoleByAssociation;

@@ -1,29 +1,31 @@
+using System;
+using System.Linq;
+using Allors.Dynamic.Meta;
+using Xunit;
+
 namespace Allors.Dynamic.Tests
 {
-    using System;
-    using System.Linq;
-    using Allors.Dynamic.Meta;
-    using Allors.Dynamic.Tests.Domain;
-    using Xunit;
-
     public class DerivationTests
     {
         [Fact]
         public void Derivation()
         {
-            var population = new DynamicPopulation(
-                 new DynamicMeta(),
-                 v =>
+            var meta = new DynamicMeta();
+            var person = meta.AddClass("Person");
+            var firstName = meta.AddUnit<string>(person, "FirstName");
+            var lastName = meta.AddUnit<string>(person, "LastName");
+            meta.AddUnit<string>(person, "FullName");
+            meta.AddUnit<DateTime>(person, "DerivedAt");
+
+            var population = new DynamicPopulation(meta)
             {
-                v.AddUnit<Person, string>("FirstName");
-                v.AddUnit<Person, string>("LastName");
-                v.AddUnit<Person, string>("FullName");
-                v.AddUnit<Person, string>("DerivedAt");
-            });
+                DerivationById =
+                {
+                    ["FullName"] = new FullNameDerivation(firstName, lastName)
+                }
+            };
 
-            population.DerivationById["FullName"] = new FullNameDerivation();
-
-            dynamic john = population.New<Person>();
+            var john = population.New(person);
             john.FirstName = "John";
             john.LastName = "Doe";
 
@@ -31,9 +33,9 @@ namespace Allors.Dynamic.Tests
 
             Assert.Equal("John Doe", john.FullName);
 
-            population.DerivationById["FullName"] = new GreetingDerivation(population.DerivationById["FullName"]);
+            population.DerivationById["FullName"] = new GreetingDerivation(population.DerivationById["FullName"], firstName, lastName);
 
-            dynamic jane = population.New<Person>();
+            var jane = population.New(person);
             jane.FirstName = "Jane";
             jane.LastName = "Doe";
 
@@ -42,14 +44,14 @@ namespace Allors.Dynamic.Tests
             Assert.Equal("Jane Doe Chained", jane.FullName);
         }
 
-        public class FullNameDerivation : IDynamicDerivation
+        private class FullNameDerivation(DynamicRoleType firstName, DynamicRoleType lastName) : IDynamicDerivation
         {
             public void Derive(DynamicChangeSet changeSet)
             {
-                var firstNames = changeSet.ChangedRoles<Person>("FirstName");
-                var lastNames = changeSet.ChangedRoles<Person>("LastName");
+                var firstNames = changeSet.ChangedRoles(firstName);
+                var lastNames = changeSet.ChangedRoles(lastName);
 
-                if (firstNames?.Any() == true || lastNames?.Any() == true)
+                if (firstNames.Any() || lastNames.Any())
                 {
                     var people = firstNames.Union(lastNames).Select(v => v.Key).Distinct();
 
@@ -67,23 +69,16 @@ namespace Allors.Dynamic.Tests
             }
         }
 
-        public class GreetingDerivation : IDynamicDerivation
+        private class GreetingDerivation(IDynamicDerivation derivation, DynamicRoleType firstName, DynamicRoleType lastName) : IDynamicDerivation
         {
-            private readonly IDynamicDerivation derivation;
-
-            public GreetingDerivation(IDynamicDerivation derivation)
-            {
-                this.derivation = derivation;
-            }
-
             public void Derive(DynamicChangeSet changeSet)
             {
-                this.derivation.Derive(changeSet);
+                derivation.Derive(changeSet);
 
-                var firstNames = changeSet.ChangedRoles<Person>("FirstName");
-                var lastNames = changeSet.ChangedRoles<Person>("LastName");
+                var firstNames = changeSet.ChangedRoles(firstName);
+                var lastNames = changeSet.ChangedRoles(lastName);
 
-                if (firstNames?.Any() == true || lastNames?.Any() == true)
+                if (firstNames.Any() || lastNames.Any())
                 {
                     var people = firstNames.Union(lastNames).Select(v => v.Key).Distinct();
 

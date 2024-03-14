@@ -1,33 +1,34 @@
+using Allors.Dynamic.Meta;
+using System;
+using Xunit;
+
 namespace Allors.Dynamic.Tests
 {
-    using Allors.Dynamic.Meta;
-    using Allors.Dynamic.Tests.Domain;
-    using Xunit;
-
     public class DynamicObjectTypeTests
     {
         [Fact]
         public void SameUnitTypeName()
         {
-            var population = new DynamicPopulation(new DynamicMeta());
-            var c1Same = population.Meta.AddUnit<C1, string>("Same");
-            var c2Same = population.Meta.AddUnit<C2, string>("Same");
+            var meta = new DynamicMeta();
+            var c1 = meta.AddClass("C1");
+            var c2 = meta.AddClass("C2");
+            meta.AddUnit<string>(c1, "Same");
+            meta.AddUnit<string>(c2, "Same");
 
-            New<C1> newC1 = population.New;
-            New<C2> newC2 = population.New;
+            var population = new DynamicPopulation(meta);
 
-            var c1 = newC1(v =>
+            var c1a = population.New(c1, v =>
             {
-                v.Same("c1");
+                v.Same = "c1";
             });
 
-            var c2 = newC2(v =>
+            var c2a = population.New(c2, v =>
             {
-                v.Same("c2");
+                v.Same = "c2";
             });
 
-            Assert.Equal("c1", c1.Same());
-            Assert.Equal("c2", c2.Same());
+            Assert.Equal("c1", c1a.Same);
+            Assert.Equal("c2", c2a.Same);
         }
     }
 }

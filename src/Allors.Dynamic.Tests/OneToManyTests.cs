@@ -1,23 +1,25 @@
+using System.Linq;
+using Allors.Dynamic.Meta;
+using Xunit;
+
 namespace Allors.Dynamic.Tests
 {
-    using System.Linq;
-    using Allors.Dynamic.Meta;
-    using Allors.Dynamic.Tests.Domain;
-    using Xunit;
-
     public class OneToManyTests
     {
         [Fact]
         public void AddSameAssociation()
         {
-            var population = new DynamicPopulation(
-                 new DynamicMeta(),
-                 v => v.AddOneToMany<Organization, Person>("Employee"));
+            var meta = new DynamicMeta();
+            var organization = meta.AddClass("Organization");
+            var person = meta.AddClass("Person");
+            meta.AddOneToMany(organization, person, "Employee");
+            
+            var population = new DynamicPopulation(meta);
 
-            dynamic acme = population.New<Organization>();
-            dynamic jane = population.New<Person>();
-            dynamic john = population.New<Person>();
-            dynamic jenny = population.New<Person>();
+            var acme = population.New(organization);
+            var jane = population.New(person);
+            var john = population.New(person);
+            var jenny = population.New(person);
 
             acme.AddEmployee(jane);
             acme.AddEmployee(john);
@@ -35,28 +37,29 @@ namespace Allors.Dynamic.Tests
         [Fact]
         public void AddDifferentAssociation()
         {
-            var population = new DynamicPopulation(
-                 new DynamicMeta(),
-                 v =>
-            {
-                v.AddUnit<INamed, string>("Name");
-                v.AddOneToMany<Organization, Person>("Employee");
-            });
+            var meta = new DynamicMeta();
+            var named = meta.AddInterface("Named");
+            var organization = meta.AddClass("Organization", named);
+            var person = meta.AddClass("Person", named);
+            meta.AddUnit<string>(named, "Name");
+            meta.AddOneToMany(organization, person, "Employee");
 
-            dynamic acme = population.New<Organization>();
+            var population = new DynamicPopulation(meta);
 
-            dynamic jane = population.New<Person>();
+            var acme = population.New(organization);
+
+            var jane = population.New(person);
             jane.Name = "Jane";
-            dynamic john = population.New<Person>();
+            var john = population.New(person);
             john.Name = "John";
-            dynamic jenny = population.New<Person>();
+            var jenny = population.New(person);
             jenny.Name = "Jenny";
 
             acme.AddEmployee(jane);
             acme.AddEmployee(john);
             acme.AddEmployee(jenny);
 
-            dynamic hooli = population.New<Organization>();
+            var hooli = population.New(organization);
 
             hooli.AddEmployee(jane);
 
@@ -80,14 +83,17 @@ namespace Allors.Dynamic.Tests
         [Fact]
         public void Remove()
         {
-            var population = new DynamicPopulation(
-                 new DynamicMeta(),
-                 v => v.AddOneToMany<Organization, Person>("Employee"));
+            var meta = new DynamicMeta();
+            var organization = meta.AddClass("Organization");
+            var person = meta.AddClass("Person");
+            meta.AddOneToMany(organization, person, "Employee");
 
-            dynamic acme = population.New<Organization>();
-            dynamic jane = population.New<Person>();
-            dynamic john = population.New<Person>();
-            dynamic jenny = population.New<Person>();
+            var population = new DynamicPopulation(meta);
+
+            var acme = population.New(organization);
+            var jane = population.New(person);
+            var john = population.New(person);
+            var jenny = population.New(person);
 
             acme.AddEmployee(jane);
             acme.AddEmployee(john);

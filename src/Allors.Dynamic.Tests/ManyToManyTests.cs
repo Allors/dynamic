@@ -1,25 +1,28 @@
+using System;
+using Allors.Dynamic.Meta;
+using Xunit;
+
 namespace Allors.Dynamic.Tests
 {
-    using Allors.Dynamic.Meta;
-    using Allors.Dynamic.Tests.Domain;
-    using Xunit;
-
     public class ManyToManyTests
     {
         [Fact]
         public void AddSingleActiveLink()
         {
-            var population = new DynamicPopulation(
-                  new DynamicMeta(),
-                  v => v.AddUnit<Organization, string>("Name"),
-                  v => v.AddManyToMany<Organization, Person>("Employee"));
+            var meta = new DynamicMeta();
+            var organization = meta.AddClass("Organization");
+            var person = meta.AddClass("Person");
+            meta.AddUnit<string>(organization, "Name");
+            meta.AddManyToMany(organization, person, "Employee");
 
-            dynamic acme = population.New<Organization>(v => v.Name("Acme"));
-            dynamic hooli = population.New<Organization>(v => v.Name("Hooli"));
+            var population = new DynamicPopulation(meta);
 
-            dynamic jane = population.New<Person>();
-            dynamic john = population.New<Person>();
-            dynamic jenny = population.New<Person>();
+            var acme = population.New(organization, v => v.Name = "Acme");
+            var hooli = population.New(organization, v => v.Name = "Hooli");
+
+            var jane = population.New(person);
+            var john = population.New(person);
+            var jenny = population.New(person);
 
             acme.AddEmployee(jane);
             acme.AddEmployee(john);
@@ -45,17 +48,20 @@ namespace Allors.Dynamic.Tests
         [Fact]
         public void SetSingleActiveLink()
         {
-            var population = new DynamicPopulation(
-                new DynamicMeta(),
-                v => v.AddUnit<Organization, string>("Name"),
-                v => v.AddManyToMany<Organization, Person>("Employee"));
+            var meta = new DynamicMeta();
+            var organization = meta.AddClass("Organization");
+            var person = meta.AddClass("Person");
+            meta.AddUnit<string>(organization, "Name");
+            meta.AddManyToMany(organization, person, "Employee");
 
-            dynamic acme = population.New<Organization>(v => v.Name("Acme"));
-            dynamic hooli = population.New<Organization>(v => v.Name("Hooli"));
+            var population = new DynamicPopulation(meta);
 
-            dynamic jane = population.New<Person>();
-            dynamic john = population.New<Person>();
-            dynamic jenny = population.New<Person>();
+            var acme = population.New(organization, v => v.Name = "Acme");
+            var hooli = population.New(organization, v => v.Name = "Hooli");
+
+            var jane = population.New(person);
+            var john = population.New(person);
+            var jenny = population.New(person);
 
             acme.Employees = new[] { jane };
 
@@ -105,7 +111,7 @@ namespace Allors.Dynamic.Tests
 
             Assert.Empty(hooli.Employees);
 
-            acme.Employees = new Person[] { };
+            acme.Employees = Array.Empty<dynamic>();
 
             Assert.Empty(jane.OrganizationWhereEmployee);
             Assert.Empty(john.OrganizationWhereEmployee);
@@ -118,17 +124,20 @@ namespace Allors.Dynamic.Tests
         [Fact]
         public void RemoveSingleActiveLink()
         {
-            var population = new DynamicPopulation(
-                new DynamicMeta(),
-                v => v.AddUnit<Organization, string>("Name"),
-                v => v.AddManyToMany<Organization, Person>("Employee"));
+            var meta = new DynamicMeta();
+            var organization = meta.AddClass("Organization");
+            var person = meta.AddClass("Person");
+            meta.AddUnit<string>(organization, "Name");
+            meta.AddManyToMany(organization, person, "Employee");
 
-            dynamic acme = population.New<Organization>(v => v.Name("Acme"));
-            dynamic hooli = population.New<Organization>(v => v.Name("Hooli"));
+            var population = new DynamicPopulation(meta);
 
-            dynamic jane = population.New<Person>();
-            dynamic john = population.New<Person>();
-            dynamic jenny = population.New<Person>();
+            var acme = population.New(organization, v => v.Name = "Acme");
+            var hooli = population.New(organization, v => v.Name = ("Hooli"));
+
+            var jane = population.New(person);
+            var john = population.New(person);
+            var jenny = population.New(person);
 
             acme.Employees = new[] { jane, john, jenny };
 
@@ -175,17 +184,20 @@ namespace Allors.Dynamic.Tests
         [Fact]
         public void MultipeleActiveLinks()
         {
-            var population = new DynamicPopulation(
-                  new DynamicMeta(),
-                  v => v.AddUnit<Organization, string>("Name"),
-                  v => v.AddManyToMany<Organization, Person>("Employee"));
+            var meta = new DynamicMeta();
+            var organization = meta.AddClass("Organization");
+            var person = meta.AddClass("Person");
+            meta.AddUnit<string>(organization, "Name");
+            meta.AddManyToMany(organization, person, "Employee");
 
-            dynamic acme = population.New<Organization>(v => v.Name("Acme"));
-            dynamic hooli = population.New<Organization>(v => v.Name("Hooli"));
+            var population = new DynamicPopulation(meta);
 
-            dynamic jane = population.New<Person>();
-            dynamic john = population.New<Person>();
-            dynamic jenny = population.New<Person>();
+            var acme = population.New(organization, v => v.Name = "Acme");
+            var hooli = population.New(organization, v => v.Name = "Hooli");
+
+            var jane = population.New(person);
+            var john = population.New(person);
+            var jenny = population.New(person);
 
             acme.AddEmployee(jane);
             acme.AddEmployee(john);

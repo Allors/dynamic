@@ -18,13 +18,13 @@
 
         internal DynamicAssociationType(DynamicObjectType objectType, DynamicRoleType roleType, string singularName, string pluralName, string name, bool isOne, bool isMany)
         {
-            this.ObjectType = objectType;
-            this.RoleType = roleType;
-            this.SingularName = singularName;
-            this.PluralName = pluralName;
-            this.Name = name;
-            this.IsOne = isOne;
-            this.IsMany = isMany;
+            ObjectType = objectType;
+            RoleType = roleType;
+            SingularName = singularName;
+            PluralName = pluralName;
+            Name = name;
+            IsOne = isOne;
+            IsMany = isMany;
         }
     }
 }

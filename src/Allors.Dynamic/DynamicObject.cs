@@ -1,54 +1,56 @@
-﻿namespace Allors.Dynamic
-{
-    using System.Collections.Generic;
-    using System.Dynamic;
-    using System.Linq;
-    using Allors.Dynamic.Meta;
+﻿using System;
+using System.Collections.Generic;
+using System.Data;
+using System.Dynamic;
+using System.Linq;
+using Allors.Dynamic.Meta;
 
-    public abstract class DynamicObject : System.Dynamic.DynamicObject, IDynamicObject
+namespace Allors.Dynamic
+{
+    public class DynamicObject : System.Dynamic.DynamicObject
     {
-        protected DynamicObject(DynamicPopulation population, DynamicObjectType objectType)
+        internal DynamicObject(DynamicPopulation population, DynamicObjectType objectType)
         {
-            this.Population = population;
-            this.ObjectType = objectType;
+            Population = population;
+            ObjectType = objectType;
         }
 
         public DynamicPopulation Population { get; }
 
         public DynamicObjectType ObjectType { get; }
 
-        public object GetRole(string name) => this.Population.GetRole(this, this.ObjectType.RoleTypeByName[name]);
+        public object GetRole(string name) => Population.GetRole(this, ObjectType.RoleTypeByName[name]);
 
-        public void SetRole(string name, object value) => this.Population.SetRole(this, this.ObjectType.RoleTypeByName[name], value);
+        public void SetRole(string name, object value) => Population.SetRole(this, ObjectType.RoleTypeByName[name], value);
 
-        public void AddRole(string name, IDynamicObject value) => this.Population.AddRole(this, this.ObjectType.RoleTypeByName[name], value);
+        public void AddRole(string name, DynamicObject value) => Population.AddRole(this, ObjectType.RoleTypeByName[name], value);
 
-        public void RemoveRole(string name, IDynamicObject value) => this.Population.RemoveRole(this, this.ObjectType.RoleTypeByName[name], value);
+        public void RemoveRole(string name, DynamicObject value) => Population.RemoveRole(this, ObjectType.RoleTypeByName[name], value);
 
-        public object GetAssociation(string name) => this.Population.GetAssociation(this, this.ObjectType.AssociationTypeByName[name]);
+        public object GetAssociation(string name) => Population.GetAssociation(this, ObjectType.AssociationTypeByName[name]);
 
         /// <inheritdoc/>
         public override bool TryGetIndex(GetIndexBinder binder, object[] indexes, out object result)
         {
-            return this.TryGet(indexes[0], out result);
+            return TryGet(indexes[0], out result);
         }
 
         /// <inheritdoc/>
         public override bool TrySetIndex(SetIndexBinder binder, object[] indexes, object value)
         {
-            return this.TrySet(indexes[0], value);
+            return TrySet(indexes[0], value);
         }
 
         /// <inheritdoc/>
         public override bool TryGetMember(GetMemberBinder binder, out object result)
         {
-            return this.TryGet(binder.Name, out result);
+            return TryGet(binder.Name, out result);
         }
 
         /// <inheritdoc/>
         public override bool TrySetMember(SetMemberBinder binder, object value)
         {
-            return this.TrySet(binder.Name, value);
+            return TrySet(binder.Name, value);
         }
 
         /// <inheritdoc/>
@@ -58,16 +60,16 @@
 
             result = null;
 
-            if (name.StartsWith("Add") && this.ObjectType.RoleTypeByName.TryGetValue(name.Substring(3), out var roleType))
+            if (name.StartsWith("Add") && ObjectType.RoleTypeByName.TryGetValue(name.Substring(3), out var roleType))
             {
-                this.Population.AddRole(this, roleType, (DynamicObject)args[0]);
+                Population.AddRole(this, roleType, (DynamicObject)args[0]);
                 return true;
             }
 
-            if (name.StartsWith("Remove") && this.ObjectType.RoleTypeByName.TryGetValue(name.Substring(6), out roleType))
+            if (name.StartsWith("Remove") && ObjectType.RoleTypeByName.TryGetValue(name.Substring(6), out roleType))
             {
                 // TODO: RemoveAll
-                this.Population.RemoveRole(this, roleType, (DynamicObject)args[0]);
+                Population.RemoveRole(this, roleType, (DynamicObject)args[0]);
                 return true;
             }
 
@@ -77,13 +79,12 @@
         /// <inheritdoc/>
         public override IEnumerable<string> GetDynamicMemberNames()
         {
-            var objectType = this.Population.Meta.ObjectTypeByType[this.GetType()];
-            foreach (var roleType in objectType.RoleTypeByName.Values.ToArray().Distinct())
+            foreach (var roleType in this.ObjectType.RoleTypeByName.Values.ToArray().Distinct())
             {
                 yield return roleType.Name;
             }
 
-            foreach (var associationType in objectType.AssociationTypeByName.Values.ToArray().Distinct())
+            foreach (var associationType in this.ObjectType.AssociationTypeByName.Values.ToArray().Distinct())
             {
                 yield return associationType.Name;
             }
@@ -95,24 +96,24 @@
             {
                 case string name:
                     {
-                        if (this.ObjectType.RoleTypeByName.TryGetValue(name, out var roleType))
+                        if (ObjectType.RoleTypeByName.TryGetValue(name, out var roleType))
                         {
-                            return this.TryGetRole(roleType, out result);
+                            return TryGetRole(roleType, out result);
                         }
 
-                        if (this.ObjectType.AssociationTypeByName.TryGetValue(name, out var associationType))
+                        if (ObjectType.AssociationTypeByName.TryGetValue(name, out var associationType))
                         {
-                            return this.TryGetAssociation(associationType, out result);
+                            return TryGetAssociation(associationType, out result);
                         }
                     }
 
                     break;
 
                 case DynamicRoleType roleType:
-                    return this.TryGetRole(roleType, out result);
+                    return TryGetRole(roleType, out result);
 
                 case DynamicAssociationType associationType:
-                    return this.TryGetAssociation(associationType, out result);
+                    return TryGetAssociation(associationType, out result);
             }
 
             result = null;
@@ -121,10 +122,10 @@
 
         private bool TryGetRole(DynamicRoleType roleType, out object result)
         {
-            result = this.Population.GetRole(this, roleType);
+            result = Population.GetRole(this, roleType);
             if (result == null && roleType.IsMany)
             {
-                result = roleType.ObjectType.EmptyArray;
+                result = Array.Empty<DynamicObject>();
             }
 
             return true;
@@ -132,10 +133,10 @@
 
         private bool TryGetAssociation(DynamicAssociationType associationType, out object result)
         {
-            result = this.Population.GetAssociation(this, associationType);
+            result = Population.GetAssociation(this, associationType);
             if (result == null && associationType.IsMany)
             {
-                result = associationType.ObjectType.EmptyArray;
+                result = Array.Empty<DynamicObject>();
             }
 
             return true;
@@ -147,9 +148,9 @@
             {
                 case string name:
                     {
-                        if (this.ObjectType.RoleTypeByName.TryGetValue(name, out var roleType))
+                        if (ObjectType.RoleTypeByName.TryGetValue(name, out var roleType))
                         {
-                            this.Population.SetRole(this, roleType, value);
+                            Population.SetRole(this, roleType, value);
                             return true;
                         }
                     }
@@ -157,7 +158,7 @@
                     break;
 
                 case DynamicRoleType roleType:
-                    this.Population.SetRole(this, roleType, value);
+                    Population.SetRole(this, roleType, value);
                     return true;
             }
 

@@ -1,36 +1,52 @@
-﻿namespace Allors.Dynamic.Meta
-{
-    using System;
-    using System.Collections.Generic;
-    using System.Collections.ObjectModel;
+﻿using System;
+using System.Collections.Generic;
+using System.Collections.ObjectModel;
 
+namespace Allors.Dynamic.Meta
+{
     public class DynamicMeta
     {
-        private readonly IDictionary<Type, DynamicObjectType> objectTypeByType;
+        private readonly Dictionary<string, DynamicObjectType> objectTypeByName;
 
         public DynamicMeta()
         {
-            this.objectTypeByType = new Dictionary<Type, DynamicObjectType>();
+            objectTypeByName = [];
+
+            this.ObjectTypeByName = new ReadOnlyDictionary<string, DynamicObjectType>(this.objectTypeByName);
         }
 
-        public IReadOnlyDictionary<Type, DynamicObjectType> ObjectTypeByType => new ReadOnlyDictionary<Type, DynamicObjectType>(this.objectTypeByType);
+        public IReadOnlyDictionary<string, DynamicObjectType> ObjectTypeByName { get; }
 
-        public DynamicRoleType AddUnit<TAssociation, TRole>(string roleName, string? associationName = null) => this.GetOrAddObjectType(typeof(TAssociation)).AddUnit(this.GetOrAddObjectType(typeof(TRole)), roleName, associationName);
+        public DynamicRoleType AddUnit<TRole>(DynamicObjectType associationObjectType, string roleName, string? associationName = null) => associationObjectType.AddUnit(Unit(typeof(TRole)), roleName, associationName);
 
-        public DynamicRoleType AddOneToOne<TAssociation, TRole>(string roleName, string? associationName = null) => this.GetOrAddObjectType(typeof(TAssociation)).AddOneToOne(this.GetOrAddObjectType(typeof(TRole)), roleName, associationName);
+        public DynamicRoleType AddOneToOne(DynamicObjectType associationObjectType, DynamicObjectType roleObjectType, string roleName, string? associationName = null) => associationObjectType.AddOneToOne(roleObjectType, roleName, associationName);
 
-        public DynamicRoleType AddManyToOne<TAssociation, TRole>(string roleName, string? associationName = null) => this.GetOrAddObjectType(typeof(TAssociation)).AddManyToOne(this.GetOrAddObjectType(typeof(TRole)), roleName, associationName);
+        public DynamicRoleType AddManyToOne(DynamicObjectType associationObjectType, DynamicObjectType roleObjectType, string roleName, string? associationName = null) => associationObjectType.AddManyToOne(roleObjectType, roleName, associationName);
 
-        public DynamicRoleType AddOneToMany<TAssociation, TRole>(string roleName, string? associationName = null) => this.GetOrAddObjectType(typeof(TAssociation)).AddOneToMany(this.GetOrAddObjectType(typeof(TRole)), roleName, associationName);
+        public DynamicRoleType AddOneToMany(DynamicObjectType associationObjectType, DynamicObjectType roleObjectType, string roleName, string? associationName = null) => associationObjectType.AddOneToMany(roleObjectType, roleName, associationName);
 
-        public DynamicRoleType AddManyToMany<TAssociation, TRole>(string roleName, string? associationName = null) => this.GetOrAddObjectType(typeof(TAssociation)).AddManyToMany(this.GetOrAddObjectType(typeof(TRole)), roleName, associationName);
+        public DynamicRoleType AddManyToMany(DynamicObjectType associationObjectType, DynamicObjectType roleObjectType, string roleName, string? associationName = null) => associationObjectType.AddManyToMany(roleObjectType, roleName, associationName);
 
-        public DynamicObjectType GetOrAddObjectType(Type type)
+        public DynamicObjectType AddInterface(string name, params DynamicObjectType[] supertypes)
         {
-            if (!this.ObjectTypeByType.TryGetValue(type, out var objectType))
+            var objectType = new DynamicObjectType(this, DynamicObjectTypeKind.Interface, name, supertypes);
+            objectTypeByName.Add(objectType.Name, objectType);
+            return objectType;
+        }
+
+        public DynamicObjectType AddClass(string name, params DynamicObjectType[] supertypes)
+        {
+            var objectType = new DynamicObjectType(this, DynamicObjectTypeKind.Class, name, supertypes);
+            objectTypeByName.Add(objectType.Name, objectType);
+            return objectType;
+        }
+
+        private DynamicObjectType Unit(Type type)
+        {
+            if (!ObjectTypeByName.TryGetValue(type.Name, out var objectType))
             {
                 objectType = new DynamicObjectType(this, type);
-                this.objectTypeByType.Add(type, objectType);
+                objectTypeByName.Add(objectType.Name, objectType);
             }
 
             return objectType;
@@ -82,7 +98,7 @@
 
         internal void ResetDerivations()
         {
-            foreach ((_, DynamicObjectType? objectType) in this.ObjectTypeByType)
+            foreach ((_, DynamicObjectType? objectType) in ObjectTypeByName)
             {
                 objectType.ResetDerivations();
             }

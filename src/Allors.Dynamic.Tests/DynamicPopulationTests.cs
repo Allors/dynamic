@@ -1,33 +1,34 @@
+using Allors.Dynamic.Meta;
+using Xunit;
+
 namespace Allors.Dynamic.Tests
 {
-    using Allors.Dynamic.Meta;
-    using Allors.Dynamic.Tests.Domain;
-    using Xunit;
-
     public class DynamicPopulationTests
     {
         [Fact]
         public void New()
         {
-            var population = new DynamicPopulation(new DynamicMeta());
-            var name = population.Meta.AddUnit<INamed, string>("Name");
-            var (property, owner) = population.Meta.AddOneToOne<Organization, Person>("Owner");
+            var meta = new DynamicMeta();
+            var named = meta.AddInterface("Named");
+            var organization = meta.AddClass("Organization", named);
+            var person = meta.AddClass("Person", named);
+            meta.AddUnit<string>(named, "Name");
+            meta.AddOneToOne(organization, person, "Owner");
 
-            New<Organization> newOrganization = population.New;
-            New<Person> newPerson = population.New;
+            var population = new DynamicPopulation(meta);
 
-            var acme = newOrganization(v =>
+            var acme = population.New(organization, v =>
             {
-                v.Name("Acme");
-                v.Owner(newPerson(v => v.Name("Jane")));
+                v.Name = "Acme";
+                v.Owner = population.New(person, w => w.Name = "Jane");
             });
 
-            var jane = acme.Owner();
+            var jane = acme.Owner;
 
-            Assert.Equal("Acme", acme.Name());
-            Assert.Equal("Jane", jane.Name());
+            Assert.Equal("Acme", acme.Name);
+            Assert.Equal("Jane", jane.Name);
 
-            Assert.Equal(acme, jane.OrganizationWhereOwner());
+            Assert.Equal(acme, jane.OrganizationWhereOwner);
         }
     }
 }

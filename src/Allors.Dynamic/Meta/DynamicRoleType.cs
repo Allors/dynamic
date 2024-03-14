@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Dynamic;
 using System.Linq;
 
 namespace Allors.Dynamic.Meta
@@ -19,53 +20,53 @@ namespace Allors.Dynamic.Meta
 
         public bool IsOne { get; }
 
-        public bool IsMany { get;}
+        public bool IsMany { get; }
 
-        public bool IsUnit { get;  }
+        public bool IsUnit { get; }
 
         public void Deconstruct(out DynamicAssociationType associationType, out DynamicRoleType roleType)
         {
-            associationType = this.AssociationType;
+            associationType = AssociationType;
             roleType = this;
         }
 
         internal DynamicRoleType(DynamicObjectType objectType, string singularName, string pluralName, string name, bool isOne, bool isMany, bool isUnit)
         {
-            this.ObjectType = objectType;
-            this.SingularName = singularName;
-            this.PluralName = pluralName;
-            this.Name = name;
-            this.IsOne = isOne;
-            this.IsMany = isMany;
-            this.IsUnit = isUnit;
+            ObjectType = objectType;
+            SingularName = singularName;
+            PluralName = pluralName;
+            Name = name;
+            IsOne = isOne;
+            IsMany = isMany;
+            IsUnit = isUnit;
         }
 
         public override string ToString()
         {
-            return this.Name;
+            return Name;
         }
 
         internal string SingularNameForEmbeddedAssociationType(DynamicObjectType dynamicObjectType)
         {
-            return $"{dynamicObjectType.Type.Name}Where{this.SingularName}";
+            return $"{dynamicObjectType.Name}Where{SingularName}";
         }
 
         internal string PluralNameForEmbeddedAssociationType(DynamicObjectType dynamicObjectType)
         {
-            return $"{this.ObjectType.DynamicMeta.Pluralize(dynamicObjectType.Type.Name)}Where{this.SingularName}";
+            return $"{ObjectType.Meta.Pluralize(dynamicObjectType.Name)}Where{SingularName}";
         }
 
         internal object? Normalize(object? value)
         {
-            if (this.IsUnit)
+            if (IsUnit)
             {
-                return this.NormalizeUnit(value);
+                return NormalizeUnit(value);
             }
 
-            return this.IsOne switch
+            return IsOne switch
             {
-                true => this.NormalizeToOne(value),
-                _ => this.NormalizeToMany(value)
+                true => NormalizeToOne(value),
+                _ => NormalizeToMany(value)
             };
         }
 
@@ -93,9 +94,9 @@ Use DateTimeKind.Utc or DateTimeKind.Local.");
                 return new DateTime(dateTime.Year, dateTime.Month, dateTime.Day, dateTime.Hour, dateTime.Minute, dateTime.Second, dateTime.Millisecond, DateTimeKind.Utc);
             }
 
-            if (value.GetType() != this.ObjectType.Type)
+            if (value.GetType() != ObjectType.Type)
             {
-                value = Convert.ChangeType(value, this.ObjectType.TypeCode);
+                value = Convert.ChangeType(value, ObjectType.TypeCode);
             }
 
             return value;
@@ -103,12 +104,18 @@ Use DateTimeKind.Utc or DateTimeKind.Local.");
 
         private object? NormalizeToOne(object? value)
         {
-            if (value != null)
+            if (value is not null)
             {
-                var type = this.ObjectType.Type;
-                if (!type.IsInstanceOfType(value))
+                if (value is DynamicObject dynamicObject)
                 {
-                    throw new ArgumentException($"{this.Name} should be a {type.Name} but was a {value.GetType()}");
+                    if (!dynamicObject.ObjectType.IsAssignableTo(this.ObjectType))
+                    {
+                        throw new ArgumentException($"{Name} should be assignable to {this.ObjectType.Name} but was a {dynamicObject.ObjectType.Name}");
+                    }
+                }
+                else
+                {
+                    throw new ArgumentException($"{Name} should be a dynamic object but was a {value.GetType()}");
                 }
             }
 
@@ -120,25 +127,30 @@ Use DateTimeKind.Utc or DateTimeKind.Local.");
             return value switch
             {
                 null => null,
-                ICollection collection => this.NormalizeToMany(collection).ToArray(),
+                ICollection collection => NormalizeToMany(collection).ToArray(),
                 _ => throw new ArgumentException($"{value.GetType()} is not a collection Type")
             };
         }
 
-        private IEnumerable<IDynamicObject> NormalizeToMany(ICollection role)
+        private IEnumerable<DynamicObject> NormalizeToMany(ICollection role)
         {
-            foreach (IDynamicObject @object in role)
+            foreach (var @object in role)
             {
                 if (@object != null)
                 {
-                    var type = this.ObjectType.Type;
-
-                    if (!type.IsInstanceOfType(@object))
+                    if (@object is DynamicObject dynamicObject)
                     {
-                        throw new ArgumentException($"{this.Name} should be a {type.Name} but was a {@object.GetType()}");
+                        if (!dynamicObject.ObjectType.IsAssignableTo(this.ObjectType))
+                        {
+                            throw new ArgumentException($"{Name} should be assignable to {this.ObjectType.Name} but was a {dynamicObject.ObjectType.Name}");
+                        }
+                    }
+                    else
+                    {
+                        throw new ArgumentException($"{Name} should be a dynamic object but was a {@object.GetType()}");
                     }
 
-                    yield return @object;
+                    yield return dynamicObject;
                 }
             }
         }

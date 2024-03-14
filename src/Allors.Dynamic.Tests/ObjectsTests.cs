@@ -1,43 +1,29 @@
+using System;
+using System.Linq;
+using Allors.Dynamic.Meta;
+using Xunit;
+
 namespace Allors.Dynamic.Tests
 {
-    using System;
-    using System.Linq;
-    using Allors.Dynamic.Meta;
-    using Allors.Dynamic.Tests.Domain;
-    using Xunit;
-
     public class ObjectsTests
     {
         [Fact]
         public void Filter()
         {
-            var population = new DynamicPopulation(
-                 new DynamicMeta(),
-                 v =>
-            {
-                v.AddUnit<Person, string>("FirstName");
-                v.AddUnit<Person, string>("LastName");
-            });
+            var meta = new DynamicMeta();
+            var person = meta.AddClass("Person");
+            meta.AddUnit<string>(person, "FirstName");
+            meta.AddUnit<string>(person, "LastName");
 
-            dynamic Create<T>(params Action<T>[] builders)
-                 where T : DynamicObject
-            {
-                return population.New<T>(builders);
-            }
-
-            Action<dynamic> FirstName(string firstName)
-            {
-                return (obj) => obj.FirstName = firstName;
-            }
-
-            Action<dynamic> LastName(string lastName)
-            {
-                return (obj) => obj.LastName = lastName;
-            }
+            var population = new DynamicPopulation(meta);
 
             dynamic NewPerson(string firstName, string lastName)
             {
-                return Create<Person>(FirstName(firstName), LastName(lastName));
+                return population.New(person, v =>
+                {
+                    v.FirstName = firstName;
+                    v.LastName = lastName;
+                });
             }
 
             var jane = NewPerson("Jane", "Doe");
