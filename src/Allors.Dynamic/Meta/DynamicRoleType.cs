@@ -108,7 +108,7 @@ Use DateTimeKind.Utc or DateTimeKind.Local.");
             {
                 if (value is DynamicObject dynamicObject)
                 {
-                    if (!dynamicObject.ObjectType.IsAssignableTo(this.ObjectType))
+                    if (!this.ObjectType.IsAssignableFrom(dynamicObject.ObjectType))
                     {
                         throw new ArgumentException($"{Name} should be assignable to {this.ObjectType.Name} but was a {dynamicObject.ObjectType.Name}");
                     }
@@ -140,7 +140,7 @@ Use DateTimeKind.Utc or DateTimeKind.Local.");
                 {
                     if (@object is DynamicObject dynamicObject)
                     {
-                        if (!dynamicObject.ObjectType.IsAssignableTo(this.ObjectType))
+                        if (!this.ObjectType.IsAssignableFrom(dynamicObject.ObjectType))
                         {
                             throw new ArgumentException($"{Name} should be assignable to {this.ObjectType.Name} but was a {dynamicObject.ObjectType.Name}");
                         }

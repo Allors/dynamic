@@ -7,14 +7,12 @@ namespace Allors.Dynamic.Meta
     public class DynamicObjectType
     {
         private readonly Dictionary<string, DynamicAssociationType> assignedAssociationTypeByName;
-
         private readonly Dictionary<string, DynamicRoleType> assignedRoleTypeByName;
+        private readonly HashSet<DynamicObjectType> supertypes;
 
         private IDictionary<string, DynamicAssociationType>? derivedAssociationTypeByName;
-
         private IDictionary<string, DynamicRoleType>? derivedRoleTypeByName;
-
-        private readonly HashSet<DynamicObjectType> supertypes;
+        private HashSet<DynamicObjectType> derivedSupertypes;
 
         internal DynamicObjectType(DynamicMeta meta, DynamicObjectTypeKind kind, string name, DynamicObjectType[] supertypes)
         {
@@ -45,7 +43,28 @@ namespace Allors.Dynamic.Meta
 
         public Type Type { get; }
 
-        public IReadOnlySet<DynamicObjectType> Supertypes => this.supertypes;
+        public IReadOnlySet<DynamicObjectType> Supertypes
+        {
+            get
+            {
+                if (this.derivedSupertypes == null)
+                {
+                    this.derivedSupertypes = [];
+                    this.AddSupertypes(this.derivedSupertypes);
+                }
+
+                return this.derivedSupertypes;
+            }
+        }
+
+        private void AddSupertypes(HashSet<DynamicObjectType> newDerivedSupertypes)
+        {
+            foreach (var supertype in this.supertypes.Where(supertype => !newDerivedSupertypes.Contains(supertype)))
+            {
+                newDerivedSupertypes.Add(supertype);
+                supertype.AddSupertypes(newDerivedSupertypes);
+            }
+        }
 
         public void AddSupertype(DynamicObjectType supertype)
         {
@@ -315,6 +334,7 @@ namespace Allors.Dynamic.Meta
 
         internal void ResetDerivations()
         {
+            derivedSupertypes = null;
             derivedAssociationTypeByName = null;
             derivedRoleTypeByName = null;
         }
@@ -350,9 +370,9 @@ namespace Allors.Dynamic.Meta
             }
         }
 
-        public bool IsAssignableTo(DynamicObjectType other)
+        public bool IsAssignableFrom(DynamicObjectType other)
         {
-            return this == other || this.Supertypes.Contains(other);
+            return this == other || other.Supertypes.Contains(this);
         }
     }
 }
