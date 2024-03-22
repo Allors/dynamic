@@ -4,7 +4,7 @@ using System.Collections.ObjectModel;
 
 namespace Allors.Dynamic.Meta
 {
-    public class DynamicMeta
+    public sealed class DynamicMeta
     {
         private readonly Dictionary<string, DynamicObjectType> objectTypeByName;
 

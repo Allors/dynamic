@@ -1,6 +1,6 @@
 ﻿namespace Allors.Dynamic.Meta
 {
-    public class DynamicAssociationType
+    public sealed class DynamicAssociationType
     {
         public DynamicObjectType ObjectType { get; }
 

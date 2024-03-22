@@ -1,13 +1,12 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Data;
 using System.Dynamic;
 using System.Linq;
 using Allors.Dynamic.Meta;
 
 namespace Allors.Dynamic.Binding
 {
-    public class DynamicObject : System.Dynamic.DynamicObject, IDynamicObject
+    public sealed class DynamicObject : System.Dynamic.DynamicObject, IDynamicObject
     {
         internal DynamicObject(DynamicPopulation population, DynamicObjectType objectType)
         {
@@ -15,7 +14,10 @@ namespace Allors.Dynamic.Binding
             ObjectType = objectType;
         }
 
-        public Dynamic.DynamicPopulation Population { get; }
+        IDynamicPopulation IDynamicObject.Population => this.Population;
+
+        public DynamicPopulation Population { get; }
+
 
         public DynamicObjectType ObjectType { get; }
 

@@ -1,4 +1,3 @@
-using System;
 using System.Linq;
 using Allors.Dynamic.Meta;
 using Xunit;

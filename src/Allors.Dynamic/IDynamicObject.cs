@@ -4,7 +4,7 @@ namespace Allors.Dynamic
 {
     public interface IDynamicObject 
     {
-        DynamicPopulation Population { get; }
+        IDynamicPopulation Population { get; }
 
         DynamicObjectType ObjectType { get; }
 

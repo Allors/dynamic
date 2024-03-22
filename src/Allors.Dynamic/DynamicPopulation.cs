@@ -4,7 +4,7 @@ using Allors.Dynamic.Meta;
 
 namespace Allors.Dynamic
 {
-   public class DynamicPopulation
+   public class DynamicPopulation : IDynamicPopulation
     {
         private readonly DynamicDatabase database;
 
@@ -23,7 +23,7 @@ namespace Allors.Dynamic
 
         public IDynamicObject New(DynamicObjectType @class, params Action<dynamic>[] builders)
         {
-            var @new = NewObject(@class);
+            var @new = (IDynamicObject)new DynamicObject(this, @class);
             database.AddObject(@new);
 
             foreach (var builder in builders)
@@ -86,11 +86,6 @@ namespace Allors.Dynamic
         {
             database.GetAssociation(obj, associationType, out var result);
             return result;
-        }
-
-        protected virtual IDynamicObject NewObject(DynamicObjectType @class)
-        {
-            return new DynamicObject(this, @class);
         }
     }
 }

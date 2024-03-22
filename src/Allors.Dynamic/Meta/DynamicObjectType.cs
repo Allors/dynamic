@@ -4,7 +4,7 @@ using System.Linq;
 
 namespace Allors.Dynamic.Meta
 {
-    public class DynamicObjectType
+    public sealed class DynamicObjectType
     {
         private readonly Dictionary<string, DynamicAssociationType> assignedAssociationTypeByName;
         private readonly Dictionary<string, DynamicRoleType> assignedRoleTypeByName;

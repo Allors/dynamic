@@ -1,28 +1,59 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <ClassDiagram MajorVersion="1" MinorVersion="1">
-  <Class Name="Allors.Dynamic.DynamicObject">
-    <Position X="1.5" Y="3.25" Width="2.25" />
-    <TypeIdentifier>
-      <HashCode>AFAAAAEAAAAAAAAIhEAEBIBACAAAAAAAAIARABAAAAA=</HashCode>
-      <FileName>DynamicObject.cs</FileName>
-    </TypeIdentifier>
-    <ShowAsAssociation>
-      <Property Name="ObjectType" />
-    </ShowAsAssociation>
-    <Lollipop Position="0.2" />
-  </Class>
   <Class Name="Allors.Dynamic.Meta.DynamicObjectType" Collapsed="true">
-    <Position X="4.75" Y="3.25" Width="1.75" />
+    <Position X="1" Y="3.75" Width="1.75" />
     <TypeIdentifier>
-      <HashCode>QAQEAAAAAAAQAARAAGAIABAQAYAARAgAAQAAgAABACA=</HashCode>
+      <HashCode>QgQEAAAAAADQIARAAGAIABQQAYAABIgAAQAAgAAAACA=</HashCode>
       <FileName>Meta\DynamicObjectType.cs</FileName>
     </TypeIdentifier>
   </Class>
-  <Interface Name="Allors.Dynamic.IDynamicObject">
-    <Position X="1.5" Y="0.75" Width="1.5" />
+  <Class Name="Allors.Dynamic.DynamicPopulation">
+    <Position X="7" Y="0.75" Width="1.75" />
     <TypeIdentifier>
-      <HashCode>ABAAAAEAAAAAAAAAgAAAAAAAAAAAAAAAAAAQAAAAAAA=</HashCode>
+      <HashCode>ABAAAAEAAAAgACBAgAAAAAAAAAAAAIEAQAQQAAAAAAE=</HashCode>
+      <FileName>DynamicPopulation.cs</FileName>
+    </TypeIdentifier>
+    <ShowAsAssociation>
+      <Property Name="Meta" />
+    </ShowAsAssociation>
+    <ShowAsCollectionAssociation>
+      <Property Name="DerivationById" />
+      <Property Name="Objects" />
+    </ShowAsCollectionAssociation>
+  </Class>
+  <Class Name="Allors.Dynamic.Meta.DynamicMeta" Collapsed="true">
+    <Position X="4.5" Y="3.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAIAAAQAACAIABAAAAAAYAABAgAAAgAAQAAACA=</HashCode>
+      <FileName>Meta\DynamicMeta.cs</FileName>
+    </TypeIdentifier>
+    <ShowAsCollectionAssociation>
+      <Field Name="objectTypeByName" />
+    </ShowAsCollectionAssociation>
+  </Class>
+  <Class Name="Allors.Dynamic.DynamicChangeSet">
+    <Position X="10.5" Y="3.25" Width="2.25" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAgAAAAEAAAAIAAAAAAgAAAoAAAAAAAAAAAAA=</HashCode>
+      <FileName>DynamicChangeSet.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Interface Name="Allors.Dynamic.IDynamicObject">
+    <Position X="1" Y="0.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>ABAAAAEAAAAAAAAIgAAAAAAAAAAAAAAAAIAQAAAAAAA=</HashCode>
       <FileName>IDynamicObject.cs</FileName>
+    </TypeIdentifier>
+    <ShowAsAssociation>
+      <Property Name="ObjectType" />
+      <Property Name="Population" />
+    </ShowAsAssociation>
+  </Interface>
+  <Interface Name="Allors.Dynamic.IDynamicDerivation">
+    <Position X="10.5" Y="0.75" Width="1.75" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAQAAAAAAAA=</HashCode>
+      <FileName>IDynamicDerivation.cs</FileName>
     </TypeIdentifier>
   </Interface>
   <Font Name="Segoe UI" Size="9" />

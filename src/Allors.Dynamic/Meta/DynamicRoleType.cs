@@ -1,12 +1,11 @@
 ﻿using System;
 using System.Collections;
 using System.Collections.Generic;
-using System.Dynamic;
 using System.Linq;
 
 namespace Allors.Dynamic.Meta
 {
-    public class DynamicRoleType
+    public sealed class DynamicRoleType
     {
         public DynamicAssociationType AssociationType { get; internal set; } = null!;
 

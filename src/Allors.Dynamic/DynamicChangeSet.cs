@@ -5,7 +5,7 @@ using Allors.Dynamic.Meta;
 
 namespace Allors.Dynamic
 {
-    public class DynamicChangeSet
+    public sealed class DynamicChangeSet
     {
         private static readonly IReadOnlyDictionary<IDynamicObject, object> Empty = new ReadOnlyDictionary<IDynamicObject, object>(new Dictionary<IDynamicObject, object>());
 

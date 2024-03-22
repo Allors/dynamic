@@ -1,19 +1,16 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Data;
-using System.Dynamic;
-using System.Linq;
-using Allors.Dynamic.Meta;
+﻿using Allors.Dynamic.Meta;
 
 namespace Allors.Dynamic
 {
-    public class DynamicObject : IDynamicObject
+    public sealed class DynamicObject : IDynamicObject
     {
         internal DynamicObject(DynamicPopulation population, DynamicObjectType objectType)
         {
             Population = population;
             ObjectType = objectType;
         }
+
+        IDynamicPopulation IDynamicObject.Population => this.Population;
 
         public DynamicPopulation Population { get; }
 

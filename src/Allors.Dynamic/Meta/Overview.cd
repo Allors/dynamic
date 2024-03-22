@@ -10,17 +10,17 @@
   <Class Name="Allors.Dynamic.Meta.DynamicMeta">
     <Position X="0.5" Y="0.5" Width="3" />
     <TypeIdentifier>
-      <HashCode>ACAAAAAAAAAQAAAAAAAAAAAACYAABAgAAAAAAQACACA=</HashCode>
+      <HashCode>AAAAAAAIAAAQAACAIABAAAAAAYAABAgAAAgAAQAAACA=</HashCode>
       <FileName>Meta\DynamicMeta.cs</FileName>
     </TypeIdentifier>
     <ShowAsCollectionAssociation>
-      <Field Name="objectTypeByType" />
+      <Field Name="objectTypeByName" />
     </ShowAsCollectionAssociation>
   </Class>
   <Class Name="Allors.Dynamic.Meta.DynamicObjectType">
     <Position X="5.25" Y="1.5" Width="2" />
     <TypeIdentifier>
-      <HashCode>QAQEAAAAAAAQAARAAGAIABAQAYAARAgAAQAAgAABACA=</HashCode>
+      <HashCode>QgQEAAAAAADQIARAAGAIABQQAYAABIgAAQAAgAAAACA=</HashCode>
       <FileName>Meta\DynamicObjectType.cs</FileName>
     </TypeIdentifier>
     <ShowAsCollectionAssociation>

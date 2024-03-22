@@ -1,5 +1,4 @@
 using Allors.Dynamic.Meta;
-using System;
 using Xunit;
 
 namespace Allors.Dynamic.Tests
