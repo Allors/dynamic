@@ -1,0 +1,45 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<ClassDiagram MajorVersion="1" MinorVersion="1">
+  <Class Name="Allors.Dynamic.Meta.DynamicAssociationType">
+    <Position X="10.25" Y="0.5" Width="2" />
+    <TypeIdentifier>
+      <HashCode>AAIAiAAAAAAAAAIAAAAAAAQAAAAAAAACAIAAAAAAAAA=</HashCode>
+      <FileName>Meta\DynamicAssociationType.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Allors.Dynamic.Meta.DynamicMeta">
+    <Position X="0.5" Y="0.5" Width="3" />
+    <TypeIdentifier>
+      <HashCode>ACAAAAAAAAAQAAAAAAAAAAAACYAABAgAAAAAAQACACA=</HashCode>
+      <FileName>Meta\DynamicMeta.cs</FileName>
+    </TypeIdentifier>
+    <ShowAsCollectionAssociation>
+      <Field Name="objectTypeByType" />
+    </ShowAsCollectionAssociation>
+  </Class>
+  <Class Name="Allors.Dynamic.Meta.DynamicObjectType">
+    <Position X="5.25" Y="1.5" Width="2" />
+    <TypeIdentifier>
+      <HashCode>QAQEAAAAAAAQAARAAGAIABAQAYAARAgAAQAAgAABACA=</HashCode>
+      <FileName>Meta\DynamicObjectType.cs</FileName>
+    </TypeIdentifier>
+    <ShowAsCollectionAssociation>
+      <Field Name="assignedAssociationTypeByName" />
+      <Field Name="assignedRoleTypeByName" />
+      <Field Name="derivedAssociationTypeByName" />
+      <Field Name="derivedRoleTypeByName" />
+    </ShowAsCollectionAssociation>
+  </Class>
+  <Class Name="Allors.Dynamic.Meta.DynamicRoleType">
+    <Position X="9.75" Y="4.25" Width="3.25" />
+    <TypeIdentifier>
+      <HashCode>AAAAiAAAAABAhAIEEAIAgAQAgDAAAAACAIAAAAAAAAA=</HashCode>
+      <FileName>Meta\DynamicRoleType.cs</FileName>
+    </TypeIdentifier>
+    <ShowAsAssociation>
+      <Property Name="AssociationType" />
+      <Property Name="ObjectType" />
+    </ShowAsAssociation>
+  </Class>
+  <Font Name="Segoe UI" Size="9" />
+</ClassDiagram>

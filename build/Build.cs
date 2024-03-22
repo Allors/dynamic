@@ -10,8 +10,6 @@ using static Nuke.Common.Tools.DotNet.DotNetTasks;
 
 class Build : NukeBuild
 {
-    const string ProjectName = "Allors.Dynamic";
-
     public static int Main() => Execute<Build>(x => x.Ci);
 
     [Parameter("Configuration to build - Default is 'Debug' (local) or 'Release' (server)")]
@@ -62,11 +60,28 @@ class Build : NukeBuild
         .Executes(() =>
         {
             DotNetTest(s => s
-                .SetProjectFile(Solution.GetProject(ProjectName + ".Tests"))
+                .SetProjectFile(Solution.GetProject("Allors.Dynamic.Tests"))
                 .SetConfiguration(Configuration)
                 .EnableNoBuild()
                 .EnableNoRestore()
                 .AddLoggers("trx;LogFileName=AllorsDynamicTests.trx")
+                .EnableProcessLogOutput()
+                .SetResultsDirectory(TestsDirectory)
+                .When(Cover, _ => _
+                    .EnableCollectCoverage()
+                    .SetCoverletOutputFormat(CoverletOutputFormat.cobertura)
+                    .SetCoverletOutput(CoverageFile)
+                    .SetExcludeByFile("*.g.cs")
+                    .When(IsServerBuild, _ => _
+                        .EnableUseSourceLink()))
+            );
+
+            DotNetTest(s => s
+                .SetProjectFile(Solution.GetProject("Allors.Dynamic.Binding.Tests"))
+                .SetConfiguration(Configuration)
+                .EnableNoBuild()
+                .EnableNoRestore()
+                .AddLoggers("trx;LogFileName=AllorsDynamicBindingTests.trx")
                 .EnableProcessLogOutput()
                 .SetResultsDirectory(TestsDirectory)
                 .When(Cover, _ => _
@@ -84,7 +99,15 @@ class Build : NukeBuild
         .Executes(() =>
         {
             DotNetPack(s => s
-                .SetProject(Solution.GetProject(ProjectName))
+                .SetProject(Solution.GetProject("Allors.Dynamic"))
+                .SetConfiguration(Configuration)
+                .EnableIncludeSource()
+                .EnableIncludeSymbols()
+                .SetVersion(GitVersion.NuGetVersionV2)
+                .SetOutputDirectory(NugetDirectory));
+
+            DotNetPack(s => s
+                .SetProject(Solution.GetProject("Allors.Dynamic.Binding"))
                 .SetConfiguration(Configuration)
                 .EnableIncludeSource()
                 .EnableIncludeSymbols()

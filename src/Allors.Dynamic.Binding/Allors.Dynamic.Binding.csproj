@@ -2,18 +2,18 @@
 
 	<PropertyGroup>
 		<TargetFramework>net8.0</TargetFramework>
-		<Title>Allors Dynamic</Title>
+		<Title>Allors Dynamic Binding</Title>
 		<Authors>allors</Authors>
-		<Company>Allors bvba</Company>
-		<Copyright>(c) Allors bvba</Copyright>
-		<Description>Dynamic implementation of Allors.</Description>
+		<Company>Allors bv</Company>
+		<Copyright>(c) Allors bv</Copyright>
+		<Description>Dynamic binding implementation of Allors (DLR).</Description>
 		<PackageProjectUrl>https://github.com/Allors/Dynamic</PackageProjectUrl>
-		<PackageDescription>Dynamic reactive domain implementation.</PackageDescription>
+		<PackageDescription>Dynamic reactive domain implementation with DLR binding.</PackageDescription>
 		<PackageReadmeFile>README.md</PackageReadmeFile>
 		<PackageIcon>icon.png</PackageIcon>
 		<PackageLicenseExpression>LGPL-3.0-or-later</PackageLicenseExpression>
 		<PackageLicenseExpression>LGPL-3.0-or-later</PackageLicenseExpression>
-		<PackageTags>dynamic;reactive;domain</PackageTags>
+		<PackageTags>dynamic;dlr;reactive;domain</PackageTags>
 		<RepositoryUrl>https://github.com/Allors/Dynamic.git</RepositoryUrl>
 		<EmbedUntrackedSources>true</EmbedUntrackedSources>
 		<IncludeSymbols>true</IncludeSymbols>
