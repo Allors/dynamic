@@ -20,14 +20,14 @@ namespace Allors.Dynamic
 
         void Derive();
 
-        object GetRole(IDynamicObject obj, DynamicRoleType roleType);
+        object GetRole(IDynamicObject obj, IDynamicRoleType roleType);
 
-        void SetRole(IDynamicObject obj, DynamicRoleType roleType, object value);
+        void SetRole(IDynamicObject obj, IDynamicRoleType roleType, object value);
 
-        void AddRole(IDynamicObject obj, DynamicRoleType roleType, IDynamicObject role);
+        void AddRole(IDynamicObject obj, IDynamicRoleType roleType, IDynamicObject role);
 
-        void RemoveRole(IDynamicObject obj, DynamicRoleType roleType, IDynamicObject role);
+        void RemoveRole(IDynamicObject obj, IDynamicRoleType roleType, IDynamicObject role);
 
-        object GetAssociation(IDynamicObject obj, DynamicAssociationType associationType);
+        object GetAssociation(IDynamicObject obj, IDynamicAssociationType associationType);
     }
 }

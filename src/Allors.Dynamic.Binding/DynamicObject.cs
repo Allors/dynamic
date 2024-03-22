@@ -111,10 +111,10 @@ namespace Allors.Dynamic.Binding
 
                     break;
 
-                case DynamicRoleType roleType:
+                case IDynamicRoleType roleType:
                     return TryGetRole(roleType, out result);
 
-                case DynamicAssociationType associationType:
+                case IDynamicAssociationType associationType:
                     return TryGetAssociation(associationType, out result);
             }
 
@@ -122,7 +122,7 @@ namespace Allors.Dynamic.Binding
             return false;
         }
 
-        private bool TryGetRole(DynamicRoleType roleType, out object result)
+        private bool TryGetRole(IDynamicRoleType roleType, out object result)
         {
             result = Population.GetRole(this, roleType);
             if (result == null && roleType.IsMany)
@@ -133,7 +133,7 @@ namespace Allors.Dynamic.Binding
             return true;
         }
 
-        private bool TryGetAssociation(DynamicAssociationType associationType, out object result)
+        private bool TryGetAssociation(IDynamicAssociationType associationType, out object result)
         {
             result = Population.GetAssociation(this, associationType);
             if (result == null && associationType.IsMany)
@@ -159,7 +159,7 @@ namespace Allors.Dynamic.Binding
 
                     break;
 
-                case DynamicRoleType roleType:
+                case IDynamicRoleType roleType:
                     Population.SetRole(this, roleType, value);
                     return true;
             }

@@ -2,7 +2,7 @@ using System;
 using Allors.Dynamic.Meta;
 using Xunit;
 
-namespace Allors.Dynamic.Indexed.Tests
+namespace Allors.Dynamic.Indexing.Tests
 {
     public class SnapshotTests
     {

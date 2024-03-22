@@ -1,10 +1,12 @@
 ﻿namespace Allors.Dynamic.Meta
 {
-    public sealed class DynamicAssociationType
+    public sealed class DynamicOneToOneAssociationType : IDynamicAssociationType
     {
-        public DynamicObjectType ObjectType { get; }
+        IDynamicRoleType IDynamicAssociationType.RoleType => this.RoleType;
 
-        public DynamicRoleType RoleType { get; }
+        public DynamicOneToOneRoleType RoleType { get; internal set; }
+
+        public DynamicObjectType ObjectType { get; }
 
         public string SingularName { get; }
 
@@ -16,7 +18,7 @@
 
         public bool IsMany { get; }
 
-        internal DynamicAssociationType(DynamicObjectType objectType, DynamicRoleType roleType, string singularName, string pluralName, string name, bool isOne, bool isMany)
+        internal DynamicOneToOneAssociationType(DynamicObjectType objectType, DynamicOneToOneRoleType roleType, string singularName, string pluralName, string name, bool isOne, bool isMany)
         {
             ObjectType = objectType;
             RoleType = roleType;

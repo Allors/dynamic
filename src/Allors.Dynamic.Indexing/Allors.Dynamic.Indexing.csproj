@@ -2,13 +2,13 @@
 
 	<PropertyGroup>
 		<TargetFramework>net8.0</TargetFramework>
-		<Title>Allors Dynamic Indexed</Title>
+		<Title>Allors Dynamic Indexing</Title>
 		<Authors>allors</Authors>
 		<Company>Allors bv</Company>
 		<Copyright>(c) Allors bv</Copyright>
-		<Description>Dynamic indexed implementation of Allors (DLR).</Description>
+		<Description>Dynamic indexing implementation of Allors.</Description>
 		<PackageProjectUrl>https://github.com/Allors/Dynamic</PackageProjectUrl>
-		<PackageDescription>Dynamic reactive domain implementation with object indexer.</PackageDescription>
+		<PackageDescription>Dynamic reactive domain implementation with object indexing.</PackageDescription>
 		<PackageReadmeFile>README.md</PackageReadmeFile>
 		<PackageIcon>icon.png</PackageIcon>
 		<PackageLicenseExpression>LGPL-3.0-or-later</PackageLicenseExpression>

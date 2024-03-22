@@ -10,11 +10,11 @@ namespace Allors.Dynamic
     {
         private readonly DynamicMeta meta;
 
-        private readonly Dictionary<DynamicRoleType, Dictionary<IDynamicObject, object>> roleByAssociationByRoleType;
-        private readonly Dictionary<DynamicAssociationType, Dictionary<IDynamicObject, object>> associationByRoleByAssociationType;
+        private readonly Dictionary<IDynamicRoleType, Dictionary<IDynamicObject, object>> roleByAssociationByRoleType;
+        private readonly Dictionary<IDynamicAssociationType, Dictionary<IDynamicObject, object>> associationByRoleByAssociationType;
 
-        private Dictionary<DynamicRoleType, Dictionary<IDynamicObject, object>> changedRoleByAssociationByRoleType;
-        private Dictionary<DynamicAssociationType, Dictionary<IDynamicObject, object>> changedAssociationByRoleByAssociationType;
+        private Dictionary<IDynamicRoleType, Dictionary<IDynamicObject, object>> changedRoleByAssociationByRoleType;
+        private Dictionary<IDynamicAssociationType, Dictionary<IDynamicObject, object>> changedAssociationByRoleByAssociationType;
 
         public DynamicDatabase(DynamicMeta meta)
         {
@@ -134,7 +134,7 @@ namespace Allors.Dynamic
             Objects = NullableArraySet.Add(Objects, newObject);
         }
 
-        public void GetRole(IDynamicObject association, DynamicRoleType roleType, out object role)
+        public void GetRole(IDynamicObject association, IDynamicRoleType roleType, out object role)
         {
             if (changedRoleByAssociationByRoleType.TryGetValue(roleType, out var changedRoleByAssociation) &&
                 changedRoleByAssociation.TryGetValue(association, out role))
@@ -145,7 +145,7 @@ namespace Allors.Dynamic
             RoleByAssociation(roleType).TryGetValue(association, out role);
         }
 
-        public void SetRole(IDynamicObject association, DynamicRoleType roleType, object role)
+        public void SetRole(IDynamicObject association, IDynamicRoleType roleType, object role)
         {
             if (role == null)
             {
@@ -219,7 +219,7 @@ namespace Allors.Dynamic
             }
         }
 
-        public void AddRole(IDynamicObject association, DynamicRoleType roleType, IDynamicObject role)
+        public void AddRole(IDynamicObject association, IDynamicRoleType roleType, IDynamicObject role)
         {
             var associationType = roleType.AssociationType;
             GetAssociation(role, associationType, out var previousAssociation);
@@ -252,7 +252,7 @@ namespace Allors.Dynamic
             }
         }
 
-        public void RemoveRole(IDynamicObject association, DynamicRoleType roleType, IDynamicObject role)
+        public void RemoveRole(IDynamicObject association, IDynamicRoleType roleType, IDynamicObject role)
         {
             var associationType = roleType.AssociationType;
             GetAssociation(role, associationType, out var previousAssociation);
@@ -279,12 +279,12 @@ namespace Allors.Dynamic
             }
         }
 
-        public void RemoveRole(IDynamicObject association, DynamicRoleType roleType)
+        public void RemoveRole(IDynamicObject association, IDynamicRoleType roleType)
         {
             throw new NotImplementedException();
         }
 
-        public void GetAssociation(IDynamicObject role, DynamicAssociationType associationType, out object association)
+        public void GetAssociation(IDynamicObject role, IDynamicAssociationType associationType, out object association)
         {
             if (changedAssociationByRoleByAssociationType.TryGetValue(associationType, out var changedAssociationByRole) &&
                 changedAssociationByRole.TryGetValue(role, out association))
@@ -295,7 +295,7 @@ namespace Allors.Dynamic
             AssociationByRole(associationType).TryGetValue(role, out association);
         }
 
-        private Dictionary<IDynamicObject, object> AssociationByRole(DynamicAssociationType asscociationType)
+        private Dictionary<IDynamicObject, object> AssociationByRole(IDynamicAssociationType asscociationType)
         {
             if (!associationByRoleByAssociationType.TryGetValue(asscociationType, out var associationByRole))
             {
@@ -306,7 +306,7 @@ namespace Allors.Dynamic
             return associationByRole;
         }
 
-        private Dictionary<IDynamicObject, object> RoleByAssociation(DynamicRoleType roleType)
+        private Dictionary<IDynamicObject, object> RoleByAssociation(IDynamicRoleType roleType)
         {
             if (!roleByAssociationByRoleType.TryGetValue(roleType, out var roleByAssociation))
             {
@@ -317,7 +317,7 @@ namespace Allors.Dynamic
             return roleByAssociation;
         }
 
-        private Dictionary<IDynamicObject, object> ChangedAssociationByRole(DynamicAssociationType associationType)
+        private Dictionary<IDynamicObject, object> ChangedAssociationByRole(IDynamicAssociationType associationType)
         {
             if (!changedAssociationByRoleByAssociationType.TryGetValue(associationType, out var changedAssociationByRole))
             {
@@ -328,7 +328,7 @@ namespace Allors.Dynamic
             return changedAssociationByRole;
         }
 
-        private Dictionary<IDynamicObject, object> ChangedRoleByAssociation(DynamicRoleType roleType)
+        private Dictionary<IDynamicObject, object> ChangedRoleByAssociation(IDynamicRoleType roleType)
         {
             if (!changedRoleByAssociationByRoleType.TryGetValue(roleType, out var changedRoleByAssociation))
             {

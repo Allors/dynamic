@@ -1,9 +1,9 @@
-using System;
-using Allors.Dynamic.Meta;
-using Xunit;
-
-namespace Allors.Dynamic.Indexed.Tests
+namespace Allors.Dynamic.Indexing.Tests.ByName
 {
+    using System;
+    using Allors.Dynamic.Meta;
+    using Xunit;
+
     public class OneToOneTests
     {
         [Fact]
@@ -47,7 +47,7 @@ namespace Allors.Dynamic.Indexed.Tests
             var meta = new DynamicMeta();
             var organization = meta.AddClass("Organization");
             var person = meta.AddClass("Person");
-            var (property, owner) = meta.AddOneToOne(organization, person, "Owner");
+            var (owner, property) = meta.AddOneToOne(organization, person, "Owner");
 
             var population = new DynamicPopulation(meta);
 
@@ -84,7 +84,7 @@ namespace Allors.Dynamic.Indexed.Tests
             var meta = new DynamicMeta();
             var organization = meta.AddClass("Organization");
             var person = meta.AddClass("Person");
-            var (property, owner) = meta.AddOneToOne(organization, person, "Owner");
+            var (owner, property) = meta.AddOneToOne(organization, person, "Owner");
 
             var population = new DynamicPopulation(meta);
 
@@ -123,7 +123,7 @@ namespace Allors.Dynamic.Indexed.Tests
             var meta = new DynamicMeta();
             var organization = meta.AddClass("Organization");
             var person = meta.AddClass("Person");
-            var (property, owner) = meta.AddOneToOne(organization, person, "Owner");
+            var (owner, property) = meta.AddOneToOne(organization, person, "Owner");
 
             var population = new DynamicPopulation(meta);
 

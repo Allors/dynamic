@@ -6,12 +6,12 @@ namespace Allors.Dynamic.Meta
 {
     public sealed class DynamicObjectType
     {
-        private readonly Dictionary<string, DynamicAssociationType> assignedAssociationTypeByName;
-        private readonly Dictionary<string, DynamicRoleType> assignedRoleTypeByName;
+        private readonly Dictionary<string, IDynamicAssociationType> assignedAssociationTypeByName;
+        private readonly Dictionary<string, IDynamicRoleType> assignedRoleTypeByName;
         private readonly HashSet<DynamicObjectType> supertypes;
 
-        private IDictionary<string, DynamicAssociationType>? derivedAssociationTypeByName;
-        private IDictionary<string, DynamicRoleType>? derivedRoleTypeByName;
+        private IDictionary<string, IDynamicAssociationType>? derivedAssociationTypeByName;
+        private IDictionary<string, IDynamicRoleType>? derivedRoleTypeByName;
         private HashSet<DynamicObjectType> derivedSupertypes;
 
         internal DynamicObjectType(DynamicMeta meta, DynamicObjectTypeKind kind, string name, DynamicObjectType[] supertypes)
@@ -72,13 +72,13 @@ namespace Allors.Dynamic.Meta
             this.Meta.ResetDerivations();
         }
 
-        public IDictionary<string, DynamicAssociationType> AssociationTypeByName
+        public IDictionary<string, IDynamicAssociationType> AssociationTypeByName
         {
             get
             {
                 if (derivedAssociationTypeByName == null)
                 {
-                    derivedAssociationTypeByName = new Dictionary<string, DynamicAssociationType>(assignedAssociationTypeByName);
+                    derivedAssociationTypeByName = new Dictionary<string, IDynamicAssociationType>(assignedAssociationTypeByName);
                     foreach (var item in Supertypes.SelectMany(v => v.assignedAssociationTypeByName))
                     {
                         derivedAssociationTypeByName[item.Key] = item.Value;
@@ -89,13 +89,13 @@ namespace Allors.Dynamic.Meta
             }
         }
 
-        public IDictionary<string, DynamicRoleType> RoleTypeByName
+        public IDictionary<string, IDynamicRoleType> RoleTypeByName
         {
             get
             {
                 if (derivedRoleTypeByName == null)
                 {
-                    derivedRoleTypeByName = new Dictionary<string, DynamicRoleType>(assignedRoleTypeByName);
+                    derivedRoleTypeByName = new Dictionary<string, IDynamicRoleType>(assignedRoleTypeByName);
                     foreach (var item in Supertypes.SelectMany(v => v.assignedRoleTypeByName))
                     {
                         derivedRoleTypeByName[item.Key] = item.Value;
@@ -106,12 +106,12 @@ namespace Allors.Dynamic.Meta
             }
         }
 
-        internal DynamicRoleType AddUnit(DynamicObjectType objectType, string? roleSingularName, string? associationSingularName)
+        internal DynamicUnitRoleType AddUnit(DynamicObjectType objectType, string? roleSingularName, string? associationSingularName)
         {
             roleSingularName ??= objectType.Name;
             string rolePluralName = Meta.Pluralize(roleSingularName);
 
-            var roleType = new DynamicRoleType
+            var roleType = new DynamicUnitRoleType
             (
                 objectType,
                 roleSingularName,
@@ -133,7 +133,7 @@ namespace Allors.Dynamic.Meta
                 associationPluralName = roleType.PluralNameForEmbeddedAssociationType(this);
             }
 
-            roleType.AssociationType = new DynamicAssociationType(
+            roleType.AssociationType = new DynamicUnitAssociationType(
                 this,
                 roleType,
                 associationSingularName,
@@ -151,12 +151,12 @@ namespace Allors.Dynamic.Meta
             return roleType;
         }
 
-        internal DynamicRoleType AddOneToOne(DynamicObjectType objectType, string? roleSingularName, string? associationSingularName)
+        internal DynamicOneToOneRoleType AddOneToOne(DynamicObjectType objectType, string? roleSingularName, string? associationSingularName)
         {
             roleSingularName ??= objectType.Name;
             string rolePluralName = Meta.Pluralize(roleSingularName);
 
-            var roleType = new DynamicRoleType
+            var roleType = new DynamicOneToOneRoleType
             (
                 objectType,
                 roleSingularName,
@@ -178,7 +178,7 @@ namespace Allors.Dynamic.Meta
                 associationPluralName = roleType.PluralNameForEmbeddedAssociationType(this);
             }
 
-            roleType.AssociationType = new DynamicAssociationType(
+            roleType.AssociationType = new DynamicOneToOneAssociationType(
                 this,
                 roleType,
                 associationSingularName,
@@ -196,12 +196,12 @@ namespace Allors.Dynamic.Meta
             return roleType;
         }
 
-        internal DynamicRoleType AddManyToOne(DynamicObjectType objectType, string? roleSingularName, string? associationSingularName)
+        internal DynamicManyToOneRoleType AddManyToOne(DynamicObjectType objectType, string? roleSingularName, string? associationSingularName)
         {
             roleSingularName ??= objectType.Name;
             string rolePluralName = Meta.Pluralize(roleSingularName);
 
-            var roleType = new DynamicRoleType
+            var roleType = new DynamicManyToOneRoleType
             (
                 objectType,
                 roleSingularName,
@@ -223,7 +223,7 @@ namespace Allors.Dynamic.Meta
                 associationPluralName = roleType.PluralNameForEmbeddedAssociationType(this);
             }
 
-            roleType.AssociationType = new DynamicAssociationType
+            roleType.AssociationType = new DynamicManyToOneAssociationType
             (
                 this,
                 roleType,
@@ -242,12 +242,12 @@ namespace Allors.Dynamic.Meta
             return roleType;
         }
 
-        internal DynamicRoleType AddOneToMany(DynamicObjectType objectType, string? roleSingularName, string? associationSingularName)
+        internal DynamicOneToManyRoleType AddOneToMany(DynamicObjectType objectType, string? roleSingularName, string? associationSingularName)
         {
             roleSingularName ??= objectType.Name;
             string rolePluralName = Meta.Pluralize(roleSingularName);
 
-            var roleType = new DynamicRoleType
+            var roleType = new DynamicOneToManyRoleType
             (
                 objectType,
                 roleSingularName,
@@ -269,7 +269,7 @@ namespace Allors.Dynamic.Meta
                 associationPluralName = roleType.PluralNameForEmbeddedAssociationType(this);
             }
 
-            roleType.AssociationType = new DynamicAssociationType(
+            roleType.AssociationType = new DynamicOneToManyAssociationType(
                 this,
                 roleType,
                 associationSingularName,
@@ -287,12 +287,12 @@ namespace Allors.Dynamic.Meta
             return roleType;
         }
 
-        internal DynamicRoleType AddManyToMany(DynamicObjectType objectType, string? roleSingularName, string? associationSingularName)
+        internal DynamicManyToManyRoleType AddManyToMany(DynamicObjectType objectType, string? roleSingularName, string? associationSingularName)
         {
             roleSingularName ??= objectType.Name;
             string rolePluralName = Meta.Pluralize(roleSingularName);
 
-            var roleType = new DynamicRoleType(
+            var roleType = new DynamicManyToManyRoleType(
                 objectType,
                 roleSingularName,
                 rolePluralName,
@@ -313,7 +313,7 @@ namespace Allors.Dynamic.Meta
                 associationPluralName = roleType.PluralNameForEmbeddedAssociationType(this);
             }
 
-            roleType.AssociationType = new DynamicAssociationType
+            roleType.AssociationType = new DynamicManyToManyAssociationType
             (
                 this,
                 roleType,
@@ -339,7 +339,7 @@ namespace Allors.Dynamic.Meta
             derivedRoleTypeByName = null;
         }
 
-        private void AddAssociationType(DynamicAssociationType associationType)
+        private void AddAssociationType(IDynamicAssociationType associationType)
         {
             CheckNames(associationType.SingularName, associationType.PluralName);
 
@@ -347,7 +347,7 @@ namespace Allors.Dynamic.Meta
             assignedAssociationTypeByName.Add(associationType.PluralName, associationType);
         }
 
-        private void AddRoleType(DynamicRoleType roleType)
+        private void AddRoleType(IDynamicRoleType roleType)
         {
             CheckNames(roleType.SingularName, roleType.PluralName);
 

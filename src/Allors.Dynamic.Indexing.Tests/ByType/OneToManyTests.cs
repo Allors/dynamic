@@ -1,10 +1,10 @@
-using System.Collections.Generic;
-using System.Linq;
-using Allors.Dynamic.Meta;
-using Xunit;
-
-namespace Allors.Dynamic.Indexed.Tests
+namespace Allors.Dynamic.Indexing.Tests.ByType
 {
+    using System.Collections.Generic;
+    using System.Linq;
+    using Allors.Dynamic.Meta;
+    using Xunit;
+
     public class OneToManyTests
     {
         [Fact]

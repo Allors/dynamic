@@ -1,13 +1,16 @@
-﻿using System;
-using System.Collections;
+﻿
 using System.Collections.Generic;
+using System;
+using System.Collections;
 using System.Linq;
 
 namespace Allors.Dynamic.Meta
 {
-    public sealed class DynamicRoleType
+    public sealed class DynamicOneToManyRoleType : IDynamicRoleType
     {
-        public DynamicAssociationType AssociationType { get; internal set; } = null!;
+        IDynamicAssociationType IDynamicRoleType.AssociationType => this.AssociationType;
+
+        public DynamicOneToManyAssociationType AssociationType { get; internal set; }
 
         public DynamicObjectType ObjectType { get; }
 
@@ -23,13 +26,19 @@ namespace Allors.Dynamic.Meta
 
         public bool IsUnit { get; }
 
-        public void Deconstruct(out DynamicAssociationType associationType, out DynamicRoleType roleType)
+        void IDynamicRoleType.Deconstruct(out IDynamicRoleType roleType, out IDynamicAssociationType associationType)
         {
             associationType = AssociationType;
             roleType = this;
         }
 
-        internal DynamicRoleType(DynamicObjectType objectType, string singularName, string pluralName, string name, bool isOne, bool isMany, bool isUnit)
+        public void Deconstruct(out DynamicOneToManyRoleType roleType, out DynamicOneToManyAssociationType associationType)
+        {
+            associationType = AssociationType;
+            roleType = this;
+        }
+
+        internal DynamicOneToManyRoleType(DynamicObjectType objectType, string singularName, string pluralName, string name, bool isOne, bool isMany, bool isUnit)
         {
             ObjectType = objectType;
             SingularName = singularName;
@@ -55,7 +64,7 @@ namespace Allors.Dynamic.Meta
             return $"{ObjectType.Meta.Pluralize(dynamicObjectType.Name)}Where{SingularName}";
         }
 
-        internal object? Normalize(object? value)
+        public object? Normalize(object? value)
         {
             if (IsUnit)
             {

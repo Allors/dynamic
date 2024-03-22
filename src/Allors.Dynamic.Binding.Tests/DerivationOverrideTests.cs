@@ -36,7 +36,7 @@ namespace Allors.Dynamic.Binding.Tests
             Assert.Equal("Hello John Doe!", john.Greeting);
         }
 
-        private class FullNameDerivation(DynamicRoleType firstName, DynamicRoleType lastName) : IDynamicDerivation
+        private class FullNameDerivation(IDynamicRoleType firstName, IDynamicRoleType lastName) : IDynamicDerivation
         {
             public void Derive(DynamicChangeSet changeSet)
             {
@@ -61,7 +61,7 @@ namespace Allors.Dynamic.Binding.Tests
             }
         }
 
-        private class GreetingDerivation(DynamicRoleType fullName) : IDynamicDerivation
+        private class GreetingDerivation(IDynamicRoleType fullName) : IDynamicDerivation
         {
             public void Derive(DynamicChangeSet changeSet)
             {

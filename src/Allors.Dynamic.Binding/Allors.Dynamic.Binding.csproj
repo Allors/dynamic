@@ -6,7 +6,7 @@
 		<Authors>allors</Authors>
 		<Company>Allors bv</Company>
 		<Copyright>(c) Allors bv</Copyright>
-		<Description>Dynamic binding implementation of Allors (DLR).</Description>
+		<Description>Dynamic binding implementation of Allors.</Description>
 		<PackageProjectUrl>https://github.com/Allors/Dynamic</PackageProjectUrl>
 		<PackageDescription>Dynamic reactive domain implementation with DLR binding.</PackageDescription>
 		<PackageReadmeFile>README.md</PackageReadmeFile>

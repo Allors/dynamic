@@ -17,15 +17,15 @@ namespace Allors.Dynamic.Meta
 
         public IReadOnlyDictionary<string, DynamicObjectType> ObjectTypeByName { get; }
 
-        public DynamicRoleType AddUnit<TRole>(DynamicObjectType associationObjectType, string roleName, string? associationName = null) => associationObjectType.AddUnit(Unit(typeof(TRole)), roleName, associationName);
+        public DynamicUnitRoleType AddUnit<TRole>(DynamicObjectType associationObjectType, string roleName, string? associationName = null) => associationObjectType.AddUnit(Unit(typeof(TRole)), roleName, associationName);
 
-        public DynamicRoleType AddOneToOne(DynamicObjectType associationObjectType, DynamicObjectType roleObjectType, string roleName, string? associationName = null) => associationObjectType.AddOneToOne(roleObjectType, roleName, associationName);
+        public DynamicOneToOneRoleType AddOneToOne(DynamicObjectType associationObjectType, DynamicObjectType roleObjectType, string roleName, string? associationName = null) => associationObjectType.AddOneToOne(roleObjectType, roleName, associationName);
 
-        public DynamicRoleType AddManyToOne(DynamicObjectType associationObjectType, DynamicObjectType roleObjectType, string roleName, string? associationName = null) => associationObjectType.AddManyToOne(roleObjectType, roleName, associationName);
+        public DynamicManyToOneRoleType AddManyToOne(DynamicObjectType associationObjectType, DynamicObjectType roleObjectType, string roleName, string? associationName = null) => associationObjectType.AddManyToOne(roleObjectType, roleName, associationName);
 
-        public DynamicRoleType AddOneToMany(DynamicObjectType associationObjectType, DynamicObjectType roleObjectType, string roleName, string? associationName = null) => associationObjectType.AddOneToMany(roleObjectType, roleName, associationName);
+        public DynamicOneToManyRoleType AddOneToMany(DynamicObjectType associationObjectType, DynamicObjectType roleObjectType, string roleName, string? associationName = null) => associationObjectType.AddOneToMany(roleObjectType, roleName, associationName);
 
-        public DynamicRoleType AddManyToMany(DynamicObjectType associationObjectType, DynamicObjectType roleObjectType, string roleName, string? associationName = null) => associationObjectType.AddManyToMany(roleObjectType, roleName, associationName);
+        public DynamicManyToManyRoleType AddManyToMany(DynamicObjectType associationObjectType, DynamicObjectType roleObjectType, string roleName, string? associationName = null) => associationObjectType.AddManyToMany(roleObjectType, roleName, associationName);
 
         public DynamicObjectType AddInterface(string name, params DynamicObjectType[] supertypes)
         {

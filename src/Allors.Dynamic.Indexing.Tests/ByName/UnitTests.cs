@@ -1,8 +1,8 @@
-using Allors.Dynamic.Meta;
-using Xunit;
-
-namespace Allors.Dynamic.Indexed.Tests
+namespace Allors.Dynamic.Indexing.Tests.ByName
 {
+    using Allors.Dynamic.Meta;
+    using Xunit;
+
     public class UnitTests
     {
         [Fact]

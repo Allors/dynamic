@@ -1,9 +1,9 @@
-using System.Linq;
-using Allors.Dynamic.Meta;
-using Xunit;
-
-namespace Allors.Dynamic.Indexed.Tests
+namespace Allors.Dynamic.Indexing.Tests
 {
+    using Allors.Dynamic.Meta;
+    using Xunit;
+    using System.Linq;
+
     public class ObjectsTests
     {
         [Fact]

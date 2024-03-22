@@ -94,11 +94,11 @@ class Build : NukeBuild
             );
 
             DotNetTest(s => s
-                .SetProjectFile(Solution.GetProject("Allors.Dynamic.Indexed.Tests"))
+                .SetProjectFile(Solution.GetProject("Allors.Dynamic.Indexing.Tests"))
                 .SetConfiguration(Configuration)
                 .EnableNoBuild()
                 .EnableNoRestore()
-                .AddLoggers("trx;LogFileName=AllorsDynamicIndexedTests.trx")
+                .AddLoggers("trx;LogFileName=AllorsDynamicIndexingTests.trx")
                 .EnableProcessLogOutput()
                 .SetResultsDirectory(TestsDirectory)
                 .When(Cover, _ => _
@@ -133,7 +133,7 @@ class Build : NukeBuild
                 .SetOutputDirectory(NugetDirectory));
 
             DotNetPack(s => s
-                .SetProject(Solution.GetProject("Allors.Dynamic.Indexed"))
+                .SetProject(Solution.GetProject("Allors.Dynamic.Indexing"))
                 .SetConfiguration(Configuration)
                 .EnableIncludeSource()
                 .EnableIncludeSymbols()

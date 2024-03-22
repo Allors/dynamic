@@ -1,4 +1,4 @@
-namespace Allors.Dynamic.Indexed.Tests
+namespace Allors.Dynamic.Indexing.Tests.ByName
 {
     public class ManyToOneTests
     {

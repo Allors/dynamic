@@ -1,11 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Dynamic;
-using System.Linq;
-using System.Xml.Linq;
 using Allors.Dynamic.Meta;
 
-namespace Allors.Dynamic.Indexed
+namespace Allors.Dynamic.Indexing
 {
     public sealed class DynamicObject : IDynamicObject
     {
@@ -57,15 +54,53 @@ namespace Allors.Dynamic.Indexed
             }
         }
 
-        public object this[DynamicRoleType roleType]
+        public object this[IDynamicRoleType roleType]
         {
             get => GetRole(roleType);
             set => this.Population.SetRole(this, roleType, value);
         }
-        
-        public object this[DynamicAssociationType associationType] => GetAssociation(associationType);
 
-        private object GetRole(DynamicRoleType roleType)
+        public object this[DynamicUnitRoleType roleType]
+        {
+            get => GetRole(roleType);
+            set => this.Population.SetRole(this, roleType, value);
+        }
+
+        public DynamicObject this[DynamicOneToOneRoleType roleType]
+        {
+            get => (DynamicObject)GetRole(roleType);
+            set => this.Population.SetRole(this, roleType, value);
+        }
+
+        public DynamicObject this[DynamicManyToOneRoleType roleType]
+        {
+            get => (DynamicObject)GetRole(roleType);
+            set => this.Population.SetRole(this, roleType, value);
+        }
+
+        public IEnumerable<DynamicObject> this[DynamicOneToManyRoleType roleType]
+        {
+            get => (IEnumerable<DynamicObject>)GetRole(roleType);
+            set => this.Population.SetRole(this, roleType, value);
+        }
+
+        public IEnumerable<DynamicObject> this[DynamicManyToManyRoleType roleType]
+        {
+            get => (IEnumerable<DynamicObject>)GetRole(roleType);
+            set => this.Population.SetRole(this, roleType, value);
+        }
+
+        public object this[IDynamicAssociationType associationType] => GetAssociation(associationType);
+
+        public DynamicObject this[DynamicOneToOneAssociationType associationType] => (DynamicObject)GetAssociation(associationType);
+
+        public DynamicObject this[DynamicOneToManyAssociationType associationType] => (DynamicObject)GetAssociation(associationType);
+
+        public IEnumerable<DynamicObject> this[DynamicManyToOneAssociationType associationType] => (IEnumerable<DynamicObject>)GetAssociation(associationType);
+
+        public IEnumerable<DynamicObject> this[DynamicManyToManyAssociationType associationType] => (IEnumerable<DynamicObject>)GetAssociation(associationType);
+
+        private object GetRole(IDynamicRoleType roleType)
         {
             var result = Population.GetRole(this, roleType);
             if (result == null && roleType.IsMany)
@@ -76,7 +111,7 @@ namespace Allors.Dynamic.Indexed
             return result;
         }
 
-        private object GetAssociation(DynamicAssociationType associationType)
+        private object GetAssociation(IDynamicAssociationType associationType)
         {
             var result = Population.GetAssociation(this, associationType);
             if (result == null && associationType.IsMany)

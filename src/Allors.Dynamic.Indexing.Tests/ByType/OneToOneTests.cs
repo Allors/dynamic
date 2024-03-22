@@ -1,9 +1,9 @@
-using System;
-using Allors.Dynamic.Meta;
-using Xunit;
-
-namespace Allors.Dynamic.Binding.Tests
+namespace Allors.Dynamic.Indexing.Tests.ByType
 {
+    using System;
+    using Allors.Dynamic.Meta;
+    using Xunit;
+
     public class OneToOneTests
     {
         [Fact]
@@ -24,21 +24,21 @@ namespace Allors.Dynamic.Binding.Tests
             var jane = population.New(person);
             var john = population.New(person);
 
-            acme.Owner = jane;
+            acme["Owner"] = jane;
 
-            Assert.Equal(jane, acme.Owner);
-            Assert.Equal(acme, jane.OrganizationWhereOwner);
+            Assert.Equal(jane, acme["Owner"]);
+            Assert.Equal(acme, jane["OrganizationWhereOwner"]);
 
-            Assert.Null(gizmo.Owner);
-            Assert.Null(john.OrganizationWhereOwner);
+            Assert.Null(gizmo["Owner"]);
+            Assert.Null(john["OrganizationWhereOwner"]);
 
-            acme.Named = jane;
+            acme["Named"] = jane;
 
-            Assert.Equal(jane, acme.Named);
-            Assert.Equal(acme, jane.OrganizationWhereNamed);
+            Assert.Equal(jane, acme["Named"]);
+            Assert.Equal(acme, jane["OrganizationWhereNamed"]);
 
-            Assert.Null(gizmo.Named);
-            Assert.Null(john.OrganizationWhereNamed);
+            Assert.Null(gizmo["Named"]);
+            Assert.Null(john["OrganizationWhereNamed"]);
         }
 
         [Fact]
@@ -57,17 +57,15 @@ namespace Allors.Dynamic.Binding.Tests
             var jane = population.New(person);
             var john = population.New(person);
 
-            acme.Owner = jane;
+            acme["Owner"] = jane;
 
-            Assert.Equal(jane, acme.Owner);
-            Assert.Equal(acme, jane.OrganizationWhereOwner);
             Assert.Equal(jane, acme["Owner"]);
             Assert.Equal(acme, jane["OrganizationWhereOwner"]);
             Assert.Equal(jane, acme[owner]);
             Assert.Equal(acme, jane[property]);
 
-            Assert.Null(gizmo.Owner);
-            Assert.Null(john.OrganizationWhereOwner);
+            Assert.Null(gizmo["Owner"]);
+            Assert.Null(john["OrganizationWhereOwner"]);
             Assert.Null(gizmo["Owner"]);
             Assert.Null(john["OrganizationWhereOwner"]);
             Assert.Null(gizmo[owner]);
@@ -76,7 +74,7 @@ namespace Allors.Dynamic.Binding.Tests
             // Wrong Type
             Assert.Throws<ArgumentException>(() =>
             {
-                acme.Owner = gizmo;
+                acme["Owner"] = gizmo;
             });
         }
 
@@ -98,15 +96,15 @@ namespace Allors.Dynamic.Binding.Tests
 
             acme["Owner"] = jane;
 
-            Assert.Equal(jane, acme.Owner);
-            Assert.Equal(acme, jane.OrganizationWhereOwner);
+            Assert.Equal(jane, acme["Owner"]);
+            Assert.Equal(acme, jane["OrganizationWhereOwner"]);
             Assert.Equal(jane, acme["Owner"]);
             Assert.Equal(acme, jane["OrganizationWhereOwner"]);
             Assert.Equal(jane, acme[owner]);
             Assert.Equal(acme, jane[property]);
 
-            Assert.Null(gizmo.Owner);
-            Assert.Null(john.OrganizationWhereOwner);
+            Assert.Null(gizmo["Owner"]);
+            Assert.Null(john["OrganizationWhereOwner"]);
             Assert.Null(gizmo["Owner"]);
             Assert.Null(john["OrganizationWhereOwner"]);
             Assert.Null(gizmo[owner]);
@@ -137,15 +135,15 @@ namespace Allors.Dynamic.Binding.Tests
 
             acme[owner] = jane;
 
-            Assert.Equal(jane, acme.Owner);
-            Assert.Equal(acme, jane.OrganizationWhereOwner);
+            Assert.Equal(jane, acme["Owner"]);
+            Assert.Equal(acme, jane["OrganizationWhereOwner"]);
             Assert.Equal(jane, acme["Owner"]);
             Assert.Equal(acme, jane["OrganizationWhereOwner"]);
             Assert.Equal(jane, acme[owner]);
             Assert.Equal(acme, jane[property]);
 
-            Assert.Null(gizmo.Owner);
-            Assert.Null(john.OrganizationWhereOwner);
+            Assert.Null(gizmo["Owner"]);
+            Assert.Null(john["OrganizationWhereOwner"]);
             Assert.Null(gizmo["Owner"]);
             Assert.Null(john["OrganizationWhereOwner"]);
             Assert.Null(gizmo[owner]);

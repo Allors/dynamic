@@ -73,28 +73,28 @@ namespace Allors.Dynamic.Binding
             }
         }
 
-        public object GetRole(IDynamicObject obj, DynamicRoleType roleType)
+        public object GetRole(IDynamicObject obj, IDynamicRoleType roleType)
         {
             database.GetRole(obj, roleType, out var result);
             return result;
         }
 
-        public void SetRole(IDynamicObject obj, DynamicRoleType roleType, object value)
+        public void SetRole(IDynamicObject obj, IDynamicRoleType roleType, object value)
         {
             database.SetRole(obj, roleType, value);
         }
 
-        public void AddRole(IDynamicObject obj, DynamicRoleType roleType, IDynamicObject role)
+        public void AddRole(IDynamicObject obj, IDynamicRoleType roleType, IDynamicObject role)
         {
             database.AddRole(obj, roleType, role);
         }
 
-        public void RemoveRole(IDynamicObject obj, DynamicRoleType roleType, IDynamicObject role)
+        public void RemoveRole(IDynamicObject obj, IDynamicRoleType roleType, IDynamicObject role)
         {
             database.RemoveRole(obj, roleType, role);
         }
 
-        public object GetAssociation(IDynamicObject obj, DynamicAssociationType associationType)
+        public object GetAssociation(IDynamicObject obj, IDynamicAssociationType associationType)
         {
             database.GetAssociation(obj, associationType, out var result);
             return result;

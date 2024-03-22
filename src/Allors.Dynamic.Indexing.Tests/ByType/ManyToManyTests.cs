@@ -1,11 +1,10 @@
 using System;
-using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using Allors.Dynamic.Meta;
 using Xunit;
 
-namespace Allors.Dynamic.Indexed.Tests
+namespace Allors.Dynamic.Indexing.Tests.ByType
 {
     public class ManyToManyTests
     {
@@ -15,13 +14,13 @@ namespace Allors.Dynamic.Indexed.Tests
             var meta = new DynamicMeta();
             var organization = meta.AddClass("Organization");
             var person = meta.AddClass("Person");
-            meta.AddUnit<string>(organization, "Name");
-            meta.AddManyToMany(organization, person, "Employee");
+            var name = meta.AddUnit<string>(organization, "Name");
+            var (employees, organizationWhereEmployee) = meta.AddManyToMany(organization, person, "Employee");
 
             var population = new DynamicPopulation(meta);
 
-            var acme = population.New(organization, v => v["Name"] = "Acme");
-            var hooli = population.New(organization, v => v["Name"] = "Hooli");
+            var acme = population.New(organization, v => v[name] = "Acme");
+            var hooli = population.New(organization, v => v[name] = "Hooli");
 
             var jane = population.New(person);
             var john = population.New(person);
@@ -31,21 +30,21 @@ namespace Allors.Dynamic.Indexed.Tests
             acme.AddRole("Employee", john);
             acme.AddRole("Employee", jenny);
 
-            Assert.Single((IEnumerable<IDynamicObject>)jane["OrganizationWhereEmployee"]);
-            Assert.Contains(acme, (IEnumerable<IDynamicObject>)jane["OrganizationWhereEmployee"]);
+            Assert.Single(jane[organizationWhereEmployee]);
+            Assert.Contains(acme, jane[organizationWhereEmployee]);
 
-            Assert.Single((IEnumerable<IDynamicObject>)john["OrganizationWhereEmployee"]);
-            Assert.Contains(acme, (IEnumerable<IDynamicObject>)john["OrganizationWhereEmployee"]);
+            Assert.Single(john[organizationWhereEmployee]);
+            Assert.Contains(acme, john[organizationWhereEmployee]);
 
-            Assert.Single((IEnumerable<IDynamicObject>)jenny["OrganizationWhereEmployee"]);
-            Assert.Contains(acme, (IEnumerable<IDynamicObject>)jenny["OrganizationWhereEmployee"]);
+            Assert.Single(jenny[organizationWhereEmployee]);
+            Assert.Contains(acme, jenny[organizationWhereEmployee]);
 
-            Assert.Equal(3, ((IEnumerable<IDynamicObject>)acme["Employees"]).Count());
-            Assert.Contains(jane, (IEnumerable<IDynamicObject>)acme["Employees"]);
-            Assert.Contains(john, (IEnumerable<IDynamicObject>)acme["Employees"]);
-            Assert.Contains(jenny, (IEnumerable<IDynamicObject>)acme["Employees"]);
+            Assert.Equal(3, acme[employees].Count());
+            Assert.Contains(jane, acme[employees]);
+            Assert.Contains(john, acme[employees]);
+            Assert.Contains(jenny, acme[employees]);
 
-            Assert.Empty((IEnumerable<IDynamicObject>)hooli["Employees"]);
+            Assert.Empty(hooli[employees]);
         }
 
         [Fact]
@@ -54,19 +53,19 @@ namespace Allors.Dynamic.Indexed.Tests
             var meta = new DynamicMeta();
             var organization = meta.AddClass("Organization");
             var person = meta.AddClass("Person");
-            meta.AddUnit<string>(organization, "Name");
-            meta.AddManyToMany(organization, person, "Employee");
+            var name = meta.AddUnit<string>(organization, "Name");
+            var (employees, organizationWhereEmployee) = meta.AddManyToMany(organization, person, "Employee");
 
             var population = new DynamicPopulation(meta);
 
-            var acme = population.New(organization, v => v["Name"] = "Acme");
-            var hooli = population.New(organization, v => v["Name"] = "Hooli");
+            var acme = population.New(organization, v => v[name] = "Acme");
+            var hooli = population.New(organization, v => v[name] = "Hooli");
 
             var jane = population.New(person);
             var john = population.New(person);
             var jenny = population.New(person);
 
-            acme["Employees"] = new[] { jane };
+            acme[employees] = new[] { jane };
 
             Assert.Single((IEnumerable<IDynamicObject>)jane["OrganizationWhereEmployee"]);
             Assert.Contains(acme, (IEnumerable<IDynamicObject>)jane["OrganizationWhereEmployee"]);
