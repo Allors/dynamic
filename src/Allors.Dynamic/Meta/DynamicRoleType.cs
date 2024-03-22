@@ -106,7 +106,7 @@ Use DateTimeKind.Utc or DateTimeKind.Local.");
         {
             if (value is not null)
             {
-                if (value is DynamicObject dynamicObject)
+                if (value is IDynamicObject dynamicObject)
                 {
                     if (!this.ObjectType.IsAssignableFrom(dynamicObject.ObjectType))
                     {
@@ -132,13 +132,13 @@ Use DateTimeKind.Utc or DateTimeKind.Local.");
             };
         }
 
-        private IEnumerable<DynamicObject> NormalizeToMany(ICollection role)
+        private IEnumerable<IDynamicObject> NormalizeToMany(ICollection role)
         {
             foreach (var @object in role)
             {
                 if (@object != null)
                 {
-                    if (@object is DynamicObject dynamicObject)
+                    if (@object is IDynamicObject dynamicObject)
                     {
                         if (!this.ObjectType.IsAssignableFrom(dynamicObject.ObjectType))
                         {

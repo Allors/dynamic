@@ -1,7 +1,7 @@
 using Allors.Dynamic.Meta;
 using Xunit;
 
-namespace Allors.Dynamic.Tests
+namespace Allors.Dynamic.Binding.Tests
 {
     public class UnitTests
     {

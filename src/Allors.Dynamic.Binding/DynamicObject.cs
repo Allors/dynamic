@@ -5,9 +5,9 @@ using System.Dynamic;
 using System.Linq;
 using Allors.Dynamic.Meta;
 
-namespace Allors.Dynamic
+namespace Allors.Dynamic.Binding
 {
-    public class DynamicObject : System.Dynamic.DynamicObject
+    public class DynamicObject : System.Dynamic.DynamicObject, IDynamicObject
     {
         internal DynamicObject(DynamicPopulation population, DynamicObjectType objectType)
         {
@@ -15,7 +15,7 @@ namespace Allors.Dynamic
             ObjectType = objectType;
         }
 
-        public DynamicPopulation Population { get; }
+        public Dynamic.DynamicPopulation Population { get; }
 
         public DynamicObjectType ObjectType { get; }
 
@@ -23,9 +23,9 @@ namespace Allors.Dynamic
 
         public void SetRole(string name, object value) => Population.SetRole(this, ObjectType.RoleTypeByName[name], value);
 
-        public void AddRole(string name, DynamicObject value) => Population.AddRole(this, ObjectType.RoleTypeByName[name], value);
+        public void AddRole(string name, IDynamicObject value) => Population.AddRole(this, ObjectType.RoleTypeByName[name], value);
 
-        public void RemoveRole(string name, DynamicObject value) => Population.RemoveRole(this, ObjectType.RoleTypeByName[name], value);
+        public void RemoveRole(string name, IDynamicObject value) => Population.RemoveRole(this, ObjectType.RoleTypeByName[name], value);
 
         public object GetAssociation(string name) => Population.GetAssociation(this, ObjectType.AssociationTypeByName[name]);
 

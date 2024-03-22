@@ -30,4 +30,8 @@
 		<PackageReference Include="Microsoft.SourceLink.GitHub" Version="8.0.0" />
 	</ItemGroup>
 
+	<ItemGroup>
+	  <ProjectReference Include="..\Allors.Dynamic\Allors.Dynamic.csproj" />
+	</ItemGroup>
+
 </Project>

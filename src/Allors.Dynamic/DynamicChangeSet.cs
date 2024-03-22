@@ -7,12 +7,12 @@ namespace Allors.Dynamic
 {
     public class DynamicChangeSet
     {
-        private static readonly IReadOnlyDictionary<DynamicObject, object> Empty = new ReadOnlyDictionary<DynamicObject, object>(new Dictionary<DynamicObject, object>());
+        private static readonly IReadOnlyDictionary<IDynamicObject, object> Empty = new ReadOnlyDictionary<IDynamicObject, object>(new Dictionary<IDynamicObject, object>());
 
-        private readonly IReadOnlyDictionary<DynamicRoleType, Dictionary<DynamicObject, object>> roleByAssociationByRoleType;
-        private readonly IReadOnlyDictionary<DynamicAssociationType, Dictionary<DynamicObject, object>> associationByRoleByRoleType;
+        private readonly IReadOnlyDictionary<DynamicRoleType, Dictionary<IDynamicObject, object>> roleByAssociationByRoleType;
+        private readonly IReadOnlyDictionary<DynamicAssociationType, Dictionary<IDynamicObject, object>> associationByRoleByRoleType;
 
-        public DynamicChangeSet(DynamicMeta meta, IReadOnlyDictionary<DynamicRoleType, Dictionary<DynamicObject, object>> roleByAssociationByRoleType, IReadOnlyDictionary<DynamicAssociationType, Dictionary<DynamicObject, object>> associationByRoleByAssociationType)
+        public DynamicChangeSet(DynamicMeta meta, IReadOnlyDictionary<DynamicRoleType, Dictionary<IDynamicObject, object>> roleByAssociationByRoleType, IReadOnlyDictionary<DynamicAssociationType, Dictionary<IDynamicObject, object>> associationByRoleByAssociationType)
         {
             Meta = meta;
             this.roleByAssociationByRoleType = roleByAssociationByRoleType;
@@ -25,13 +25,13 @@ namespace Allors.Dynamic
             roleByAssociationByRoleType.Any(v => v.Value.Count > 0) ||
             associationByRoleByRoleType.Any(v => v.Value.Count > 0);
 
-        public IReadOnlyDictionary<DynamicObject, object> ChangedRoles(DynamicObjectType objectType, string name)
+        public IReadOnlyDictionary<IDynamicObject, object> ChangedRoles(DynamicObjectType objectType, string name)
         {
             var roleType = objectType.RoleTypeByName[name];
             return ChangedRoles(roleType) ?? Empty;
         }
 
-        public IReadOnlyDictionary<DynamicObject, object> ChangedRoles(DynamicRoleType roleType)
+        public IReadOnlyDictionary<IDynamicObject, object> ChangedRoles(DynamicRoleType roleType)
         {
             roleByAssociationByRoleType.TryGetValue(roleType, out var changedRelations);
             return changedRelations?? Empty;

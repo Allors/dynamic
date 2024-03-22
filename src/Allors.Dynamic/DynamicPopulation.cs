@@ -19,11 +19,11 @@ namespace Allors.Dynamic
 
         public Dictionary<string, IDynamicDerivation> DerivationById { get; }
 
-        public IEnumerable<dynamic> Objects => database.Objects;
+        public IEnumerable<IDynamicObject> Objects => database.Objects;
 
-        public dynamic New(DynamicObjectType @class, params Action<dynamic>[] builders)
+        public IDynamicObject New(DynamicObjectType @class, params Action<dynamic>[] builders)
         {
-            var @new = new DynamicObject(this, @class);
+            var @new = NewObject(@class);
             database.AddObject(@new);
 
             foreach (var builder in builders)
@@ -33,19 +33,11 @@ namespace Allors.Dynamic
 
             return @new;
         }
-
-        public dynamic New(string className, params Action<dynamic>[] builders)
+        
+        public IDynamicObject New(string className, params Action<dynamic>[] builders)
         {
             var @class = this.Meta.ObjectTypeByName[className];
-            var @new = new DynamicObject(this, @class);
-            database.AddObject(@new);
-
-            foreach (var builder in builders)
-            {
-                builder(@new);
-            }
-
-            return @new;
+            return this.New(@class, builders);
         }
 
         public DynamicChangeSet Snapshot()
@@ -69,31 +61,36 @@ namespace Allors.Dynamic
             }
         }
 
-        public object GetRole(DynamicObject obj, DynamicRoleType roleType)
+        public object GetRole(IDynamicObject obj, DynamicRoleType roleType)
         {
             database.GetRole(obj, roleType, out var result);
             return result;
         }
 
-        public void SetRole(DynamicObject obj, DynamicRoleType roleType, object value)
+        public void SetRole(IDynamicObject obj, DynamicRoleType roleType, object value)
         {
             database.SetRole(obj, roleType, value);
         }
 
-        public void AddRole(DynamicObject obj, DynamicRoleType roleType, DynamicObject role)
+        public void AddRole(IDynamicObject obj, DynamicRoleType roleType, IDynamicObject role)
         {
             database.AddRole(obj, roleType, role);
         }
 
-        public void RemoveRole(DynamicObject obj, DynamicRoleType roleType, DynamicObject role)
+        public void RemoveRole(IDynamicObject obj, DynamicRoleType roleType, IDynamicObject role)
         {
             database.RemoveRole(obj, roleType, role);
         }
 
-        public object GetAssociation(DynamicObject obj, DynamicAssociationType associationType)
+        public object GetAssociation(IDynamicObject obj, DynamicAssociationType associationType)
         {
             database.GetAssociation(obj, associationType, out var result);
             return result;
+        }
+
+        protected virtual IDynamicObject NewObject(DynamicObjectType @class)
+        {
+            return new DynamicObject(this, @class);
         }
     }
 }

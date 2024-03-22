@@ -4,9 +4,9 @@ namespace Allors.Dynamic
 {
     internal static class NullableArraySet
     {
-        internal static DynamicObject[] Add(object set, DynamicObject item)
+        internal static IDynamicObject[] Add(object set, IDynamicObject item)
         {
-            var sourceArray = (DynamicObject[])set;
+            var sourceArray = (IDynamicObject[])set;
 
             if (item == null)
             {
@@ -23,7 +23,7 @@ namespace Allors.Dynamic
                 return sourceArray;
             }
 
-            var destinationArray = new DynamicObject[sourceArray.Length + 1];
+            var destinationArray = new IDynamicObject[sourceArray.Length + 1];
 
             Array.Copy(sourceArray, destinationArray, sourceArray.Length);
             destinationArray[destinationArray.Length - 1] = item;
@@ -31,10 +31,10 @@ namespace Allors.Dynamic
             return destinationArray;
         }
 
-        internal static DynamicObject[] Remove(object set, DynamicObject item)
+        internal static IDynamicObject[] Remove(object set, IDynamicObject item)
         {
 
-            var sourceArray = (DynamicObject[])set;
+            var sourceArray = (IDynamicObject[])set;
 
             if (sourceArray == null)
             {
@@ -53,7 +53,7 @@ namespace Allors.Dynamic
                 return null;
             }
 
-            var destinationArray = new DynamicObject[sourceArray.Length - 1];
+            var destinationArray = new IDynamicObject[sourceArray.Length - 1];
 
             if (index > 0)
             {
@@ -80,8 +80,8 @@ namespace Allors.Dynamic
                 return false;
             }
 
-            var sourceArray = (DynamicObject[])source;
-            var destinationArray = (DynamicObject[])source;
+            var sourceArray = (IDynamicObject[])source;
+            var destinationArray = (IDynamicObject[])source;
 
             if (sourceArray.Length != destinationArray.Length)
             {
