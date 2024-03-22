@@ -13,6 +13,10 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Allors.Dynamic.Binding", "A
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Allors.Dynamic.Binding.Tests", "Allors.Dynamic.Binding.Tests\Allors.Dynamic.Binding.Tests.csproj", "{8CF946EE-27AE-4837-BDE9-A410B8F9F1E8}"
 EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Allors.Dynamic.Indexed", "Allors.Dynamic.Indexed\Allors.Dynamic.Indexed.csproj", "{6D5455FD-F082-411B-B880-982483BD367E}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Allors.Dynamic.Indexed.Tests", "Allors.Dynamic.Indexed.Tests\Allors.Dynamic.Indexed.Tests.csproj", "{754B022C-6EEC-4E4E-8531-29990A6DD46C}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -37,6 +41,14 @@ Global
 		{8CF946EE-27AE-4837-BDE9-A410B8F9F1E8}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{8CF946EE-27AE-4837-BDE9-A410B8F9F1E8}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{8CF946EE-27AE-4837-BDE9-A410B8F9F1E8}.Release|Any CPU.Build.0 = Release|Any CPU
+		{6D5455FD-F082-411B-B880-982483BD367E}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{6D5455FD-F082-411B-B880-982483BD367E}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{6D5455FD-F082-411B-B880-982483BD367E}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{6D5455FD-F082-411B-B880-982483BD367E}.Release|Any CPU.Build.0 = Release|Any CPU
+		{754B022C-6EEC-4E4E-8531-29990A6DD46C}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{754B022C-6EEC-4E4E-8531-29990A6DD46C}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{754B022C-6EEC-4E4E-8531-29990A6DD46C}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{754B022C-6EEC-4E4E-8531-29990A6DD46C}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

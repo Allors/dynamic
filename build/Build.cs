@@ -92,6 +92,24 @@ class Build : NukeBuild
                     .When(IsServerBuild, _ => _
                         .EnableUseSourceLink()))
             );
+
+            DotNetTest(s => s
+                .SetProjectFile(Solution.GetProject("Allors.Dynamic.Indexed.Tests"))
+                .SetConfiguration(Configuration)
+                .EnableNoBuild()
+                .EnableNoRestore()
+                .AddLoggers("trx;LogFileName=AllorsDynamicIndexedTests.trx")
+                .EnableProcessLogOutput()
+                .SetResultsDirectory(TestsDirectory)
+                .When(Cover, _ => _
+                    .EnableCollectCoverage()
+                    .SetCoverletOutputFormat(CoverletOutputFormat.cobertura)
+                    .SetCoverletOutput(CoverageFile)
+                    .SetExcludeByFile("*.g.cs")
+                    .When(IsServerBuild, _ => _
+                        .EnableUseSourceLink()))
+            );
+
         });
 
     Target Pack => _ => _
@@ -108,6 +126,14 @@ class Build : NukeBuild
 
             DotNetPack(s => s
                 .SetProject(Solution.GetProject("Allors.Dynamic.Binding"))
+                .SetConfiguration(Configuration)
+                .EnableIncludeSource()
+                .EnableIncludeSymbols()
+                .SetVersion(GitVersion.NuGetVersionV2)
+                .SetOutputDirectory(NugetDirectory));
+
+            DotNetPack(s => s
+                .SetProject(Solution.GetProject("Allors.Dynamic.Indexed"))
                 .SetConfiguration(Configuration)
                 .EnableIncludeSource()
                 .EnableIncludeSymbols()

@@ -1,8 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 using Allors.Dynamic.Meta;
 
-namespace Allors.Dynamic.Binding
+namespace Allors.Dynamic.Indexed
 {
     public sealed class DynamicPopulation : IDynamicPopulation
     {
@@ -21,16 +22,16 @@ namespace Allors.Dynamic.Binding
 
         IEnumerable<IDynamicObject> IDynamicPopulation.Objects => database.Objects;
 
-        public new IEnumerable<dynamic> Objects => database.Objects;
+        public IEnumerable<DynamicObject> Objects => database.Objects.Cast<DynamicObject>();
 
         IDynamicObject IDynamicPopulation.New(DynamicObjectType @class, params Action<dynamic>[] builders)
         {
             return this.New(@class, builders);
         }
 
-        public dynamic New(DynamicObjectType @class, params Action<dynamic>[] builders)
+        public DynamicObject New(DynamicObjectType @class, params Action<DynamicObject>[] builders)
         {
-            var @new = (IDynamicObject)new DynamicObject(this, @class);
+            var @new = new DynamicObject(this, @class);
             database.AddObject(@new);
 
             foreach (var builder in builders)
@@ -40,17 +41,18 @@ namespace Allors.Dynamic.Binding
 
             return @new;
         }
-
+        
         IDynamicObject IDynamicPopulation.New(string className, params Action<dynamic>[] builders)
         {
             return this.New(className, builders);
         }
 
-        public dynamic New(string className, params Action<dynamic>[] builders)
+        public DynamicObject New(string className, params Action<DynamicObject>[] builders)
         {
             var @class = this.Meta.ObjectTypeByName[className];
             return this.New(@class, builders);
         }
+
 
         public DynamicChangeSet Snapshot()
         {
@@ -99,5 +101,9 @@ namespace Allors.Dynamic.Binding
             database.GetAssociation(obj, associationType, out var result);
             return result;
         }
+
+    
+  
+      
     }
 }
