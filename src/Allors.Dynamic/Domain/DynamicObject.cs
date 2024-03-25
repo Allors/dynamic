@@ -27,7 +27,7 @@ namespace Allors.Dynamic.Domain
                     {
                         DynamicUnitRoleType unitRoleType => this.Population.GetRole(this, unitRoleType),
                         IDynamicToOneRoleType toOneRoleType => (DynamicObject)this.Population.GetRole(this, toOneRoleType),
-                        IDynamicToManyRoleType toManyRoleType => (IReadOnlyList<DynamicObject>)this.Population.GetRole(this, toManyRoleType) ?? [],
+                        IDynamicToManyRoleType toManyRoleType => (IEnumerable<DynamicObject>)this.Population.GetRole(this, toManyRoleType) ?? [],
                         _ => throw new InvalidOperationException(),
                     };
                 }
@@ -37,7 +37,7 @@ namespace Allors.Dynamic.Domain
                     return associationType switch
                     {
                         IDynamicOneToAssociationType oneToAssociationType => (DynamicObject)this.Population.GetAssociation(this, oneToAssociationType),
-                        IDynamicManyToAssociationType oneToAssociationType => (IReadOnlyList<DynamicObject>)this.Population.GetAssociation(this, oneToAssociationType) ?? [],
+                        IDynamicManyToAssociationType oneToAssociationType => (IEnumerable<DynamicObject>)this.Population.GetAssociation(this, oneToAssociationType) ?? [],
                         _ => throw new InvalidOperationException()
                     };
                 }
@@ -78,7 +78,7 @@ namespace Allors.Dynamic.Domain
             {
                 DynamicUnitRoleType unitRoleType => this.Population.GetRole(this, unitRoleType),
                 IDynamicToOneRoleType toOneRoleType => (DynamicObject)this.Population.GetRole(this, toOneRoleType),
-                IDynamicToManyRoleType toManyRoleType => (IReadOnlyList<DynamicObject>)this.Population.GetRole(this, toManyRoleType) ?? [],
+                IDynamicToManyRoleType toManyRoleType => (IEnumerable<DynamicObject>)this.Population.GetRole(this, toManyRoleType) ?? [],
                 _ => throw new InvalidOperationException(),
             };
             set
@@ -124,20 +124,20 @@ namespace Allors.Dynamic.Domain
 
         public IEnumerable<DynamicObject> this[DynamicOneToManyRoleType roleType]
         {
-            get => (IReadOnlyList<DynamicObject>)this.Population.GetRole(this, roleType) ?? [];
+            get => (IEnumerable<DynamicObject>)this.Population.GetRole(this, roleType) ?? [];
             set => this.Population.SetRole(this, roleType, value);
         }
 
         public IEnumerable<DynamicObject> this[DynamicManyToManyRoleType roleType]
         {
-            get => (IReadOnlyList<DynamicObject>)this.Population.GetRole(this, roleType) ?? [];
+            get => (IEnumerable<DynamicObject>)this.Population.GetRole(this, roleType) ?? [];
             set => this.Population.SetRole(this, roleType, value);
         }
 
         public object this[IDynamicAssociationType associationType] => associationType switch
         {
             IDynamicOneToAssociationType oneToAssociationType => (DynamicObject)this.Population.GetAssociation(this, oneToAssociationType),
-            IDynamicManyToAssociationType oneToAssociationType => (IReadOnlyList<DynamicObject>)this.Population.GetAssociation(this, oneToAssociationType) ?? [],
+            IDynamicManyToAssociationType oneToAssociationType => (IEnumerable<DynamicObject>)this.Population.GetAssociation(this, oneToAssociationType) ?? [],
             _ => throw new InvalidOperationException()
         };
 
@@ -145,9 +145,9 @@ namespace Allors.Dynamic.Domain
 
         public DynamicObject this[DynamicOneToManyAssociationType associationType] => (DynamicObject)this.Population.GetAssociation(this, associationType);
 
-        public IEnumerable<DynamicObject> this[DynamicManyToOneAssociationType associationType] => (IReadOnlyList<DynamicObject>)this.Population.GetAssociation(this, associationType) ?? [];
+        public IEnumerable<DynamicObject> this[DynamicManyToOneAssociationType associationType] => (IEnumerable<DynamicObject>)this.Population.GetAssociation(this, associationType) ?? [];
 
-        public IEnumerable<DynamicObject> this[DynamicManyToManyAssociationType associationType] => (IReadOnlyList<DynamicObject>)this.Population.GetAssociation(this, associationType) ?? [];
+        public IEnumerable<DynamicObject> this[DynamicManyToManyAssociationType associationType] => (IEnumerable<DynamicObject>)this.Population.GetAssociation(this, associationType) ?? [];
 
         public void Add(IDynamicToManyRoleType roleType, DynamicObject role) => this.Population.AddRole(this, roleType, role);
 
