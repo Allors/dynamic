@@ -11,14 +11,11 @@ namespace Allors.Dynamic.Domain
         {
             Population = population;
             ObjectType = objectType;
-            Database = population.Database;
         }
 
         public DynamicPopulation Population { get; }
 
         public DynamicObjectType ObjectType { get; }
-
-        internal DynamicDatabase Database { get; }
 
         public object this[string name]
         {
@@ -28,9 +25,9 @@ namespace Allors.Dynamic.Domain
                 {
                     return roleType switch
                     {
-                        DynamicUnitRoleType unitRoleType => this.GetRole(unitRoleType),
-                        IDynamicToOneRoleType toOneRoleType => this.GetRole(toOneRoleType),
-                        IDynamicToManyRoleType toManyRoleType => this.GetRole(toManyRoleType),
+                        DynamicUnitRoleType unitRoleType => this.Population.GetRole(this, unitRoleType),
+                        IDynamicToOneRoleType toOneRoleType => (DynamicObject)this.Population.GetRole(this, toOneRoleType),
+                        IDynamicToManyRoleType toManyRoleType => (IReadOnlyList<DynamicObject>)this.Population.GetRole(this, toManyRoleType) ?? [],
                         _ => throw new InvalidOperationException(),
                     };
                 }
@@ -39,8 +36,8 @@ namespace Allors.Dynamic.Domain
                 {
                     return associationType switch
                     {
-                        IDynamicOneToAssociationType oneToAssociationType => this.GetAssociation(oneToAssociationType),
-                        IDynamicManyToAssociationType oneToAssociationType => this.GetAssociation(oneToAssociationType),
+                        IDynamicOneToAssociationType oneToAssociationType => (DynamicObject)this.Population.GetAssociation(this, oneToAssociationType),
+                        IDynamicManyToAssociationType oneToAssociationType => (IReadOnlyList<DynamicObject>)this.Population.GetAssociation(this, oneToAssociationType) ?? [],
                         _ => throw new InvalidOperationException()
                     };
                 }
@@ -54,15 +51,16 @@ namespace Allors.Dynamic.Domain
                     switch (roleType)
                     {
                         case DynamicUnitRoleType unitRoleType:
-                            this.SetRole(unitRoleType, value);
+                            this.Population.SetRole(this, unitRoleType, value);
                             return;
 
                         case IDynamicToOneRoleType toOneRoleType:
-                            this.SetRole(toOneRoleType, (DynamicObject)value);
+                            DynamicObject value1 = (DynamicObject)value;
+                            this.Population.SetRole(this, toOneRoleType, value1);
                             return;
 
                         case IDynamicToManyRoleType toManyRoleType:
-                            this.Database.SetRole(this, toManyRoleType, value);
+                            this.Population.SetRole(this, toManyRoleType, value);
                             return;
 
                         default:
@@ -78,9 +76,9 @@ namespace Allors.Dynamic.Domain
         {
             get => roleType switch
             {
-                DynamicUnitRoleType unitRoleType => this.GetRole(unitRoleType),
-                IDynamicToOneRoleType toOneRoleType => this.GetRole(toOneRoleType),
-                IDynamicToManyRoleType toManyRoleType => this.GetRole(toManyRoleType),
+                DynamicUnitRoleType unitRoleType => this.Population.GetRole(this, unitRoleType),
+                IDynamicToOneRoleType toOneRoleType => (DynamicObject)this.Population.GetRole(this, toOneRoleType),
+                IDynamicToManyRoleType toManyRoleType => (IReadOnlyList<DynamicObject>)this.Population.GetRole(this, toManyRoleType) ?? [],
                 _ => throw new InvalidOperationException(),
             };
             set
@@ -88,15 +86,16 @@ namespace Allors.Dynamic.Domain
                 switch (roleType)
                 {
                     case DynamicUnitRoleType unitRoleType:
-                        this.SetRole(unitRoleType, value);
+                        this.Population.SetRole(this, unitRoleType, value);
                         return;
 
                     case IDynamicToOneRoleType toOneRoleType:
-                        this.SetRole(toOneRoleType, (DynamicObject)value);
+                        DynamicObject value1 = (DynamicObject)value;
+                        this.Population.SetRole(this, toOneRoleType, value1);
                         return;
 
                     case IDynamicToManyRoleType toManyRoleType:
-                        this.Database.SetRole(this, toManyRoleType, value);
+                        this.Population.SetRole(this, toManyRoleType, value);
                         return;
 
                     default:
@@ -107,67 +106,51 @@ namespace Allors.Dynamic.Domain
 
         public object this[DynamicUnitRoleType roleType]
         {
-            get => GetRole(roleType);
-            set => this.SetRole(roleType, value);
+            get => this.Population.GetRole(this, roleType);
+            set => this.Population.SetRole(this, roleType, value);
         }
 
         public DynamicObject this[DynamicOneToOneRoleType roleType]
         {
-            get => GetRole(roleType);
-            set => this.SetRole(roleType, value);
+            get => (DynamicObject)this.Population.GetRole(this, roleType);
+            set => this.Population.SetRole(this, roleType, value);
         }
 
         public DynamicObject this[DynamicManyToOneRoleType roleType]
         {
-            get => GetRole(roleType);
-            set => this.SetRole(roleType, value);
+            get => (DynamicObject)this.Population.GetRole(this, roleType);
+            set => this.Population.SetRole(this, roleType, value);
         }
 
         public IEnumerable<DynamicObject> this[DynamicOneToManyRoleType roleType]
         {
-            get => GetRole(roleType);
-            set => this.Database.SetRole(this, roleType, value);
+            get => (IReadOnlyList<DynamicObject>)this.Population.GetRole(this, roleType) ?? [];
+            set => this.Population.SetRole(this, roleType, value);
         }
 
         public IEnumerable<DynamicObject> this[DynamicManyToManyRoleType roleType]
         {
-            get => GetRole(roleType);
-            set => this.Database.SetRole(this, roleType, value);
+            get => (IReadOnlyList<DynamicObject>)this.Population.GetRole(this, roleType) ?? [];
+            set => this.Population.SetRole(this, roleType, value);
         }
 
         public object this[IDynamicAssociationType associationType] => associationType switch
         {
-            IDynamicOneToAssociationType oneToAssociationType => this.GetAssociation(oneToAssociationType),
-            IDynamicManyToAssociationType oneToAssociationType => this.GetAssociation(oneToAssociationType),
+            IDynamicOneToAssociationType oneToAssociationType => (DynamicObject)this.Population.GetAssociation(this, oneToAssociationType),
+            IDynamicManyToAssociationType oneToAssociationType => (IReadOnlyList<DynamicObject>)this.Population.GetAssociation(this, oneToAssociationType) ?? [],
             _ => throw new InvalidOperationException()
         };
 
-        public DynamicObject this[DynamicOneToOneAssociationType associationType] => GetAssociation(associationType);
+        public DynamicObject this[DynamicOneToOneAssociationType associationType] => (DynamicObject)this.Population.GetAssociation(this, associationType);
 
-        public DynamicObject this[DynamicOneToManyAssociationType associationType] => GetAssociation(associationType);
+        public DynamicObject this[DynamicOneToManyAssociationType associationType] => (DynamicObject)this.Population.GetAssociation(this, associationType);
 
-        public IEnumerable<DynamicObject> this[DynamicManyToOneAssociationType associationType] => GetAssociation(associationType);
+        public IEnumerable<DynamicObject> this[DynamicManyToOneAssociationType associationType] => (IReadOnlyList<DynamicObject>)this.Population.GetAssociation(this, associationType) ?? [];
 
-        public IEnumerable<DynamicObject> this[DynamicManyToManyAssociationType associationType] => GetAssociation(associationType);
+        public IEnumerable<DynamicObject> this[DynamicManyToManyAssociationType associationType] => (IReadOnlyList<DynamicObject>)this.Population.GetAssociation(this, associationType) ?? [];
 
-        public object GetRole(DynamicUnitRoleType roleType) => this.Database.GetRole(this, roleType);
+        public void Add(IDynamicToManyRoleType roleType, DynamicObject role) => this.Population.AddRole(this, roleType, role);
 
-        public DynamicObject GetRole(IDynamicToOneRoleType roleType) => (DynamicObject)this.Database.GetRole(this, roleType);
-
-        public IReadOnlyList<DynamicObject> GetRole(IDynamicToManyRoleType roleType) => (IReadOnlyList<DynamicObject>)this.Database.GetRole(this, roleType) ?? [];
-
-        public void SetRole(DynamicUnitRoleType roleType, object value) => this.Database.SetRole(this, roleType, value);
-
-        public void SetRole(IDynamicToOneRoleType roleType, DynamicObject value) => this.Database.SetRole(this, roleType, value);
-
-        public void SetRole(IDynamicToOneRoleType roleType, IEnumerable<DynamicObject> value) => this.Database.SetRole(this, roleType, value);
-
-        public void AddRole(IDynamicToManyRoleType roleType, DynamicObject role) => this.Database.AddRole(this, roleType, role);
-
-        public void RemoveRole(IDynamicToManyRoleType roleType, DynamicObject role) => this.Database.RemoveRole(this, roleType, role);
-
-        public DynamicObject GetAssociation(IDynamicOneToAssociationType associationType) => (DynamicObject)this.Database.GetAssociation(this, associationType);
-
-        public IReadOnlyList<DynamicObject> GetAssociation(IDynamicManyToAssociationType associationType) => (IReadOnlyList<DynamicObject>)this.Database.GetAssociation(this, associationType) ?? [];
+        public void Remove(IDynamicToManyRoleType roleType, DynamicObject role) => this.Population.RemoveRole(this, roleType, role);
     }
 }

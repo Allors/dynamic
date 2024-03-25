@@ -29,9 +29,9 @@ namespace Allors.Dynamic.Tests.Domain
             var john = population.Create(person);
             var jenny = population.Create(person);
 
-            acme.AddRole(employees, jane);
-            acme.AddRole(employees, john);
-            acme.AddRole(employees, jenny);
+            acme.Add(employees, jane);
+            acme.Add(employees, john);
+            acme.Add(employees, jenny);
 
             Assert.Single(jane[organizationWhereEmployee]);
             Assert.Contains(acme, jane[organizationWhereEmployee]);
@@ -146,7 +146,7 @@ namespace Allors.Dynamic.Tests.Domain
 
             acme["Employees"] = new[] { jane, john, jenny };
 
-            acme.RemoveRole(employees, jenny);
+            acme.Remove(employees, jenny);
 
             Assert.Single((IEnumerable<DynamicObject>)jane["OrganizationWhereEmployee"]);
             Assert.Contains(acme, (IEnumerable<DynamicObject>)jane["OrganizationWhereEmployee"]);
@@ -162,7 +162,7 @@ namespace Allors.Dynamic.Tests.Domain
 
             Assert.Empty((IEnumerable<DynamicObject>)hooli["Employees"]);
 
-            acme.RemoveRole(employees, john);
+            acme.Remove(employees, john);
 
             Assert.Single((IEnumerable<DynamicObject>)jane["OrganizationWhereEmployee"]);
             Assert.Contains(acme, (IEnumerable<DynamicObject>)jane["OrganizationWhereEmployee"]);
@@ -176,7 +176,7 @@ namespace Allors.Dynamic.Tests.Domain
 
             Assert.Empty((IEnumerable<DynamicObject>)hooli["Employees"]);
 
-            acme.RemoveRole(employees, jane);
+            acme.Remove(employees, jane);
 
             Assert.Empty((IEnumerable<DynamicObject>)jane["OrganizationWhereEmployee"]);
             Assert.Empty((IEnumerable<DynamicObject>)john["OrganizationWhereEmployee"]);
@@ -204,11 +204,11 @@ namespace Allors.Dynamic.Tests.Domain
             var john = population.Create(person);
             var jenny = population.Create(person);
 
-            acme.AddRole(employees, jane);
-            acme.AddRole(employees, john);
-            acme.AddRole(employees, jenny);
+            acme.Add(employees, jane);
+            acme.Add(employees, john);
+            acme.Add(employees, jenny);
 
-            hooli.AddRole(employees, jane);
+            hooli.Add(employees, jane);
 
             Assert.Equal(2, (((IEnumerable<DynamicObject>)jane["OrganizationWhereEmployee"]).Count()));
             Assert.Contains(acme, (IEnumerable<DynamicObject>)jane["OrganizationWhereEmployee"]);
@@ -228,7 +228,7 @@ namespace Allors.Dynamic.Tests.Domain
             Assert.Single((IEnumerable<DynamicObject>)hooli["Employees"]);
             Assert.Contains(jane, (IEnumerable<DynamicObject>)hooli["Employees"]);
 
-            hooli.AddRole(employees, john);
+            hooli.Add(employees, john);
 
             Assert.Equal(2, ((IEnumerable<DynamicObject>)jane["OrganizationWhereEmployee"]).Count());
             Assert.Contains(acme, (IEnumerable<DynamicObject>)jane["OrganizationWhereEmployee"]);
@@ -250,7 +250,7 @@ namespace Allors.Dynamic.Tests.Domain
             Assert.Contains(jane, (IEnumerable<DynamicObject>)hooli["Employees"]);
             Assert.Contains(john, (IEnumerable<DynamicObject>)hooli["Employees"]);
 
-            hooli.AddRole(employees, jenny);
+            hooli.Add(employees, jenny);
 
             Assert.Equal(2, ((IEnumerable<DynamicObject>)jane["OrganizationWhereEmployee"]).Count());
             Assert.Contains(acme, (IEnumerable<DynamicObject>)jane["OrganizationWhereEmployee"]);
