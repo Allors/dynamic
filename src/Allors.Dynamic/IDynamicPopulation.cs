@@ -12,9 +12,9 @@ namespace Allors.Dynamic
         
         IEnumerable<IDynamicObject> Objects { get; }
 
-        IDynamicObject New(DynamicObjectType @class, params Action<dynamic>[] builders);
+        IDynamicObject Create(DynamicObjectType @class, params Action<dynamic>[] builders);
 
-        IDynamicObject New(string className, params Action<dynamic>[] builders);
+        IDynamicObject Create(string className, params Action<dynamic>[] builders);
 
         DynamicChangeSet Snapshot();
 
@@ -24,10 +24,10 @@ namespace Allors.Dynamic
 
         void SetRole(IDynamicObject obj, IDynamicRoleType roleType, object value);
 
-        void AddRole(IDynamicObject obj, IDynamicRoleType roleType, IDynamicObject role);
+        void AddRole(IDynamicObject obj, IDynamicCompositeRoleType roleType, IDynamicObject role);
 
-        void RemoveRole(IDynamicObject obj, IDynamicRoleType roleType, IDynamicObject role);
+        void RemoveRole(IDynamicObject obj, IDynamicCompositeRoleType roleType, IDynamicObject role);
 
-        object GetAssociation(IDynamicObject obj, IDynamicAssociationType associationType);
+        object GetAssociation(IDynamicObject obj, IDynamicCompositeAssociationType associationType);
     }
 }

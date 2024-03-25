@@ -23,11 +23,11 @@ namespace Allors.Dynamic.Indexing
 
         public void SetRole(string name, object value) => Population.SetRole(this, ObjectType.RoleTypeByName[name], value);
 
-        public void AddRole(string name, IDynamicObject value) => Population.AddRole(this, ObjectType.RoleTypeByName[name], value);
+        public void AddRole(string name, IDynamicObject value) => Population.AddRole(this, (IDynamicManyRoleType)ObjectType.RoleTypeByName[name], value);
 
-        public void RemoveRole(string name, IDynamicObject value) => Population.RemoveRole(this, ObjectType.RoleTypeByName[name], value);
+        public void RemoveRole(string name, IDynamicObject value) => Population.RemoveRole(this, (IDynamicManyRoleType)ObjectType.RoleTypeByName[name], value);
 
-        public object GetAssociation(string name) => Population.GetAssociation(this, ObjectType.AssociationTypeByName[name]);
+        public object GetAssociation(string name) => Population.GetAssociation(this, (IDynamicCompositeAssociationType)ObjectType.AssociationTypeByName[name]);
 
         public object this[string name]
         {
@@ -40,7 +40,7 @@ namespace Allors.Dynamic.Indexing
 
                 if (ObjectType.AssociationTypeByName.TryGetValue(name, out var associationType))
                 {
-                    return GetAssociation(associationType);
+                    return GetAssociation((IDynamicCompositeAssociationType)associationType);
                 }
 
                 return null;
@@ -90,7 +90,7 @@ namespace Allors.Dynamic.Indexing
             set => this.Population.SetRole(this, roleType, value);
         }
 
-        public object this[IDynamicAssociationType associationType] => GetAssociation(associationType);
+        public object this[IDynamicAssociationType associationType] => GetAssociation((IDynamicCompositeAssociationType)associationType);
 
         public DynamicObject this[DynamicOneToOneAssociationType associationType] => (DynamicObject)GetAssociation(associationType);
 
@@ -111,7 +111,7 @@ namespace Allors.Dynamic.Indexing
             return result;
         }
 
-        private object GetAssociation(IDynamicAssociationType associationType)
+        private object GetAssociation(IDynamicCompositeAssociationType associationType)
         {
             var result = Population.GetAssociation(this, associationType);
             if (result == null && associationType.IsMany)

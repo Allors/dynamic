@@ -1,6 +1,6 @@
 ﻿namespace Allors.Dynamic.Meta
 {
-    public sealed class DynamicOneToManyAssociationType : IDynamicAssociationType
+    public sealed class DynamicOneToManyAssociationType : IDynamicOneAssociationType
     {
         IDynamicRoleType IDynamicAssociationType.RoleType => this.RoleType;
 

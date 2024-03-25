@@ -10,9 +10,12 @@ namespace Allors.Dynamic
         private static readonly IReadOnlyDictionary<IDynamicObject, object> Empty = new ReadOnlyDictionary<IDynamicObject, object>(new Dictionary<IDynamicObject, object>());
 
         private readonly IReadOnlyDictionary<IDynamicRoleType, Dictionary<IDynamicObject, object>> roleByAssociationByRoleType;
-        private readonly IReadOnlyDictionary<IDynamicAssociationType, Dictionary<IDynamicObject, object>> associationByRoleByRoleType;
+        private readonly IReadOnlyDictionary<IDynamicCompositeAssociationType, Dictionary<IDynamicObject, object>> associationByRoleByRoleType;
 
-        public DynamicChangeSet(DynamicMeta meta, IReadOnlyDictionary<IDynamicRoleType, Dictionary<IDynamicObject, object>> roleByAssociationByRoleType, IReadOnlyDictionary<IDynamicAssociationType, Dictionary<IDynamicObject, object>> associationByRoleByAssociationType)
+        public DynamicChangeSet(
+            DynamicMeta meta,
+            IReadOnlyDictionary<IDynamicRoleType, Dictionary<IDynamicObject, object>> roleByAssociationByRoleType,
+            IReadOnlyDictionary<IDynamicCompositeAssociationType, Dictionary<IDynamicObject, object>> associationByRoleByAssociationType)
         {
             Meta = meta;
             this.roleByAssociationByRoleType = roleByAssociationByRoleType;
@@ -34,7 +37,7 @@ namespace Allors.Dynamic
         public IReadOnlyDictionary<IDynamicObject, object> ChangedRoles(IDynamicRoleType roleType)
         {
             roleByAssociationByRoleType.TryGetValue(roleType, out var changedRelations);
-            return changedRelations?? Empty;
+            return changedRelations ?? Empty;
         }
     }
 }

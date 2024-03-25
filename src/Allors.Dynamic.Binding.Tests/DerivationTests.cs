@@ -25,7 +25,7 @@ namespace Allors.Dynamic.Binding.Tests
                 }
             };
 
-            var john = population.New(person);
+            var john = population.Create(person);
             john.FirstName = "John";
             john.LastName = "Doe";
 
@@ -35,7 +35,7 @@ namespace Allors.Dynamic.Binding.Tests
 
             population.DerivationById["FullName"] = new GreetingDerivation(population.DerivationById["FullName"], firstName, lastName);
 
-            var jane = population.New(person);
+            var jane = population.Create(person);
             jane.FirstName = "Jane";
             jane.LastName = "Doe";
 

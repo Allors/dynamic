@@ -25,11 +25,11 @@ namespace Allors.Dynamic.Binding
 
         public void SetRole(string name, object value) => Population.SetRole(this, ObjectType.RoleTypeByName[name], value);
 
-        public void AddRole(string name, IDynamicObject value) => Population.AddRole(this, ObjectType.RoleTypeByName[name], value);
+        public void AddRole(string name, IDynamicObject value) => Population.AddRole(this, (IDynamicManyRoleType)ObjectType.RoleTypeByName[name], value);
 
-        public void RemoveRole(string name, IDynamicObject value) => Population.RemoveRole(this, ObjectType.RoleTypeByName[name], value);
+        public void RemoveRole(string name, IDynamicObject value) => Population.RemoveRole(this, (IDynamicManyRoleType)ObjectType.RoleTypeByName[name], value);
 
-        public object GetAssociation(string name) => Population.GetAssociation(this, ObjectType.AssociationTypeByName[name]);
+        public object GetAssociation(string name) => Population.GetAssociation(this, (IDynamicCompositeAssociationType)ObjectType.AssociationTypeByName[name]);
 
         /// <inheritdoc/>
         public override bool TryGetIndex(GetIndexBinder binder, object[] indexes, out object result)
@@ -64,14 +64,14 @@ namespace Allors.Dynamic.Binding
 
             if (name.StartsWith("Add") && ObjectType.RoleTypeByName.TryGetValue(name.Substring(3), out var roleType))
             {
-                Population.AddRole(this, roleType, (DynamicObject)args[0]);
+                Population.AddRole(this, (IDynamicCompositeRoleType)roleType, (DynamicObject)args[0]);
                 return true;
             }
 
             if (name.StartsWith("Remove") && ObjectType.RoleTypeByName.TryGetValue(name.Substring(6), out roleType))
             {
                 // TODO: RemoveAll
-                Population.RemoveRole(this, roleType, (DynamicObject)args[0]);
+                Population.RemoveRole(this, (IDynamicCompositeRoleType)roleType, (DynamicObject)args[0]);
                 return true;
             }
 
@@ -105,7 +105,7 @@ namespace Allors.Dynamic.Binding
 
                         if (ObjectType.AssociationTypeByName.TryGetValue(name, out var associationType))
                         {
-                            return TryGetAssociation(associationType, out result);
+                            return TryGetAssociation((IDynamicCompositeAssociationType)associationType, out result);
                         }
                     }
 
@@ -115,7 +115,7 @@ namespace Allors.Dynamic.Binding
                     return TryGetRole(roleType, out result);
 
                 case IDynamicAssociationType associationType:
-                    return TryGetAssociation(associationType, out result);
+                    return TryGetAssociation((IDynamicCompositeAssociationType)associationType, out result);
             }
 
             result = null;
@@ -133,7 +133,7 @@ namespace Allors.Dynamic.Binding
             return true;
         }
 
-        private bool TryGetAssociation(IDynamicAssociationType associationType, out object result)
+        private bool TryGetAssociation(IDynamicCompositeAssociationType associationType, out object result)
         {
             result = Population.GetAssociation(this, associationType);
             if (result == null && associationType.IsMany)

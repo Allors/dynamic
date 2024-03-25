@@ -16,12 +16,12 @@ namespace Allors.Dynamic.Indexing.Tests.ByName
 
             var population = new DynamicPopulation(meta);
 
-            var c1a = population.New(c1, v =>
+            var c1a = population.Create(c1, v =>
             {
                 v["Same"] = "c1";
             });
 
-            var c2a = population.New(c2, v =>
+            var c2a = population.Create(c2, v =>
             {
                 v["Same"] = "c2";
             });
@@ -39,8 +39,8 @@ namespace Allors.Dynamic.Indexing.Tests.ByName
 
             var population = new DynamicPopulation(meta);
 
-            var john = population.New(person);
-            var jane = population.New(person);
+            var john = population.Create(person);
+            var jane = population.Create(person);
 
             john["FirstName"] = "John";
             jane["FirstName"] = "Jane";

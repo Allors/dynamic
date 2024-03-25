@@ -11,9 +11,5 @@
         string PluralName { get; }
 
         string Name { get; }
-
-        bool IsOne { get; }
-
-        bool IsMany { get; }
     }
 }

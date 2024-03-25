@@ -17,10 +17,10 @@ namespace Allors.Dynamic.Indexing.Tests
 
             var population = new DynamicPopulation(meta);
 
-            var acme = population.New(organization, v =>
+            var acme = population.Create(organization, v =>
             {
                 v["Name"] = "Acme";
-                v["Owner"] = population.New(person, w => w["Name"] = "Jane");
+                v["Owner"] = population.Create(person, w => w["Name"] = "Jane");
             });
 
             var jane = (DynamicObject)acme["Owner"];

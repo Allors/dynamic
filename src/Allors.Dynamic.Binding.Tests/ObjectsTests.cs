@@ -18,7 +18,7 @@ namespace Allors.Dynamic.Binding.Tests
 
             dynamic NewPerson(string firstName, string lastName)
             {
-                return population.New(person, v =>
+                return population.Create(person, v =>
                 {
                     v.FirstName = firstName;
                     v.LastName = lastName;

@@ -24,12 +24,12 @@ namespace Allors.Dynamic.Indexing
 
         public IEnumerable<DynamicObject> Objects => database.Objects.Cast<DynamicObject>();
 
-        IDynamicObject IDynamicPopulation.New(DynamicObjectType @class, params Action<dynamic>[] builders)
+        IDynamicObject IDynamicPopulation.Create(DynamicObjectType @class, params Action<dynamic>[] builders)
         {
-            return this.New(@class, builders);
+            return this.Create(@class, builders);
         }
 
-        public DynamicObject New(DynamicObjectType @class, params Action<DynamicObject>[] builders)
+        public DynamicObject Create(DynamicObjectType @class, params Action<DynamicObject>[] builders)
         {
             var @new = new DynamicObject(this, @class);
             database.AddObject(@new);
@@ -42,15 +42,15 @@ namespace Allors.Dynamic.Indexing
             return @new;
         }
         
-        IDynamicObject IDynamicPopulation.New(string className, params Action<dynamic>[] builders)
+        IDynamicObject IDynamicPopulation.Create(string className, params Action<dynamic>[] builders)
         {
-            return this.New(className, builders);
+            return this.Create(className, builders);
         }
 
-        public DynamicObject New(string className, params Action<DynamicObject>[] builders)
+        public DynamicObject Create(string className, params Action<DynamicObject>[] builders)
         {
             var @class = this.Meta.ObjectTypeByName[className];
-            return this.New(@class, builders);
+            return this.Create(@class, builders);
         }
 
 
@@ -86,17 +86,17 @@ namespace Allors.Dynamic.Indexing
             database.SetRole(obj, roleType, value);
         }
 
-        public void AddRole(IDynamicObject obj, IDynamicRoleType roleType, IDynamicObject role)
+        public void AddRole(IDynamicObject obj, IDynamicCompositeRoleType roleType, IDynamicObject role)
         {
             database.AddRole(obj, roleType, role);
         }
 
-        public void RemoveRole(IDynamicObject obj, IDynamicRoleType roleType, IDynamicObject role)
+        public void RemoveRole(IDynamicObject obj, IDynamicCompositeRoleType roleType, IDynamicObject role)
         {
             database.RemoveRole(obj, roleType, role);
         }
 
-        public object GetAssociation(IDynamicObject obj, IDynamicAssociationType associationType)
+        public object GetAssociation(IDynamicObject obj, IDynamicCompositeAssociationType associationType)
         {
             database.GetAssociation(obj, associationType, out var result);
             return result;

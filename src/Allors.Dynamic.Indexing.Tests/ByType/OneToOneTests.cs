@@ -18,11 +18,11 @@ namespace Allors.Dynamic.Indexing.Tests.ByType
 
             var population = new DynamicPopulation(meta);
 
-            var acme = population.New(organization);
-            var gizmo = population.New(organization);
+            var acme = population.Create(organization);
+            var gizmo = population.Create(organization);
 
-            var jane = population.New(person);
-            var john = population.New(person);
+            var jane = population.Create(person);
+            var john = population.Create(person);
 
             acme["Owner"] = jane;
 
@@ -51,11 +51,11 @@ namespace Allors.Dynamic.Indexing.Tests.ByType
 
             var population = new DynamicPopulation(meta);
 
-            var acme = population.New(organization);
-            var gizmo = population.New(organization);
+            var acme = population.Create(organization);
+            var gizmo = population.Create(organization);
 
-            var jane = population.New(person);
-            var john = population.New(person);
+            var jane = population.Create(person);
+            var john = population.Create(person);
 
             acme["Owner"] = jane;
 
@@ -88,11 +88,11 @@ namespace Allors.Dynamic.Indexing.Tests.ByType
 
             var population = new DynamicPopulation(meta);
 
-            var acme = population.New(organization);
-            var gizmo = population.New(organization);
+            var acme = population.Create(organization);
+            var gizmo = population.Create(organization);
 
-            var jane = population.New(person);
-            var john = population.New(person);
+            var jane = population.Create(person);
+            var john = population.Create(person);
 
             acme["Owner"] = jane;
 
@@ -127,11 +127,11 @@ namespace Allors.Dynamic.Indexing.Tests.ByType
 
             var population = new DynamicPopulation(meta);
 
-            var acme = population.New(organization);
-            var gizmo = population.New(organization);
+            var acme = population.Create(organization);
+            var gizmo = population.Create(organization);
 
-            var jane = population.New(person);
-            var john = population.New(person);
+            var jane = population.Create(person);
+            var john = population.Create(person);
 
             acme[owner] = jane;
 

@@ -16,8 +16,8 @@ namespace Allors.Dynamic.Binding.Tests
 
             var population = new DynamicPopulation(meta);
 
-            var john = population.New(person);
-            var jane = population.New(person);
+            var john = population.Create(person);
+            var jane = population.Create(person);
 
             john.FirstName = "John";
             john.LastName = "Doe";
@@ -61,8 +61,8 @@ namespace Allors.Dynamic.Binding.Tests
 
             var population = new DynamicPopulation(meta);
 
-            var john = population.New(person);
-            var jane = population.New(person);
+            var john = population.Create(person);
+            var jane = population.Create(person);
 
             john.FirstName = "John";
             john.LastName = "Doe";
@@ -70,7 +70,7 @@ namespace Allors.Dynamic.Binding.Tests
             jane.FirstName = "Jane";
             jane.LastName = "Doe";
 
-            var acme = population.New(organization);
+            var acme = population.Create(organization);
 
             acme.Name = "Acme";
 

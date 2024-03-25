@@ -6,7 +6,7 @@ using System.Linq;
 
 namespace Allors.Dynamic.Meta
 {
-    public sealed class DynamicManyToManyRoleType : IDynamicRoleType
+    public sealed class DynamicManyToManyRoleType : IDynamicManyRoleType
     {
         IDynamicAssociationType IDynamicRoleType.AssociationType => this.AssociationType;
 

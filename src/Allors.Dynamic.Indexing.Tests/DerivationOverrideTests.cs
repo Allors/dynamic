@@ -27,7 +27,7 @@ namespace Allors.Dynamic.Indexing.Tests
                 }
             };
 
-            var john = population.New(person);
+            var john = population.Create(person);
             john["FirstName"] = "John";
             john["LastName"] = "Doe";
 

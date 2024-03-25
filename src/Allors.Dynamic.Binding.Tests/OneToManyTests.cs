@@ -16,10 +16,10 @@ namespace Allors.Dynamic.Binding.Tests
             
             var population = new DynamicPopulation(meta);
 
-            var acme = population.New(organization);
-            var jane = population.New(person);
-            var john = population.New(person);
-            var jenny = population.New(person);
+            var acme = population.Create(organization);
+            var jane = population.Create(person);
+            var john = population.Create(person);
+            var jenny = population.Create(person);
 
             acme.AddEmployee(jane);
             acme.AddEmployee(john);
@@ -46,20 +46,20 @@ namespace Allors.Dynamic.Binding.Tests
 
             var population = new DynamicPopulation(meta);
 
-            var acme = population.New(organization);
+            var acme = population.Create(organization);
 
-            var jane = population.New(person);
+            var jane = population.Create(person);
             jane.Name = "Jane";
-            var john = population.New(person);
+            var john = population.Create(person);
             john.Name = "John";
-            var jenny = population.New(person);
+            var jenny = population.Create(person);
             jenny.Name = "Jenny";
 
             acme.AddEmployee(jane);
             acme.AddEmployee(john);
             acme.AddEmployee(jenny);
 
-            var hooli = population.New(organization);
+            var hooli = population.Create(organization);
 
             hooli.AddEmployee(jane);
 
@@ -90,10 +90,10 @@ namespace Allors.Dynamic.Binding.Tests
 
             var population = new DynamicPopulation(meta);
 
-            var acme = population.New(organization);
-            var jane = population.New(person);
-            var john = population.New(person);
-            var jenny = population.New(person);
+            var acme = population.Create(organization);
+            var jane = population.Create(person);
+            var john = population.Create(person);
+            var jenny = population.Create(person);
 
             acme.AddEmployee(jane);
             acme.AddEmployee(john);

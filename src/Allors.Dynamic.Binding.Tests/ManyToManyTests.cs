@@ -17,12 +17,12 @@ namespace Allors.Dynamic.Binding.Tests
 
             var population = new DynamicPopulation(meta);
 
-            var acme = population.New(organization, v => v.Name = "Acme");
-            var hooli = population.New(organization, v => v.Name = "Hooli");
+            var acme = population.Create(organization, v => v.Name = "Acme");
+            var hooli = population.Create(organization, v => v.Name = "Hooli");
 
-            var jane = population.New(person);
-            var john = population.New(person);
-            var jenny = population.New(person);
+            var jane = population.Create(person);
+            var john = population.Create(person);
+            var jenny = population.Create(person);
 
             acme.AddEmployee(jane);
             acme.AddEmployee(john);
@@ -56,12 +56,12 @@ namespace Allors.Dynamic.Binding.Tests
 
             var population = new DynamicPopulation(meta);
 
-            var acme = population.New(organization, v => v.Name = "Acme");
-            var hooli = population.New(organization, v => v.Name = "Hooli");
+            var acme = population.Create(organization, v => v.Name = "Acme");
+            var hooli = population.Create(organization, v => v.Name = "Hooli");
 
-            var jane = population.New(person);
-            var john = population.New(person);
-            var jenny = population.New(person);
+            var jane = population.Create(person);
+            var john = population.Create(person);
+            var jenny = population.Create(person);
 
             acme.Employees = new[] { jane };
 
@@ -132,12 +132,12 @@ namespace Allors.Dynamic.Binding.Tests
 
             var population = new DynamicPopulation(meta);
 
-            var acme = population.New(organization, v => v.Name = "Acme");
-            var hooli = population.New(organization, v => v.Name = ("Hooli"));
+            var acme = population.Create(organization, v => v.Name = "Acme");
+            var hooli = population.Create(organization, v => v.Name = ("Hooli"));
 
-            var jane = population.New(person);
-            var john = population.New(person);
-            var jenny = population.New(person);
+            var jane = population.Create(person);
+            var john = population.Create(person);
+            var jenny = population.Create(person);
 
             acme.Employees = new[] { jane, john, jenny };
 
@@ -192,12 +192,12 @@ namespace Allors.Dynamic.Binding.Tests
 
             var population = new DynamicPopulation(meta);
 
-            var acme = population.New(organization, v => v.Name = "Acme");
-            var hooli = population.New(organization, v => v.Name = "Hooli");
+            var acme = population.Create(organization, v => v.Name = "Acme");
+            var hooli = population.Create(organization, v => v.Name = "Hooli");
 
-            var jane = population.New(person);
-            var john = population.New(person);
-            var jenny = population.New(person);
+            var jane = population.Create(person);
+            var john = population.Create(person);
+            var jenny = population.Create(person);
 
             acme.AddEmployee(jane);
             acme.AddEmployee(john);

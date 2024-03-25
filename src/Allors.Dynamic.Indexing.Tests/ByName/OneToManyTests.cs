@@ -17,10 +17,10 @@ namespace Allors.Dynamic.Indexing.Tests.ByName
 
             var population = new DynamicPopulation(meta);
 
-            var acme = population.New(organization);
-            var jane = population.New(person);
-            var john = population.New(person);
-            var jenny = population.New(person);
+            var acme = population.Create(organization);
+            var jane = population.Create(person);
+            var john = population.Create(person);
+            var jenny = population.Create(person);
 
             acme.AddRole("Employee", jane);
             acme.AddRole("Employee", john);
@@ -47,20 +47,20 @@ namespace Allors.Dynamic.Indexing.Tests.ByName
 
             var population = new DynamicPopulation(meta);
 
-            var acme = population.New(organization);
+            var acme = population.Create(organization);
 
-            var jane = population.New(person);
+            var jane = population.Create(person);
             jane["Name"] = "Jane";
-            var john = population.New(person);
+            var john = population.Create(person);
             john["Name"] = "John";
-            var jenny = population.New(person);
+            var jenny = population.Create(person);
             jenny["Name"] = "Jenny";
 
             acme.AddRole("Employee", jane);
             acme.AddRole("Employee", john);
             acme.AddRole("Employee", jenny);
 
-            var hooli = population.New(organization);
+            var hooli = population.Create(organization);
 
             hooli.AddRole("Employee", jane);
 
@@ -91,10 +91,10 @@ namespace Allors.Dynamic.Indexing.Tests.ByName
 
             var population = new DynamicPopulation(meta);
 
-            var acme = population.New(organization);
-            var jane = population.New(person);
-            var john = population.New(person);
-            var jenny = population.New(person);
+            var acme = population.Create(organization);
+            var jane = population.Create(person);
+            var john = population.Create(person);
+            var jenny = population.Create(person);
 
             acme.AddRole("Employee", jane);
             acme.AddRole("Employee", john);
