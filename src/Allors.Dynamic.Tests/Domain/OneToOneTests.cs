@@ -1,4 +1,7 @@
-namespace Allors.Dynamic.Indexing.Tests.ByName
+using Allors.Dynamic.Domain;
+using Allors.Dynamic.Domain.Indexing;
+
+namespace Allors.Dynamic.Tests.Domain
 {
     using System;
     using Allors.Dynamic.Meta;

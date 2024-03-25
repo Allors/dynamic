@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System;
 using System.Collections;
 using System.Linq;
+using Allors.Dynamic.Domain;
 
 namespace Allors.Dynamic.Meta
 {
@@ -114,7 +115,7 @@ Use DateTimeKind.Utc or DateTimeKind.Local.");
         {
             if (value is not null)
             {
-                if (value is IDynamicObject dynamicObject)
+                if (value is DynamicObject dynamicObject)
                 {
                     if (!this.ObjectType.IsAssignableFrom(dynamicObject.ObjectType))
                     {
@@ -140,13 +141,13 @@ Use DateTimeKind.Utc or DateTimeKind.Local.");
             };
         }
 
-        private IEnumerable<IDynamicObject> NormalizeToMany(ICollection role)
+        private IEnumerable<DynamicObject> NormalizeToMany(ICollection role)
         {
             foreach (var @object in role)
             {
                 if (@object != null)
                 {
-                    if (@object is IDynamicObject dynamicObject)
+                    if (@object is DynamicObject dynamicObject)
                     {
                         if (!this.ObjectType.IsAssignableFrom(dynamicObject.ObjectType))
                         {

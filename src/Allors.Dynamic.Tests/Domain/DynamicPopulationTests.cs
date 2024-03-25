@@ -1,7 +1,9 @@
+using Allors.Dynamic.Domain;
+using Allors.Dynamic.Domain.Indexing;
 using Allors.Dynamic.Meta;
 using Xunit;
 
-namespace Allors.Dynamic.Indexing.Tests
+namespace Allors.Dynamic.Tests.Domain
 {
     public class DynamicPopulationTests
     {

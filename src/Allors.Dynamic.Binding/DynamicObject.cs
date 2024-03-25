@@ -13,50 +13,56 @@ namespace Allors.Dynamic.Binding
         {
             Population = population;
             ObjectType = objectType;
+            this.Database = population.Database;
         }
 
         IDynamicPopulation IDynamicObject.Population => this.Population;
 
         public DynamicPopulation Population { get; }
 
-
         public DynamicObjectType ObjectType { get; }
 
-        object IDynamicObject.GetRole(DynamicUnitRoleType roleType) => Population.GetRole(this, roleType);
+        internal DynamicDatabase Database { get; }
 
-        IDynamicObject IDynamicObject.GetRole(IDynamicToOneRoleType roleType) => Population.GetRole(this, roleType);
+        object IDynamicObject.GetRole(DynamicUnitRoleType roleType) => this.GetRole(roleType);
 
-        IReadOnlyList<IDynamicObject> IDynamicObject.GetRole(IDynamicToManyRoleType roleType) => Population.GetRole(this, roleType);
+        IDynamicObject IDynamicObject.GetRole(IDynamicToOneRoleType roleType) => this.GetRole(roleType);
 
-        void IDynamicObject.SetRole(DynamicUnitRoleType roleType, object value) => Population.SetRole(this, roleType, value);
+        IReadOnlyList<IDynamicObject> IDynamicObject.GetRole(IDynamicToManyRoleType roleType) => this.GetRole(roleType);
 
-        void IDynamicObject.SetRole(IDynamicToOneRoleType roleType, IDynamicObject value) => ((IDynamicPopulation)Population).SetRole(this, roleType, value);
+        void IDynamicObject.SetRole(DynamicUnitRoleType roleType, object value) => this.SetRole(roleType, value);
 
-        void IDynamicObject.AddRole(IDynamicToManyRoleType roleType, IDynamicObject role) => ((IDynamicPopulation)Population).AddRole(this, roleType, role);
+        void IDynamicObject.SetRole(IDynamicToOneRoleType roleType, IDynamicObject value) => this.SetRole(roleType, (DynamicObject)value);
 
-        void IDynamicObject.RemoveRole(IDynamicToManyRoleType roleType, IDynamicObject role) => ((IDynamicPopulation)Population).RemoveRole(this, roleType, role);
+        void IDynamicObject.SetRole(IDynamicToManyRoleType roleType, IEnumerable<IDynamicObject> value) => this.SetRole(roleType, value);
 
-        IDynamicObject IDynamicObject.GetAssociation(IDynamicOneToAssociationType associationType) => ((IDynamicPopulation)Population).GetAssociation(this, associationType);
+        void IDynamicObject.AddRole(IDynamicToManyRoleType roleType, IDynamicObject role) => this.AddRole(roleType, (DynamicObject)role);
 
-        IReadOnlyList<IDynamicObject> IDynamicObject.GetAssociation(IDynamicManyToAssociationType associationType) => ((IDynamicPopulation)Population).GetAssociation(this, associationType);
+        void IDynamicObject.RemoveRole(IDynamicToManyRoleType roleType, IDynamicObject role) => this.RemoveRole(roleType, (DynamicObject)role);
 
-        public object GetRole(DynamicUnitRoleType roleType) => Population.GetRole(this, roleType);
+        IDynamicObject IDynamicObject.GetAssociation(IDynamicOneToAssociationType associationType) => this.GetAssociation(associationType);
 
-        public DynamicObject GetRole(IDynamicToOneRoleType roleType) => Population.GetRole(this, roleType);
+        IReadOnlyList<IDynamicObject> IDynamicObject.GetAssociation(IDynamicManyToAssociationType associationType) => this.GetAssociation(associationType);
 
-        public IReadOnlyList<DynamicObject> GetRole(IDynamicToManyRoleType roleType) => Population.GetRole(this, roleType);
+        public object GetRole(DynamicUnitRoleType roleType) => this.Database.GetRole(this, roleType);
 
-        public void SetRole(DynamicUnitRoleType roleType, object value) => Population.SetRole(this, roleType, value);
+        public DynamicObject GetRole(IDynamicToOneRoleType roleType) => (DynamicObject)this.Database.GetRole(this, roleType);
 
-        public void SetRole(IDynamicToOneRoleType roleType, DynamicObject value) => Population.SetRole(this, roleType, value);
+        public IReadOnlyList<DynamicObject> GetRole(IDynamicToManyRoleType roleType) => (IReadOnlyList<DynamicObject>)this.Database.GetRole(this, roleType) ?? [];
 
-        public void AddRole(IDynamicToManyRoleType roleType, DynamicObject role) => Population.AddRole(this, roleType, role);
+        public void SetRole(DynamicUnitRoleType roleType, object value) => this.Database.SetRole(this, roleType, value);
 
-        public void RemoveRole(IDynamicToManyRoleType roleType, DynamicObject role) => Population.RemoveRole(this, roleType, role);
+        public void SetRole(IDynamicToOneRoleType roleType, DynamicObject value) => this.Database.SetRole(this, roleType, value);
 
-        public DynamicObject GetAssociation(IDynamicOneToAssociationType associationType) => Population.GetAssociation(this, associationType);
+        public void SetRole(IDynamicToOneRoleType roleType, IEnumerable<DynamicObject> value) => this.Database.SetRole(this, roleType, value);
 
-        public IReadOnlyList<DynamicObject> GetAssociation(IDynamicManyToAssociationType associationType) => Population.GetAssociation(this, associationType);
+        public void AddRole(IDynamicToManyRoleType roleType, DynamicObject role) => this.Database.AddRole(this, roleType, role);
+
+        public void RemoveRole(IDynamicToManyRoleType roleType, DynamicObject role) => this.Database.RemoveRole(this, roleType, role);
+
+        public DynamicObject GetAssociation(IDynamicOneToAssociationType associationType) => (DynamicObject)this.Database.GetAssociation(this, associationType);
+
+        public IReadOnlyList<DynamicObject> GetAssociation(IDynamicManyToAssociationType associationType) => (IReadOnlyList<DynamicObject>)this.Database.GetAssociation(this, associationType) ?? [];
 
         /// <inheritdoc/>
         public override bool TryGetIndex(GetIndexBinder binder, object[] indexes, out object result)
@@ -89,16 +95,16 @@ namespace Allors.Dynamic.Binding
 
             result = null;
 
-            if (name.StartsWith("Add") && ObjectType.RoleTypeByName.TryGetValue(name.Substring(3), out var roleType))
+            if (name.StartsWith("Add", StringComparison.InvariantCulture) && ObjectType.RoleTypeByName.TryGetValue(name.Substring(3), out var roleType))
             {
-                Population.AddRole(this, (IDynamicToManyRoleType)roleType, (DynamicObject)args[0]);
+                this.AddRole((IDynamicToManyRoleType)roleType, (DynamicObject)args[0]);
                 return true;
             }
 
-            if (name.StartsWith("Remove") && ObjectType.RoleTypeByName.TryGetValue(name.Substring(6), out roleType))
+            if (name.StartsWith("Remove", StringComparison.InvariantCulture) && ObjectType.RoleTypeByName.TryGetValue(name.Substring(6), out roleType))
             {
                 // TODO: RemoveAll
-                Population.RemoveRole(this, (IDynamicToManyRoleType)roleType, (DynamicObject)args[0]);
+                this.RemoveRole((IDynamicToManyRoleType)roleType, (DynamicObject)args[0]);
                 return true;
             }
 
@@ -181,19 +187,22 @@ namespace Allors.Dynamic.Binding
                     break;
 
                 case DynamicUnitRoleType roleType:
-                    Population.SetRole(this, roleType, value);
+                    this.SetRole(roleType, value);
                     return true;
 
                 case IDynamicToOneRoleType roleType:
-                    Population.SetRole(this, roleType, (DynamicObject)value);
+                    this.SetRole(roleType, (DynamicObject)value);
                     return true;
 
                 case IDynamicToManyRoleType roleType:
-                    ((IDynamicPopulation)Population).SetRole(this, roleType, (System.Collections.IEnumerable)value);
+                    this.SetRole(roleType, (System.Collections.IEnumerable)value);
                     return true;
             }
 
             return false;
         }
+
+        private void SetRole(IDynamicToManyRoleType roleType, System.Collections.IEnumerable value) => this.Database.SetRole(this, roleType, value);
+
     }
 }

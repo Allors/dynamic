@@ -1,11 +1,13 @@
 using System;
 using System.Linq;
+using Allors.Dynamic.Domain;
+using Allors.Dynamic.Domain.Indexing;
 using Allors.Dynamic.Meta;
 using Xunit;
 
-namespace Allors.Dynamic.Indexing.Tests
+namespace Allors.Dynamic.Tests.Domain
 {
-    public class DerivationOverrideTests
+    public class DerivationTests
     {
         [Fact]
         public void Derivation()
@@ -14,16 +16,14 @@ namespace Allors.Dynamic.Indexing.Tests
             var person = meta.AddClass("Person");
             var firstName = meta.AddUnit<string>(person, "FirstName");
             var lastName = meta.AddUnit<string>(person, "LastName");
-            var fullName = meta.AddUnit<string>(person, "FullName");
+            meta.AddUnit<string>(person, "FullName");
             meta.AddUnit<DateTime>(person, "DerivedAt");
-            meta.AddUnit<string>(person, "Greeting");
 
             var population = new DynamicPopulation(meta)
             {
                 DerivationById =
                 {
-                    ["FullName"] = new FullNameDerivation(firstName, lastName),
-                    ["Greeting"] = new GreetingDerivation(fullName)
+                    ["FullName"] = new FullNameDerivation(firstName, lastName)
                 }
             };
 
@@ -33,7 +33,17 @@ namespace Allors.Dynamic.Indexing.Tests
 
             population.Derive();
 
-            Assert.Equal("Hello John Doe!", john["Greeting"]);
+            Assert.Equal("John Doe", john["FullName"]);
+
+            population.DerivationById["FullName"] = new GreetingDerivation(population.DerivationById["FullName"], firstName, lastName);
+
+            var jane = population.Create(person);
+            jane["FirstName"] = "Jane";
+            jane["LastName"] = "Doe";
+
+            population.Derive();
+
+            Assert.Equal("Jane Doe Chained", jane["FullName"]);
         }
 
         private class FullNameDerivation(IDynamicRoleType firstName, IDynamicRoleType lastName) : IDynamicDerivation
@@ -61,19 +71,22 @@ namespace Allors.Dynamic.Indexing.Tests
             }
         }
 
-        private class GreetingDerivation(IDynamicRoleType fullName) : IDynamicDerivation
+        private class GreetingDerivation(IDynamicDerivation derivation, IDynamicRoleType firstName, IDynamicRoleType lastName) : IDynamicDerivation
         {
             public void Derive(DynamicChangeSet changeSet)
             {
-                var fullNames = changeSet.ChangedRoles(fullName);
+                derivation.Derive(changeSet);
 
-                if (fullNames.Any())
+                var firstNames = changeSet.ChangedRoles(firstName);
+                var lastNames = changeSet.ChangedRoles(lastName);
+
+                if (firstNames.Any() || lastNames.Any())
                 {
-                    var people = fullNames.Select(v => v.Key).Distinct();
+                    var people = firstNames.Union(lastNames).Select(v => v.Key).Distinct();
 
                     foreach (DynamicObject person in people)
                     {
-                        person["Greeting"] = $"Hello {person["FullName"]}!";
+                        person["FullName"] = $"{person["FullName"]} Chained";
                     }
                 }
             }

@@ -4,9 +4,9 @@ using System.Collections.Generic;
 using System.Linq;
 using Allors.Dynamic.Meta;
 
-namespace Allors.Dynamic.Indexing
+namespace Allors.Dynamic.Domain.Indexing
 {
-    public sealed class DynamicObjects : IReadOnlyList<IDynamicObject>, IReadOnlyList<DynamicObject>
+    public sealed class DynamicObjects : IReadOnlyList<DynamicObject>
     {
         private static readonly DynamicObjects Empty = new(Array.Empty<DynamicObject>());
 
@@ -17,23 +17,16 @@ namespace Allors.Dynamic.Indexing
             this.objects = objects;
         }
 
-        IDynamicObject IReadOnlyList<IDynamicObject>.this[int index] => this.objects[index];
-
-        public DynamicObject this[int index] => this.objects[index];
-
-        IEnumerator<IDynamicObject> IEnumerable<IDynamicObject>.GetEnumerator()
-        {
-            return ((IEnumerable<IDynamicObject>)this.objects).GetEnumerator();
-        }
+        public DynamicObject this[int index] => objects[index];
 
         IEnumerator<DynamicObject> IEnumerable<DynamicObject>.GetEnumerator()
         {
-            return ((IEnumerable<DynamicObject>)this.objects).GetEnumerator();
+            return ((IEnumerable<DynamicObject>)objects).GetEnumerator();
         }
 
-        public IEnumerator GetEnumerator() => this.objects.GetEnumerator();
+        public IEnumerator GetEnumerator() => objects.GetEnumerator();
 
-        public int Count => this.objects.Length;
+        public int Count => objects.Length;
 
         internal static DynamicObjects Ensure(object list)
         {
@@ -45,14 +38,14 @@ namespace Allors.Dynamic.Indexing
             return (DynamicObjects)list;
         }
 
-        public DynamicObjects Add(IDynamicObject item)
+        public DynamicObjects Add(DynamicObject item)
         {
             if (item == null)
             {
                 return this;
             }
 
-            if (this.objects.Contains(item))
+            if (objects.Contains(item))
             {
                 return this;
             }
@@ -65,16 +58,16 @@ namespace Allors.Dynamic.Indexing
             return new DynamicObjects(added);
         }
 
-        public DynamicObjects Remove(IDynamicObject item)
+        public DynamicObjects Remove(DynamicObject item)
         {
-            var index = Array.IndexOf(this.objects, (DynamicObject)item);
+            var index = Array.IndexOf(objects, (DynamicObject)item);
 
             if (index < 0)
             {
                 return this;
             }
 
-            if (this.objects.Length == 1)
+            if (objects.Length == 1)
             {
                 return Empty;
             }

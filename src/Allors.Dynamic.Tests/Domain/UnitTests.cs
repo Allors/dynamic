@@ -1,4 +1,7 @@
-namespace Allors.Dynamic.Indexing.Tests.ByType
+using Allors.Dynamic.Domain;
+using Allors.Dynamic.Domain.Indexing;
+
+namespace Allors.Dynamic.Tests.Domain
 {
     using Allors.Dynamic.Meta;
     using Xunit;

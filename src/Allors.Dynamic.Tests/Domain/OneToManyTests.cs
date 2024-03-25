@@ -1,4 +1,8 @@
-namespace Allors.Dynamic.Indexing.Tests.ByName
+using Allors.Dynamic.Domain;
+using Allors.Dynamic.Domain.Indexing;
+using DynamicObject = Allors.Dynamic.Domain.DynamicObject;
+
+namespace Allors.Dynamic.Tests.Domain
 {
     using System.Collections.Generic;
     using System.Linq;
@@ -13,7 +17,7 @@ namespace Allors.Dynamic.Indexing.Tests.ByName
             var meta = new DynamicMeta();
             var organization = meta.AddClass("Organization");
             var person = meta.AddClass("Person");
-            meta.AddOneToMany(organization, person, "Employee");
+            var (employees, organizationWhereEmployee) = meta.AddOneToMany(organization, person, "Employee");
 
             var population = new DynamicPopulation(meta);
 
@@ -22,13 +26,13 @@ namespace Allors.Dynamic.Indexing.Tests.ByName
             var john = population.Create(person);
             var jenny = population.Create(person);
 
-            acme.AddRole("Employee", jane);
-            acme.AddRole("Employee", john);
-            acme.AddRole("Employee", jenny);
+            acme.AddRole(employees, jane);
+            acme.AddRole(employees, john);
+            acme.AddRole(employees, jenny);
 
-            Assert.Contains(jane, (IEnumerable<IDynamicObject>)acme["Employees"]);
-            Assert.Contains(john, (IEnumerable<IDynamicObject>)acme["Employees"]);
-            Assert.Contains(jenny, (IEnumerable<IDynamicObject>)acme["Employees"]);
+            Assert.Contains(jane, (IEnumerable<DynamicObject>)acme["Employees"]);
+            Assert.Contains(john, (IEnumerable<DynamicObject>)acme["Employees"]);
+            Assert.Contains(jenny, (IEnumerable<DynamicObject>)acme["Employees"]);
 
             Assert.Equal(acme, jane["OrganizationWhereEmployee"]);
             Assert.Equal(acme, john["OrganizationWhereEmployee"]);
@@ -43,7 +47,7 @@ namespace Allors.Dynamic.Indexing.Tests.ByName
             var organization = meta.AddClass("Organization", named);
             var person = meta.AddClass("Person", named);
             meta.AddUnit<string>(named, "Name");
-            meta.AddOneToMany(organization, person, "Employee");
+            var (employees, organizationWhereEmployee) = meta.AddOneToMany(organization, person, "Employee");
 
             var population = new DynamicPopulation(meta);
 
@@ -56,23 +60,23 @@ namespace Allors.Dynamic.Indexing.Tests.ByName
             var jenny = population.Create(person);
             jenny["Name"] = "Jenny";
 
-            acme.AddRole("Employee", jane);
-            acme.AddRole("Employee", john);
-            acme.AddRole("Employee", jenny);
+            acme.AddRole(employees, jane);
+            acme.AddRole(employees, john);
+            acme.AddRole(employees, jenny);
 
             var hooli = population.Create(organization);
 
-            hooli.AddRole("Employee", jane);
+            hooli.AddRole(employees, jane);
 
             var people = new[] { jane, john, jenny };
 
             var x = people.Where(v => "Jane".Equals(v["FirstName"]));
 
-            Assert.Contains(jane, (IEnumerable<IDynamicObject>)hooli["Employees"]);
+            Assert.Contains(jane, (IEnumerable<DynamicObject>)hooli["Employees"]);
 
-            Assert.DoesNotContain(jane, (IEnumerable<IDynamicObject>)acme["Employees"]);
-            Assert.Contains(john, (IEnumerable<IDynamicObject>)acme["Employees"]);
-            Assert.Contains(jenny, (IEnumerable<IDynamicObject>)acme["Employees"]);
+            Assert.DoesNotContain(jane, (IEnumerable<DynamicObject>)acme["Employees"]);
+            Assert.Contains(john, (IEnumerable<DynamicObject>)acme["Employees"]);
+            Assert.Contains(jenny, (IEnumerable<DynamicObject>)acme["Employees"]);
 
             Assert.Equal(hooli, jane["OrganizationWhereEmployee"]);
 
@@ -87,7 +91,7 @@ namespace Allors.Dynamic.Indexing.Tests.ByName
             var meta = new DynamicMeta();
             var organization = meta.AddClass("Organization");
             var person = meta.AddClass("Person");
-            meta.AddOneToMany(organization, person, "Employee");
+            var (employees, organizationWhereEmployee) = meta.AddOneToMany(organization, person, "Employee");
 
             var population = new DynamicPopulation(meta);
 
@@ -96,35 +100,35 @@ namespace Allors.Dynamic.Indexing.Tests.ByName
             var john = population.Create(person);
             var jenny = population.Create(person);
 
-            acme.AddRole("Employee", jane);
-            acme.AddRole("Employee", john);
-            acme.AddRole("Employee", jenny);
+            acme.AddRole(employees, jane);
+            acme.AddRole(employees, john);
+            acme.AddRole(employees, jenny);
 
-            acme.RemoveRole("Employee", jane);
+            acme.RemoveRole(employees, jane);
 
-            Assert.DoesNotContain(jane, (IEnumerable<IDynamicObject>)acme["Employees"]);
-            Assert.Contains(john, (IEnumerable<IDynamicObject>)acme["Employees"]);
-            Assert.Contains(jenny, (IEnumerable<IDynamicObject>)acme["Employees"]);
+            Assert.DoesNotContain(jane, (IEnumerable<DynamicObject>)acme["Employees"]);
+            Assert.Contains(john, (IEnumerable<DynamicObject>)acme["Employees"]);
+            Assert.Contains(jenny, (IEnumerable<DynamicObject>)acme["Employees"]);
 
             Assert.NotEqual(acme, jane["OrganizationWhereEmployee"]);
             Assert.Equal(acme, john["OrganizationWhereEmployee"]);
             Assert.Equal(acme, jenny["OrganizationWhereEmployee"]);
 
-            acme.RemoveRole("Employee", john);
+            acme.RemoveRole(employees, john);
 
-            Assert.DoesNotContain(jane, (IEnumerable<IDynamicObject>)acme["Employees"]);
-            Assert.DoesNotContain(john, (IEnumerable<IDynamicObject>)acme["Employees"]);
-            Assert.Contains(jenny, (IEnumerable<IDynamicObject>)acme["Employees"]);
+            Assert.DoesNotContain(jane, (IEnumerable<DynamicObject>)acme["Employees"]);
+            Assert.DoesNotContain(john, (IEnumerable<DynamicObject>)acme["Employees"]);
+            Assert.Contains(jenny, (IEnumerable<DynamicObject>)acme["Employees"]);
 
             Assert.NotEqual(acme, jane["OrganizationWhereEmployee"]);
             Assert.NotEqual(acme, john["OrganizationWhereEmployee"]);
             Assert.Equal(acme, jenny["OrganizationWhereEmployee"]);
 
-            acme.RemoveRole("Employee", jenny);
+            acme.RemoveRole(employees, jenny);
 
-            Assert.DoesNotContain(jane, (IEnumerable<IDynamicObject>)acme["Employees"]);
-            Assert.DoesNotContain(john, (IEnumerable<IDynamicObject>)acme["Employees"]);
-            Assert.DoesNotContain(jenny, (IEnumerable<IDynamicObject>)acme["Employees"]);
+            Assert.DoesNotContain(jane, (IEnumerable<DynamicObject>)acme["Employees"]);
+            Assert.DoesNotContain(john, (IEnumerable<DynamicObject>)acme["Employees"]);
+            Assert.DoesNotContain(jenny, (IEnumerable<DynamicObject>)acme["Employees"]);
 
             Assert.NotEqual(acme, jane["OrganizationWhereEmployee"]);
             Assert.NotEqual(acme, john["OrganizationWhereEmployee"]);
