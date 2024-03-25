@@ -7,20 +7,6 @@
       <FileName>Meta\DynamicObjectType.cs</FileName>
     </TypeIdentifier>
   </Class>
-  <Class Name="Allors.Dynamic.DynamicPopulation">
-    <Position X="7" Y="0.75" Width="1.75" />
-    <TypeIdentifier>
-      <HashCode>ABAAAAEAAAAgACBAgAAAAAAAAAAAAIEAQAQQAAAAAAE=</HashCode>
-      <FileName>DynamicPopulation.cs</FileName>
-    </TypeIdentifier>
-    <ShowAsAssociation>
-      <Property Name="Meta" />
-    </ShowAsAssociation>
-    <ShowAsCollectionAssociation>
-      <Property Name="DerivationById" />
-      <Property Name="Objects" />
-    </ShowAsCollectionAssociation>
-  </Class>
   <Class Name="Allors.Dynamic.Meta.DynamicMeta" Collapsed="true">
     <Position X="4.5" Y="3.75" Width="1.5" />
     <TypeIdentifier>
@@ -55,6 +41,20 @@
       <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAQAAAAAAAA=</HashCode>
       <FileName>IDynamicDerivation.cs</FileName>
     </TypeIdentifier>
+  </Interface>
+  <Interface Name="Allors.Dynamic.IDynamicPopulation">
+    <Position X="7" Y="0.75" Width="1.75" />
+    <TypeIdentifier>
+      <HashCode>ABAAAAEAAAAgAAAAgAAAAAAAAAAAAMEAAAQQAAAAAAE=</HashCode>
+      <FileName>IDynamicPopulation.cs</FileName>
+    </TypeIdentifier>
+    <ShowAsAssociation>
+      <Property Name="Meta" />
+    </ShowAsAssociation>
+    <ShowAsCollectionAssociation>
+      <Property Name="DerivationById" />
+      <Property Name="Objects" />
+    </ShowAsCollectionAssociation>
   </Interface>
   <Font Name="Segoe UI" Size="9" />
 </ClassDiagram>

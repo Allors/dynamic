@@ -1,4 +1,5 @@
 ﻿using Allors.Dynamic.Meta;
+using System.Collections.Generic;
 
 namespace Allors.Dynamic
 {
@@ -8,14 +9,22 @@ namespace Allors.Dynamic
 
         DynamicObjectType ObjectType { get; }
 
-        object GetRole(string name);
+        object GetRole(DynamicUnitRoleType roleType);
 
-        void SetRole(string name, object value);
+        IDynamicObject GetRole(IDynamicToOneRoleType roleType);
 
-        void AddRole(string name, IDynamicObject value);
+        IReadOnlyList<IDynamicObject> GetRole(IDynamicToManyRoleType roleType);
 
-        void RemoveRole(string name, IDynamicObject value);
+        void SetRole(DynamicUnitRoleType roleType, object value);
 
-        object GetAssociation(string name);
+        void SetRole(IDynamicToOneRoleType roleType, IDynamicObject value);
+
+        void AddRole(IDynamicToManyRoleType roleType, IDynamicObject role);
+
+        void RemoveRole(IDynamicToManyRoleType roleType, IDynamicObject role);
+
+        IDynamicObject GetAssociation(IDynamicOneToAssociationType associationType);
+
+        IReadOnlyList<IDynamicObject> GetAssociation(IDynamicManyToAssociationType associationType);
     }
 }

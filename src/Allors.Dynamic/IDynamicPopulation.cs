@@ -9,7 +9,7 @@ namespace Allors.Dynamic
         DynamicMeta Meta { get; }
 
         Dictionary<string, IDynamicDerivation> DerivationById { get; }
-        
+
         IEnumerable<IDynamicObject> Objects { get; }
 
         IDynamicObject Create(DynamicObjectType @class, params Action<dynamic>[] builders);
@@ -20,14 +20,24 @@ namespace Allors.Dynamic
 
         void Derive();
 
-        object GetRole(IDynamicObject obj, IDynamicRoleType roleType);
+        object GetRole(IDynamicObject obj, DynamicUnitRoleType roleType);
 
-        void SetRole(IDynamicObject obj, IDynamicRoleType roleType, object value);
+        IDynamicObject GetRole(IDynamicObject obj, IDynamicToOneRoleType roleType);
 
-        void AddRole(IDynamicObject obj, IDynamicCompositeRoleType roleType, IDynamicObject role);
+        IReadOnlyList<IDynamicObject> GetRole(IDynamicObject obj, IDynamicToManyRoleType roleType);
 
-        void RemoveRole(IDynamicObject obj, IDynamicCompositeRoleType roleType, IDynamicObject role);
+        void SetRole(IDynamicObject obj, DynamicUnitRoleType roleType, object value);
 
-        object GetAssociation(IDynamicObject obj, IDynamicCompositeAssociationType associationType);
+        void SetRole(IDynamicObject obj, IDynamicToOneRoleType roleType, IDynamicObject value);
+
+        void SetRole(IDynamicObject obj, IDynamicToManyRoleType roleType, System.Collections.IEnumerable value);
+
+        void AddRole(IDynamicObject obj, IDynamicToManyRoleType roleType, IDynamicObject role);
+
+        void RemoveRole(IDynamicObject obj, IDynamicToManyRoleType roleType, IDynamicObject role);
+
+        IDynamicObject GetAssociation(IDynamicObject obj, IDynamicOneToAssociationType associationType);
+
+        IReadOnlyList<IDynamicObject> GetAssociation(IDynamicObject obj, IDynamicManyToAssociationType associationType);
     }
 }
