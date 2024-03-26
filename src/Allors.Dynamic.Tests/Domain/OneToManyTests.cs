@@ -40,13 +40,65 @@
         }
 
         [Fact]
+        public void AddSameAssociationParams()
+        {
+            var meta = new DynamicMeta();
+            var organization = meta.AddClass("Organization");
+            var person = meta.AddClass("Person");
+            (DynamicOneToManyRoleType employees, _) = meta.AddOneToMany(organization, person, "Employee");
+
+            var population = new DynamicPopulation();
+
+            var acme = population.Create(organization);
+            var jane = population.Create(person);
+            var john = population.Create(person);
+            var jenny = population.Create(person);
+
+            acme.Add(employees, jane, john, jenny);
+
+            Assert.Contains(jane, (IEnumerable<DynamicObject>)acme["Employees"]!);
+            Assert.Contains(john, (IEnumerable<DynamicObject>)acme["Employees"]!);
+            Assert.Contains(jenny, (IEnumerable<DynamicObject>)acme["Employees"]!);
+
+            Assert.Equal(acme, jane["OrganizationWhereEmployee"]);
+            Assert.Equal(acme, john["OrganizationWhereEmployee"]);
+            Assert.Equal(acme, jenny["OrganizationWhereEmployee"]);
+        }
+
+        [Fact]
+        public void AddSameAssociationArray()
+        {
+            var meta = new DynamicMeta();
+            var organization = meta.AddClass("Organization");
+            var person = meta.AddClass("Person");
+            (DynamicOneToManyRoleType employees, _) = meta.AddOneToMany(organization, person, "Employee");
+
+            var population = new DynamicPopulation();
+
+            var acme = population.Create(organization);
+            var jane = population.Create(person);
+            var john = population.Create(person);
+            var jenny = population.Create(person);
+
+            acme.Add(employees, [jane, john, jenny]);
+
+            Assert.Contains(jane, (IEnumerable<DynamicObject>)acme["Employees"]!);
+            Assert.Contains(john, (IEnumerable<DynamicObject>)acme["Employees"]!);
+            Assert.Contains(jenny, (IEnumerable<DynamicObject>)acme["Employees"]!);
+
+            Assert.Equal(acme, jane["OrganizationWhereEmployee"]);
+            Assert.Equal(acme, john["OrganizationWhereEmployee"]);
+            Assert.Equal(acme, jenny["OrganizationWhereEmployee"]);
+        }
+
+
+        [Fact]
         public void AddDifferentAssociation()
         {
             var meta = new DynamicMeta();
             var named = meta.AddInterface("Named");
             var organization = meta.AddClass("Organization", named);
             var person = meta.AddClass("Person", named);
-            meta.AddUnit<string>(named, "Name");
             (DynamicOneToManyRoleType employees, _) = meta.AddOneToMany(organization, person, "Employee");
 
             var population = new DynamicPopulation();
@@ -54,11 +106,8 @@
             var acme = population.Create(organization);
 
             var jane = population.Create(person);
-            jane["Name"] = "Jane";
             var john = population.Create(person);
-            john["Name"] = "John";
             var jenny = population.Create(person);
-            jenny["Name"] = "Jenny";
 
             acme.Add(employees, jane);
             acme.Add(employees, john);
@@ -129,6 +178,66 @@
             Assert.NotEqual(acme, jane["OrganizationWhereEmployee"]);
             Assert.NotEqual(acme, john["OrganizationWhereEmployee"]);
             Assert.NotEqual(acme, jenny["OrganizationWhereEmployee"]);
+        }
+
+        [Fact]
+        public void RemoveParams()
+        {
+            var meta = new DynamicMeta();
+            var organization = meta.AddClass("Organization");
+            var person = meta.AddClass("Person");
+            (DynamicOneToManyRoleType employees, _) = meta.AddOneToMany(organization, person, "Employee");
+
+            var population = new DynamicPopulation();
+
+            var acme = population.Create(organization);
+            var jane = population.Create(person);
+            var john = population.Create(person);
+            var jenny = population.Create(person);
+
+            acme.Add(employees, jane);
+            acme.Add(employees, john);
+            acme.Add(employees, jenny);
+
+            acme.Remove(employees, jane, john);
+
+            Assert.DoesNotContain(jane, (IEnumerable<DynamicObject>)acme["Employees"]!);
+            Assert.DoesNotContain(john, (IEnumerable<DynamicObject>)acme["Employees"]!);
+            Assert.Contains(jenny, (IEnumerable<DynamicObject>)acme["Employees"]!);
+
+            Assert.NotEqual(acme, jane["OrganizationWhereEmployee"]);
+            Assert.NotEqual(acme, john["OrganizationWhereEmployee"]);
+            Assert.Equal(acme, jenny["OrganizationWhereEmployee"]);
+        }
+
+        [Fact]
+        public void RemoveArray()
+        {
+            var meta = new DynamicMeta();
+            var organization = meta.AddClass("Organization");
+            var person = meta.AddClass("Person");
+            (DynamicOneToManyRoleType employees, _) = meta.AddOneToMany(organization, person, "Employee");
+
+            var population = new DynamicPopulation();
+
+            var acme = population.Create(organization);
+            var jane = population.Create(person);
+            var john = population.Create(person);
+            var jenny = population.Create(person);
+
+            acme.Add(employees, jane);
+            acme.Add(employees, john);
+            acme.Add(employees, jenny);
+
+            acme.Remove(employees, [jane, john]);
+
+            Assert.DoesNotContain(jane, (IEnumerable<DynamicObject>)acme["Employees"]!);
+            Assert.DoesNotContain(john, (IEnumerable<DynamicObject>)acme["Employees"]!);
+            Assert.Contains(jenny, (IEnumerable<DynamicObject>)acme["Employees"]!);
+
+            Assert.NotEqual(acme, jane["OrganizationWhereEmployee"]);
+            Assert.NotEqual(acme, john["OrganizationWhereEmployee"]);
+            Assert.Equal(acme, jenny["OrganizationWhereEmployee"]);
         }
 
         [Fact]

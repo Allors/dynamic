@@ -168,7 +168,7 @@
 
             if (normalizedRole == null)
             {
-                this.RemoveRole(association, roleType);
+                this.RemoveFromRole(association, roleType);
                 return;
             }
 
@@ -182,7 +182,7 @@
 
             if (normalizedRole == null)
             {
-                this.RemoveRole(association, roleType);
+                this.RemoveFromRole(association, roleType);
                 return;
             }
 
@@ -220,7 +220,7 @@
             {
                 // Many to One
                 var previousAssociation = (IImmutableSet<DynamicObject>?)this.GetAssociation(roleObject, associationType);
-                if (previousAssociation != null && previousAssociation.Contains(roleObject))
+                if (previousAssociation?.Contains(roleObject) == true)
                 {
                     changedAssociationByRole[roleObject] = previousAssociation.Remove(roleObject);
                 }
@@ -233,7 +233,7 @@
 
             if (normalizedRole == null)
             {
-                this.RemoveRole(association, roleType);
+                this.RemoveFromRole(association, roleType);
                 return;
             }
 
@@ -250,86 +250,170 @@
 
                 foreach (var addedRole in addedRoles)
                 {
-                    this.AddRole(association, roleType, addedRole);
+                    this.AddToRole(association, roleType, addedRole);
                 }
 
                 foreach (var removeRole in removedRoles)
                 {
-                    this.RemoveRole(association, roleType, removeRole);
+                    this.RemoveFromRole(association, roleType, removeRole);
                 }
             }
             else
             {
                 foreach (var addedRole in roles)
                 {
-                    this.AddRole(association, roleType, addedRole);
+                    this.AddToRole(association, roleType, addedRole);
                 }
             }
         }
 
-        internal void AddRole(DynamicObject association, IDynamicRoleType roleType, DynamicObject role)
+        internal void AddToRole(DynamicObject association, IDynamicRoleType roleType, DynamicObject item)
         {
             var associationType = (IDynamicCompositeAssociationType)roleType.AssociationType;
 
             // Role
             var changedRoleByAssociation = this.ChangedRoleByAssociation(roleType);
             var previousRole = (IImmutableSet<DynamicObject>?)this.GetRole(association, roleType);
-            var newRole = previousRole != null ? previousRole.Add(role) : ImmutableHashSet.Create(role);
+            var newRole = previousRole != null ? previousRole.Add(item) : ImmutableHashSet.Create(item);
             changedRoleByAssociation[association] = newRole;
 
             // Association
             var changedAssociationByRole = this.ChangedAssociationByRole(associationType);
             if (associationType.IsOne)
             {
-                var previousAssociation = (DynamicObject?)this.GetAssociation(role, associationType);
+                var previousAssociation = (DynamicObject?)this.GetAssociation(item, associationType);
 
                 // One to Many
                 if (previousAssociation != null)
                 {
                     var previousAssociationRole = (IImmutableSet<DynamicObject>?)this.GetRole(previousAssociation, roleType);
-                    if (previousAssociationRole != null && previousAssociationRole.Contains(role))
+                    if (previousAssociationRole?.Contains(item) == true)
                     {
-                        changedRoleByAssociation[previousAssociation] = previousAssociationRole.Remove(role);
+                        changedRoleByAssociation[previousAssociation] = previousAssociationRole.Remove(item);
                     }
                 }
 
-                changedAssociationByRole[role] = association;
+                changedAssociationByRole[item] = association;
             }
             else
             {
-                var previousAssociation = (IImmutableSet<DynamicObject>?)this.GetAssociation(role, associationType);
+                var previousAssociation = (IImmutableSet<DynamicObject>?)this.GetAssociation(item, associationType);
 
                 // Many to Many
-                changedAssociationByRole[role] = previousAssociation != null ? previousAssociation.Add(association) : ImmutableHashSet.Create(association);
+                changedAssociationByRole[item] = previousAssociation != null ? previousAssociation.Add(association) : ImmutableHashSet.Create(association);
             }
         }
 
-        internal void RemoveRole(DynamicObject association, IDynamicRoleType roleType, DynamicObject role)
+        internal void AddToRole(DynamicObject association, IDynamicRoleType roleType, DynamicObject[]? items)
+        {
+            if (items == null || items.Length == 0)
+            {
+                return;
+            }
+
+            var associationType = (IDynamicCompositeAssociationType)roleType.AssociationType;
+
+            // Role
+            var changedRoleByAssociation = this.ChangedRoleByAssociation(roleType);
+            var previousRole = (IImmutableSet<DynamicObject>?)this.GetRole(association, roleType);
+            changedRoleByAssociation[association] = previousRole != null ? previousRole.Union(items) : ImmutableHashSet.Create(items);
+
+            // Association
+            var changedAssociationByRole = this.ChangedAssociationByRole(associationType);
+            foreach (var item in items)
+            {
+                if (associationType.IsOne)
+                {
+                    var previousAssociation = (DynamicObject?)this.GetAssociation(item, associationType);
+
+                    // One to Many
+                    if (previousAssociation != null)
+                    {
+                        var previousAssociationRole = (IImmutableSet<DynamicObject>?)this.GetRole(previousAssociation, roleType);
+                        if (previousAssociationRole?.Contains(item) == true)
+                        {
+                            changedRoleByAssociation[previousAssociation] = previousAssociationRole.Remove(item);
+                        }
+                    }
+
+                    changedAssociationByRole[item] = association;
+                }
+                else
+                {
+                    var previousAssociation = (IImmutableSet<DynamicObject>?)this.GetAssociation(item, associationType);
+
+                    // Many to Many
+                    changedAssociationByRole[item] = previousAssociation != null ? previousAssociation.Add(association) : ImmutableHashSet.Create(association);
+                }
+            }
+        }
+
+        internal void RemoveFromRole(DynamicObject association, IDynamicRoleType roleType, DynamicObject item)
         {
             var associationType = (IDynamicCompositeAssociationType)roleType.AssociationType;
 
             var previousRole = (IImmutableSet<DynamicObject>?)this.GetRole(association, roleType);
-            if (previousRole != null && previousRole.Contains(role))
+            if (previousRole?.Contains(item) == true)
             {
                 // Role
                 var changedRoleByAssociation = this.ChangedRoleByAssociation(roleType);
-                changedRoleByAssociation[association] = previousRole.Remove(role);
+                changedRoleByAssociation[association] = previousRole.Remove(item);
 
                 // Association
                 var changedAssociationByRole = this.ChangedAssociationByRole(associationType);
                 if (associationType.IsOne)
                 {
                     // One to Many
-                    changedAssociationByRole.Remove(role);
+                    changedAssociationByRole.Remove(item);
                 }
                 else
                 {
-                    var previousAssociation = (IImmutableSet<DynamicObject>?)this.GetAssociation(role, associationType);
+                    var previousAssociation = (IImmutableSet<DynamicObject>?)this.GetAssociation(item, associationType);
 
                     // Many to Many
-                    if (previousAssociation != null && previousAssociation.Contains(association))
+                    if (previousAssociation?.Contains(association) == true)
                     {
-                        changedAssociationByRole[role] = previousAssociation.Remove(association);
+                        changedAssociationByRole[item] = previousAssociation.Remove(association);
+                    }
+                }
+            }
+        }
+
+        internal void RemoveFromRole(DynamicObject association, IDynamicRoleType roleType, DynamicObject[]? items)
+        {
+            if (items == null || items.Length == 0)
+            {
+                return;
+            }
+
+            var associationType = (IDynamicCompositeAssociationType)roleType.AssociationType;
+
+            var previousRole = (IImmutableSet<DynamicObject>?)this.GetRole(association, roleType);
+            if (previousRole?.Overlaps(items) == true)
+            {
+                // Role
+                var changedRoleByAssociation = this.ChangedRoleByAssociation(roleType);
+                changedRoleByAssociation[association] = previousRole.Except(items);
+
+                // Association
+                var changedAssociationByRole = this.ChangedAssociationByRole(associationType);
+
+                foreach (var item in items)
+                {
+                    if (associationType.IsOne)
+                    {
+                        // One to Many
+                        changedAssociationByRole.Remove(item);
+                    }
+                    else
+                    {
+                        var previousAssociation = (IImmutableSet<DynamicObject>?)this.GetAssociation(item, associationType);
+
+                        // Many to Many
+                        if (previousAssociation?.Contains(association) == true)
+                        {
+                            changedAssociationByRole[item] = previousAssociation.Remove(association);
+                        }
                     }
                 }
             }
@@ -412,7 +496,7 @@
             return changedRoleByAssociation;
         }
 
-        private void RemoveRole(DynamicObject association, IDynamicRoleType roleType)
+        private void RemoveFromRole(DynamicObject association, IDynamicRoleType roleType)
         {
             var associationType = (IDynamicCompositeAssociationType)roleType.AssociationType;
 
@@ -437,7 +521,7 @@
                         var previousAssociation = (IImmutableSet<DynamicObject>?)this.GetAssociation(role, associationType);
 
                         // Many to Many
-                        if (previousAssociation != null && previousAssociation.Contains(association))
+                        if (previousAssociation?.Contains(association) == true)
                         {
                             changedAssociationByRole[role] = previousAssociation.Remove(association);
                         }

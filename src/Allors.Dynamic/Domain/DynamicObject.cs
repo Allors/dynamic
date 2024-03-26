@@ -3,6 +3,7 @@
     using System;
     using System.Collections.Generic;
     using System.Collections.Immutable;
+    using System.Linq;
     using Allors.Dynamic.Meta;
 
     public sealed class DynamicObject
@@ -150,8 +151,16 @@
 
         public IReadOnlySet<DynamicObject> this[DynamicManyToManyAssociationType associationType] => (IReadOnlySet<DynamicObject>?)this.Population.GetAssociation(this, associationType) ?? ImmutableHashSet<DynamicObject>.Empty;
 
-        public void Add(IDynamicToManyRoleType roleType, DynamicObject role) => this.Population.AddRole(this, roleType, role);
+        public void Add(IDynamicToManyRoleType roleType, DynamicObject item) => this.Population.AddToRole(this, roleType, item);
 
-        public void Remove(IDynamicToManyRoleType roleType, DynamicObject role) => this.Population.RemoveRole(this, roleType, role);
+        public void Add(IDynamicToManyRoleType roleType, params DynamicObject[] items) => this.Population.AddToRole(this, roleType, items);
+
+        public void Add(IDynamicToManyRoleType roleType, IEnumerable<DynamicObject> items) => this.Population.AddToRole(this, roleType, items as DynamicObject[] ?? items.ToArray());
+
+        public void Remove(IDynamicToManyRoleType roleType, DynamicObject item) => this.Population.RemoveFromRole(this, roleType, item);
+
+        public void Remove(IDynamicToManyRoleType roleType, params DynamicObject[] items) => this.Population.RemoveFromRole(this, roleType, items);
+
+        public void Remove(IDynamicToManyRoleType roleType, IEnumerable<DynamicObject> items) => this.Population.RemoveFromRole(this, roleType, items as DynamicObject[] ?? items.ToArray());
     }
 }
