@@ -57,7 +57,7 @@
             var organization = meta.AddClass("Organization");
             var person = meta.AddClass("Person");
             var name = meta.AddUnit<string>(organization, "Name");
-            var (employees, organizationWhereEmployee) = meta.AddManyToMany(organization, person, "Employee");
+            (DynamicManyToManyRoleType employees, _) = meta.AddManyToMany(organization, person, "Employee");
 
             var population = new DynamicPopulation();
 
@@ -70,7 +70,7 @@
 
             acme[employees] = new[] { jane }.ToFrozenSet();
 
-            Assert.Single(((IReadOnlySet<DynamicObject>)jane["OrganizationsWhereEmployee"]!));
+            Assert.Single((IReadOnlySet<DynamicObject>)jane["OrganizationsWhereEmployee"]!);
             Assert.Contains(acme, (IReadOnlySet<DynamicObject>)jane["OrganizationWhereEmployee"]!);
 
             Assert.Empty((IEnumerable<DynamicObject>)john["OrganizationWhereEmployee"]!);
@@ -133,12 +133,12 @@
             var organization = meta.AddClass("Organization");
             var person = meta.AddClass("Person");
             meta.AddUnit<string>(organization, "Name");
-            var (employees, organizationWhereEmployee) = meta.AddManyToMany(organization, person, "Employee");
+            (DynamicManyToManyRoleType employees, _) = meta.AddManyToMany(organization, person, "Employee");
 
             var population = new DynamicPopulation();
 
             var acme = population.Create(organization, v => v["Name"] = "Acme");
-            var hooli = population.Create(organization, v => v["Name"] = ("Hooli"));
+            var hooli = population.Create(organization, v => v["Name"] = "Hooli");
 
             var jane = population.Create(person);
             var john = population.Create(person);
@@ -156,7 +156,7 @@
 
             Assert.Empty((IEnumerable<DynamicObject>)jenny["OrganizationWhereEmployee"]!);
 
-            Assert.Equal(2, (((IEnumerable<DynamicObject>)acme["Employees"]!).Count()));
+            Assert.Equal(2, ((IEnumerable<DynamicObject>)acme["Employees"]!).Count());
             Assert.Contains(jane, (IEnumerable<DynamicObject>)acme["Employees"]!);
             Assert.Contains(john, (IEnumerable<DynamicObject>)acme["Employees"]!);
 
@@ -193,7 +193,7 @@
             var organization = meta.AddClass("Organization");
             var person = meta.AddClass("Person");
             meta.AddUnit<string>(organization, "Name");
-            var (employees, organizationWhereEmployee) = meta.AddManyToMany(organization, person, "Employee");
+            (DynamicManyToManyRoleType employees, _) = meta.AddManyToMany(organization, person, "Employee");
 
             var population = new DynamicPopulation();
 
@@ -210,7 +210,7 @@
 
             hooli.Add(employees, jane);
 
-            Assert.Equal(2, (((IEnumerable<DynamicObject>)jane["OrganizationWhereEmployee"]!).Count()));
+            Assert.Equal(2, ((IEnumerable<DynamicObject>)jane["OrganizationWhereEmployee"]!).Count());
             Assert.Contains(acme, (IEnumerable<DynamicObject>)jane["OrganizationWhereEmployee"]!);
             Assert.Contains(hooli, (IEnumerable<DynamicObject>)jane["OrganizationWhereEmployee"]!);
 

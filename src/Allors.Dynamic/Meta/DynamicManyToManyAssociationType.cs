@@ -2,9 +2,18 @@
 {
     public sealed class DynamicManyToManyAssociationType : IDynamicManyToAssociationType
     {
+        internal DynamicManyToManyAssociationType(DynamicObjectType objectType, DynamicManyToManyRoleType roleType, string singularName, string pluralName, string name)
+        {
+            this.ObjectType = objectType;
+            this.RoleType = roleType;
+            this.SingularName = singularName;
+            this.PluralName = pluralName;
+            this.Name = name;
+        }
+
         IDynamicRoleType IDynamicAssociationType.RoleType => this.RoleType;
 
-        public DynamicManyToManyRoleType RoleType { get; internal set; }
+        public DynamicManyToManyRoleType RoleType { get; }
 
         public DynamicObjectType ObjectType { get; }
 
@@ -14,19 +23,8 @@
 
         public string Name { get; }
 
-        public bool IsOne { get; }
+        public bool IsOne => false;
 
-        public bool IsMany { get; }
-
-        internal DynamicManyToManyAssociationType(DynamicObjectType objectType, DynamicManyToManyRoleType roleType, string singularName, string pluralName, string name, bool isOne, bool isMany)
-        {
-            this.ObjectType = objectType;
-            this.RoleType = roleType;
-            this.SingularName = singularName;
-            this.PluralName = pluralName;
-            this.Name = name;
-            this.IsOne = isOne;
-            this.IsMany = isMany;
-        }
+        public bool IsMany => true;
     }
 }

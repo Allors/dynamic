@@ -2,6 +2,14 @@
 {
     public sealed class DynamicOneToOneRoleType : IDynamicToOneRoleType
     {
+        internal DynamicOneToOneRoleType(DynamicObjectType objectType, string singularName, string pluralName, string name)
+        {
+            this.ObjectType = objectType;
+            this.SingularName = singularName;
+            this.PluralName = pluralName;
+            this.Name = name;
+        }
+
         IDynamicAssociationType IDynamicRoleType.AssociationType => this.AssociationType;
 
         public DynamicOneToOneAssociationType AssociationType { get; internal set; } = null!;
@@ -14,9 +22,9 @@
 
         public string Name { get; }
 
-        public bool IsOne { get; }
+        public bool IsOne => true;
 
-        public bool IsMany { get; }
+        public bool IsMany => false;
 
         void IDynamicRoleType.Deconstruct(out IDynamicRoleType roleType, out IDynamicAssociationType associationType)
         {
@@ -30,27 +38,17 @@
             roleType = this;
         }
 
-        internal DynamicOneToOneRoleType(DynamicObjectType objectType, string singularName, string pluralName, string name, bool isOne, bool isMany)
-        {
-            this.ObjectType = objectType;
-            this.SingularName = singularName;
-            this.PluralName = pluralName;
-            this.Name = name;
-            this.IsOne = isOne;
-            this.IsMany = isMany;
-        }
-
         public override string ToString()
         {
             return this.Name;
         }
 
-        internal string SingularNameForEmbeddedAssociationType(DynamicObjectType dynamicObjectType)
+        internal string SingularNameForAssociationType(DynamicObjectType dynamicObjectType)
         {
             return $"{dynamicObjectType.Name}Where{this.SingularName}";
         }
 
-        internal string PluralNameForEmbeddedAssociationType(DynamicObjectType dynamicObjectType)
+        internal string PluralNameForAssociationType(DynamicObjectType dynamicObjectType)
         {
             return $"{this.ObjectType.Meta.Pluralize(dynamicObjectType.Name)}Where{this.SingularName}";
         }

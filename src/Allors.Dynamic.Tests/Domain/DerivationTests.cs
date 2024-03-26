@@ -22,7 +22,7 @@
             {
                 DerivationById =
                 {
-                    ["FullName"] = new FullNameDerivation(firstName, lastName)
+                    ["FullName"] = new FullNameDerivation(firstName, lastName),
                 },
             };
 
@@ -52,20 +52,22 @@
                 var firstNames = changeSet.ChangedRoles(firstName);
                 var lastNames = changeSet.ChangedRoles(lastName);
 
-                if (firstNames.Any() || lastNames.Any())
+                if (!firstNames.Any() && !lastNames.Any())
                 {
-                    var people = firstNames.Union(lastNames).Select(v => v.Key).Distinct();
+                    return;
+                }
 
-                    foreach (DynamicObject person in people)
-                    {
-                        // Dummy updates ...
-                        person["FirstName"] = person["FirstName"];
-                        person["LastName"] = person["LastName"];
+                var people = firstNames.Union(lastNames).Select(v => v.Key).Distinct();
 
-                        person["DerivedAt"] = DateTime.Now;
+                foreach (DynamicObject person in people)
+                {
+                    // Dummy updates ...
+                    person["FirstName"] = person["FirstName"];
+                    person["LastName"] = person["LastName"];
 
-                        person["FullName"] = $"{person["FirstName"]} {person["LastName"]}";
-                    }
+                    person["DerivedAt"] = DateTime.Now;
+
+                    person["FullName"] = $"{person["FirstName"]} {person["LastName"]}";
                 }
             }
         }
@@ -79,14 +81,16 @@
                 var firstNames = changeSet.ChangedRoles(firstName);
                 var lastNames = changeSet.ChangedRoles(lastName);
 
-                if (firstNames.Any() || lastNames.Any())
+                if (!firstNames.Any() && !lastNames.Any())
                 {
-                    var people = firstNames.Union(lastNames).Select(v => v.Key).Distinct();
+                    return;
+                }
 
-                    foreach (DynamicObject person in people)
-                    {
-                        person["FullName"] = $"{person["FullName"]} Chained";
-                    }
+                var people = firstNames.Union(lastNames).Select(v => v.Key).Distinct();
+
+                foreach (DynamicObject person in people)
+                {
+                    person["FullName"] = $"{person["FullName"]} Chained";
                 }
             }
         }

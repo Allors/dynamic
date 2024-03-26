@@ -17,7 +17,7 @@
             var meta = new DynamicMeta();
             var organization = meta.AddClass("Organization");
             var person = meta.AddClass("Person");
-            var (employees, organizationWhereEmployee) = meta.AddOneToMany(organization, person, "Employee");
+            (DynamicOneToManyRoleType employees, _) = meta.AddOneToMany(organization, person, "Employee");
 
             var population = new DynamicPopulation();
 
@@ -47,7 +47,7 @@
             var organization = meta.AddClass("Organization", named);
             var person = meta.AddClass("Person", named);
             meta.AddUnit<string>(named, "Name");
-            var (employees, organizationWhereEmployee) = meta.AddOneToMany(organization, person, "Employee");
+            (DynamicOneToManyRoleType employees, _) = meta.AddOneToMany(organization, person, "Employee");
 
             var population = new DynamicPopulation();
 
@@ -68,10 +68,6 @@
 
             hooli.Add(employees, jane);
 
-            var people = new[] { jane, john, jenny };
-
-            var x = people.Where(v => "Jane".Equals(v["FirstName"]));
-
             Assert.Contains(jane, (IEnumerable<DynamicObject>)hooli["Employees"]!);
 
             Assert.DoesNotContain(jane, (IEnumerable<DynamicObject>)acme["Employees"]!);
@@ -91,7 +87,7 @@
             var meta = new DynamicMeta();
             var organization = meta.AddClass("Organization");
             var person = meta.AddClass("Person");
-            var (employees, organizationWhereEmployee) = meta.AddOneToMany(organization, person, "Employee");
+            (DynamicOneToManyRoleType employees, _) = meta.AddOneToMany(organization, person, "Employee");
 
             var population = new DynamicPopulation();
 
@@ -141,7 +137,7 @@
             var meta = new DynamicMeta();
             var organization = meta.AddClass("Organization");
             var person = meta.AddClass("Person");
-            var (employees, organizationWhereEmployee) = meta.AddOneToMany(organization, person, "Employee");
+            (DynamicOneToManyRoleType employees, _) = meta.AddOneToMany(organization, person, "Employee");
 
             var population = new DynamicPopulation();
 
@@ -177,7 +173,6 @@
             Assert.NotEqual(acme, jane["OrganizationWhereEmployee"]);
             Assert.NotEqual(acme, john["OrganizationWhereEmployee"]);
             Assert.NotEqual(acme, jenny["OrganizationWhereEmployee"]);
-
 
             acme.Add(employees, jane);
             acme.Add(employees, john);

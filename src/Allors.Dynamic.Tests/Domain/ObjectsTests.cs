@@ -30,7 +30,7 @@
             var john = NewPerson("John", "Doe");
             var jenny = NewPerson("Jenny", "Doe");
 
-            var lastNameDoe = population.Objects.Where(v => v["LastName"] == "Doe").ToArray();
+            var lastNameDoe = population.Objects.Where(v => (string)v["LastName"]! == "Doe").ToArray();
 
             Assert.Equal(3, lastNameDoe.Length);
             Assert.Contains(jane, lastNameDoe);

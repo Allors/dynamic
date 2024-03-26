@@ -1,10 +1,21 @@
 ﻿namespace Allors.Dynamic.Meta
 {
+    using System.Runtime.InteropServices.Marshalling;
+
     public sealed class DynamicOneToOneAssociationType : IDynamicOneToAssociationType
     {
+        internal DynamicOneToOneAssociationType(DynamicObjectType objectType, DynamicOneToOneRoleType roleType, string singularName, string pluralName, string name)
+        {
+            this.ObjectType = objectType;
+            this.RoleType = roleType;
+            this.SingularName = singularName;
+            this.PluralName = pluralName;
+            this.Name = name;
+        }
+
         IDynamicRoleType IDynamicAssociationType.RoleType => this.RoleType;
 
-        public DynamicOneToOneRoleType RoleType { get; internal set; }
+        public DynamicOneToOneRoleType RoleType { get; }
 
         public DynamicObjectType ObjectType { get; }
 
@@ -14,19 +25,8 @@
 
         public string Name { get; }
 
-        public bool IsOne { get; }
+        public bool IsOne => true;
 
-        public bool IsMany { get; }
-
-        internal DynamicOneToOneAssociationType(DynamicObjectType objectType, DynamicOneToOneRoleType roleType, string singularName, string pluralName, string name, bool isOne, bool isMany)
-        {
-            this.ObjectType = objectType;
-            this.RoleType = roleType;
-            this.SingularName = singularName;
-            this.PluralName = pluralName;
-            this.Name = name;
-            this.IsOne = isOne;
-            this.IsMany = isMany;
-        }
+        public bool IsMany => false;
     }
 }

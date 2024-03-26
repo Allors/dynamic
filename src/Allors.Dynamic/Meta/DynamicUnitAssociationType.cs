@@ -13,7 +13,7 @@
 
         IDynamicRoleType IDynamicAssociationType.RoleType => this.RoleType;
 
-        public DynamicUnitRoleType RoleType { get; internal set; }
+        public DynamicUnitRoleType RoleType { get; }
 
         public DynamicObjectType ObjectType { get; }
 

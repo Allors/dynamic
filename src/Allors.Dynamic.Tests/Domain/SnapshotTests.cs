@@ -47,18 +47,16 @@
             Assert.Contains(jane, changedLastNames.Keys);
         }
 
-
         [Fact]
         public void Composites()
         {
             var meta = new DynamicMeta();
             var person = meta.AddClass("Person");
             var organization = meta.AddClass("Organization");
-            var firstName = meta.AddUnit<string>(person, "FirstName");
-            var lastName = meta.AddUnit<string>(person, "LastName");
-            var name = meta.AddUnit<string>(organization, "Name");
-            var employee = meta.AddManyToMany(organization, person, "Employee");
-
+            meta.AddUnit<string>(person, "FirstName");
+            meta.AddUnit<string>(person, "LastName");
+            meta.AddUnit<string>(organization, "Name");
+            (DynamicManyToManyRoleType employees, _) = meta.AddManyToMany(organization, person, "Employee");
 
             var population = new DynamicPopulation();
 
@@ -78,23 +76,21 @@
             acme["Employees"] = new[] { john, jane };
 
             var snapshot = population.Snapshot();
-            var changedEmployees = snapshot.ChangedRoles(employee);
+            var changedEmployees = snapshot.ChangedRoles(employees);
             Assert.Single(changedEmployees);
 
             acme["Employees"] = new[] { jane, john };
 
             snapshot = population.Snapshot();
-            changedEmployees = snapshot.ChangedRoles(employee);
+            changedEmployees = snapshot.ChangedRoles(employees);
             Assert.Empty(changedEmployees);
 
             acme["Employees"] = Array.Empty<DynamicObject>();
 
-            var x = acme["Employees"];
-
             acme["Employees"] = new[] { jane, john };
 
             snapshot = population.Snapshot();
-            changedEmployees = snapshot.ChangedRoles(employee);
+            changedEmployees = snapshot.ChangedRoles(employees);
             Assert.Empty(changedEmployees);
         }
     }
