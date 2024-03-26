@@ -8,6 +8,8 @@ using DynamicObject = Allors.Dynamic.Domain.DynamicObject;
 
 namespace Allors.Dynamic.Tests.Domain
 {
+    using System.Collections.Frozen;
+
     public class ManyToManyTests
     {
         [Fact]
@@ -41,7 +43,7 @@ namespace Allors.Dynamic.Tests.Domain
             Assert.Single(jenny[organizationWhereEmployee]);
             Assert.Contains(acme, jenny[organizationWhereEmployee]);
 
-            Assert.Equal(3, acme[employees].Count());
+            Assert.Equal(3, acme[employees].Count);
             Assert.Contains(jane, acme[employees]);
             Assert.Contains(john, acme[employees]);
             Assert.Contains(jenny, acme[employees]);
@@ -67,62 +69,62 @@ namespace Allors.Dynamic.Tests.Domain
             var john = population.Create(person);
             var jenny = population.Create(person);
 
-            acme[employees] = new[] { jane };
+            acme[employees] = new[] { jane }.ToFrozenSet();
 
-            Assert.Single((IEnumerable<DynamicObject>)jane["OrganizationWhereEmployee"]);
-            Assert.Contains(acme, (IEnumerable<DynamicObject>)jane["OrganizationWhereEmployee"]);
+            Assert.Single(((IReadOnlySet<DynamicObject>)jane["OrganizationsWhereEmployee"]!));
+            Assert.Contains(acme, (IReadOnlySet<DynamicObject>)jane["OrganizationWhereEmployee"]!);
 
-            Assert.Empty((IEnumerable<DynamicObject>)john["OrganizationWhereEmployee"]);
+            Assert.Empty((IEnumerable<DynamicObject>)john["OrganizationWhereEmployee"]!);
 
-            Assert.Empty((IEnumerable<DynamicObject>)jenny["OrganizationWhereEmployee"]);
+            Assert.Empty((IEnumerable<DynamicObject>)jenny["OrganizationWhereEmployee"]!);
 
-            Assert.Single((IEnumerable<DynamicObject>)acme["Employees"]);
-            Assert.Contains(jane, (IEnumerable<DynamicObject>)acme["Employees"]);
+            Assert.Single((IEnumerable<DynamicObject>)acme["Employees"]!);
+            Assert.Contains(jane, (IEnumerable<DynamicObject>)acme["Employees"]!);
 
-            Assert.Empty((IEnumerable<DynamicObject>)hooli["Employees"]);
+            Assert.Empty((IEnumerable<DynamicObject>)hooli["Employees"]!);
 
             acme["Employees"] = new[] { jane, john };
 
-            Assert.Single((IEnumerable<DynamicObject>)jane["OrganizationWhereEmployee"]);
-            Assert.Contains(acme, (IEnumerable<DynamicObject>)jane["OrganizationWhereEmployee"]);
+            Assert.Single((IEnumerable<DynamicObject>)jane["OrganizationWhereEmployee"]!);
+            Assert.Contains(acme, (IEnumerable<DynamicObject>)jane["OrganizationWhereEmployee"]!);
 
-            Assert.Single((IEnumerable<DynamicObject>)john["OrganizationWhereEmployee"]);
-            Assert.Contains(acme, (IEnumerable<DynamicObject>)john["OrganizationWhereEmployee"]);
+            Assert.Single((IEnumerable<DynamicObject>)john["OrganizationWhereEmployee"]!);
+            Assert.Contains(acme, (IEnumerable<DynamicObject>)john["OrganizationWhereEmployee"]!);
 
-            Assert.Empty((IEnumerable<DynamicObject>)jenny["OrganizationWhereEmployee"]);
+            Assert.Empty((IEnumerable<DynamicObject>)jenny["OrganizationWhereEmployee"]!);
 
-            Assert.Equal(2, ((IEnumerable<DynamicObject>)acme["Employees"]).Count());
-            Assert.Contains(jane, (IEnumerable<DynamicObject>)acme["Employees"]);
-            Assert.Contains(john, (IEnumerable<DynamicObject>)acme["Employees"]);
+            Assert.Equal(2, ((IEnumerable<DynamicObject>)acme["Employees"]!).Count());
+            Assert.Contains(jane, (IEnumerable<DynamicObject>)acme["Employees"]!);
+            Assert.Contains(john, (IEnumerable<DynamicObject>)acme["Employees"]!);
 
-            Assert.Empty((IEnumerable<DynamicObject>)hooli["Employees"]);
+            Assert.Empty((IEnumerable<DynamicObject>)hooli["Employees"]!);
 
             acme["Employees"] = new[] { jane, john, jenny };
 
-            Assert.Single((IEnumerable<DynamicObject>)jane["OrganizationWhereEmployee"]);
-            Assert.Contains(acme, (IEnumerable<DynamicObject>)jane["OrganizationWhereEmployee"]);
+            Assert.Single((IEnumerable<DynamicObject>)jane["OrganizationWhereEmployee"]!);
+            Assert.Contains(acme, (IEnumerable<DynamicObject>)jane["OrganizationWhereEmployee"]!);
 
-            Assert.Single((IEnumerable<DynamicObject>)john["OrganizationWhereEmployee"]);
-            Assert.Contains(acme, (IEnumerable<DynamicObject>)john["OrganizationWhereEmployee"]);
+            Assert.Single((IEnumerable<DynamicObject>)john["OrganizationWhereEmployee"]!);
+            Assert.Contains(acme, (IEnumerable<DynamicObject>)john["OrganizationWhereEmployee"]!);
 
-            Assert.Single((IEnumerable<DynamicObject>)jenny["OrganizationWhereEmployee"]);
-            Assert.Contains(acme, (IEnumerable<DynamicObject>)jenny["OrganizationWhereEmployee"]);
+            Assert.Single((IEnumerable<DynamicObject>)jenny["OrganizationWhereEmployee"]!);
+            Assert.Contains(acme, (IEnumerable<DynamicObject>)jenny["OrganizationWhereEmployee"]!);
 
-            Assert.Equal(3, ((IEnumerable<DynamicObject>)acme["Employees"]).Count());
-            Assert.Contains(jane, (IEnumerable<DynamicObject>)acme["Employees"]);
-            Assert.Contains(john, (IEnumerable<DynamicObject>)acme["Employees"]);
-            Assert.Contains(jenny, (IEnumerable<DynamicObject>)acme["Employees"]);
+            Assert.Equal(3, ((IEnumerable<DynamicObject>)acme["Employees"]!).Count());
+            Assert.Contains(jane, (IEnumerable<DynamicObject>)acme["Employees"]!);
+            Assert.Contains(john, (IEnumerable<DynamicObject>)acme["Employees"]!);
+            Assert.Contains(jenny, (IEnumerable<DynamicObject>)acme["Employees"]!);
 
-            Assert.Empty((IEnumerable<DynamicObject>)hooli["Employees"]);
+            Assert.Empty((IEnumerable<DynamicObject>)hooli["Employees"]!);
 
             acme["Employees"] = Array.Empty<dynamic>();
 
-            Assert.Empty((IEnumerable<DynamicObject>)jane["OrganizationWhereEmployee"]);
-            Assert.Empty((IEnumerable<DynamicObject>)john["OrganizationWhereEmployee"]);
-            Assert.Empty((IEnumerable<DynamicObject>)jenny["OrganizationWhereEmployee"]);
+            Assert.Empty((IEnumerable<DynamicObject>)jane["OrganizationWhereEmployee"]!);
+            Assert.Empty((IEnumerable<DynamicObject>)john["OrganizationWhereEmployee"]!);
+            Assert.Empty((IEnumerable<DynamicObject>)jenny["OrganizationWhereEmployee"]!);
 
-            Assert.Empty((IEnumerable<DynamicObject>)acme["Employees"]);
-            Assert.Empty((IEnumerable<DynamicObject>)hooli["Employees"]);
+            Assert.Empty((IEnumerable<DynamicObject>)acme["Employees"]!);
+            Assert.Empty((IEnumerable<DynamicObject>)hooli["Employees"]!);
         }
 
         [Fact]
@@ -147,46 +149,46 @@ namespace Allors.Dynamic.Tests.Domain
 
             acme.Remove(employees, jenny);
 
-            Assert.Single((IEnumerable<DynamicObject>)jane["OrganizationWhereEmployee"]);
-            Assert.Contains(acme, (IEnumerable<DynamicObject>)jane["OrganizationWhereEmployee"]);
+            Assert.Single((IEnumerable<DynamicObject>)jane["OrganizationWhereEmployee"]!);
+            Assert.Contains(acme, (IEnumerable<DynamicObject>)jane["OrganizationWhereEmployee"]!);
 
-            Assert.Single((IEnumerable<DynamicObject>)john["OrganizationWhereEmployee"]);
-            Assert.Contains(acme, (IEnumerable<DynamicObject>)john["OrganizationWhereEmployee"]);
+            Assert.Single((IEnumerable<DynamicObject>)john["OrganizationWhereEmployee"]!);
+            Assert.Contains(acme, (IEnumerable<DynamicObject>)john["OrganizationWhereEmployee"]!);
 
-            Assert.Empty((IEnumerable<DynamicObject>)jenny["OrganizationWhereEmployee"]);
+            Assert.Empty((IEnumerable<DynamicObject>)jenny["OrganizationWhereEmployee"]!);
 
-            Assert.Equal(2, (((IEnumerable<DynamicObject>)acme["Employees"]).Count()));
-            Assert.Contains(jane, (IEnumerable<DynamicObject>)acme["Employees"]);
-            Assert.Contains(john, (IEnumerable<DynamicObject>)acme["Employees"]);
+            Assert.Equal(2, (((IEnumerable<DynamicObject>)acme["Employees"]!).Count()));
+            Assert.Contains(jane, (IEnumerable<DynamicObject>)acme["Employees"]!);
+            Assert.Contains(john, (IEnumerable<DynamicObject>)acme["Employees"]!);
 
-            Assert.Empty((IEnumerable<DynamicObject>)hooli["Employees"]);
+            Assert.Empty((IEnumerable<DynamicObject>)hooli["Employees"]!);
 
             acme.Remove(employees, john);
 
-            Assert.Single((IEnumerable<DynamicObject>)jane["OrganizationWhereEmployee"]);
-            Assert.Contains(acme, (IEnumerable<DynamicObject>)jane["OrganizationWhereEmployee"]);
+            Assert.Single((IEnumerable<DynamicObject>)jane["OrganizationWhereEmployee"]!);
+            Assert.Contains(acme, (IEnumerable<DynamicObject>)jane["OrganizationWhereEmployee"]!);
 
-            Assert.Empty((IEnumerable<DynamicObject>)john["OrganizationWhereEmployee"]);
+            Assert.Empty((IEnumerable<DynamicObject>)john["OrganizationWhereEmployee"]!);
 
-            Assert.Empty((IEnumerable<DynamicObject>)jenny["OrganizationWhereEmployee"]);
+            Assert.Empty((IEnumerable<DynamicObject>)jenny["OrganizationWhereEmployee"]!);
 
-            Assert.Equal(1, (((IEnumerable<DynamicObject>)acme["Employees"]).Count()));
-            Assert.Contains(jane, (IEnumerable<DynamicObject>)acme["Employees"]);
+            Assert.Single((IEnumerable<DynamicObject>)acme["Employees"]!);
+            Assert.Contains(jane, (IEnumerable<DynamicObject>)acme["Employees"]!);
 
-            Assert.Empty((IEnumerable<DynamicObject>)hooli["Employees"]);
+            Assert.Empty((IEnumerable<DynamicObject>)hooli["Employees"]!);
 
             acme.Remove(employees, jane);
 
-            Assert.Empty((IEnumerable<DynamicObject>)jane["OrganizationWhereEmployee"]);
-            Assert.Empty((IEnumerable<DynamicObject>)john["OrganizationWhereEmployee"]);
-            Assert.Empty((IEnumerable<DynamicObject>)jenny["OrganizationWhereEmployee"]);
+            Assert.Empty((IEnumerable<DynamicObject>)jane["OrganizationWhereEmployee"]!);
+            Assert.Empty((IEnumerable<DynamicObject>)john["OrganizationWhereEmployee"]!);
+            Assert.Empty((IEnumerable<DynamicObject>)jenny["OrganizationWhereEmployee"]!);
 
-            Assert.Empty((IEnumerable<DynamicObject>)acme["Employees"]);
-            Assert.Empty((IEnumerable<DynamicObject>)hooli["Employees"]);
+            Assert.Empty((IEnumerable<DynamicObject>)acme["Employees"]!);
+            Assert.Empty((IEnumerable<DynamicObject>)hooli["Employees"]!);
         }
 
         [Fact]
-        public void MultipeleActiveLinks()
+        public void MultipleActiveLinks()
         {
             var meta = new DynamicMeta();
             var organization = meta.AddClass("Organization");
@@ -209,69 +211,69 @@ namespace Allors.Dynamic.Tests.Domain
 
             hooli.Add(employees, jane);
 
-            Assert.Equal(2, (((IEnumerable<DynamicObject>)jane["OrganizationWhereEmployee"]).Count()));
-            Assert.Contains(acme, (IEnumerable<DynamicObject>)jane["OrganizationWhereEmployee"]);
-            Assert.Contains(hooli, (IEnumerable<DynamicObject>)jane["OrganizationWhereEmployee"]);
+            Assert.Equal(2, (((IEnumerable<DynamicObject>)jane["OrganizationWhereEmployee"]!).Count()));
+            Assert.Contains(acme, (IEnumerable<DynamicObject>)jane["OrganizationWhereEmployee"]!);
+            Assert.Contains(hooli, (IEnumerable<DynamicObject>)jane["OrganizationWhereEmployee"]!);
 
-            Assert.Single((IEnumerable<DynamicObject>)john["OrganizationWhereEmployee"]);
-            Assert.Contains(acme, (IEnumerable<DynamicObject>)john["OrganizationWhereEmployee"]);
+            Assert.Single((IEnumerable<DynamicObject>)john["OrganizationWhereEmployee"]!);
+            Assert.Contains(acme, (IEnumerable<DynamicObject>)john["OrganizationWhereEmployee"]!);
 
-            Assert.Single((IEnumerable<DynamicObject>)jenny["OrganizationWhereEmployee"]);
-            Assert.Contains(acme, (IEnumerable<DynamicObject>)jenny["OrganizationWhereEmployee"]);
+            Assert.Single((IEnumerable<DynamicObject>)jenny["OrganizationWhereEmployee"]!);
+            Assert.Contains(acme, (IEnumerable<DynamicObject>)jenny["OrganizationWhereEmployee"]!);
 
-            Assert.Equal(3, ((IEnumerable<DynamicObject>)acme["Employees"]).Count());
-            Assert.Contains(jane, (IEnumerable<DynamicObject>)acme["Employees"]);
-            Assert.Contains(john, (IEnumerable<DynamicObject>)acme["Employees"]);
-            Assert.Contains(jenny, (IEnumerable<DynamicObject>)acme["Employees"]);
+            Assert.Equal(3, ((IEnumerable<DynamicObject>)acme["Employees"]!).Count());
+            Assert.Contains(jane, (IEnumerable<DynamicObject>)acme["Employees"]!);
+            Assert.Contains(john, (IEnumerable<DynamicObject>)acme["Employees"]!);
+            Assert.Contains(jenny, (IEnumerable<DynamicObject>)acme["Employees"]!);
 
-            Assert.Single((IEnumerable<DynamicObject>)hooli["Employees"]);
-            Assert.Contains(jane, (IEnumerable<DynamicObject>)hooli["Employees"]);
+            Assert.Single((IEnumerable<DynamicObject>)hooli["Employees"]!);
+            Assert.Contains(jane, (IEnumerable<DynamicObject>)hooli["Employees"]!);
 
             hooli.Add(employees, john);
 
-            Assert.Equal(2, ((IEnumerable<DynamicObject>)jane["OrganizationWhereEmployee"]).Count());
-            Assert.Contains(acme, (IEnumerable<DynamicObject>)jane["OrganizationWhereEmployee"]);
-            Assert.Contains(hooli, (IEnumerable<DynamicObject>)jane["OrganizationWhereEmployee"]);
+            Assert.Equal(2, ((IEnumerable<DynamicObject>)jane["OrganizationWhereEmployee"]!).Count());
+            Assert.Contains(acme, (IEnumerable<DynamicObject>)jane["OrganizationWhereEmployee"]!);
+            Assert.Contains(hooli, (IEnumerable<DynamicObject>)jane["OrganizationWhereEmployee"]!);
 
-            Assert.Equal(2, ((IEnumerable<DynamicObject>)john["OrganizationWhereEmployee"]).Count());
-            Assert.Contains(acme, (IEnumerable<DynamicObject>)john["OrganizationWhereEmployee"]);
-            Assert.Contains(hooli, (IEnumerable<DynamicObject>)john["OrganizationWhereEmployee"]);
+            Assert.Equal(2, ((IEnumerable<DynamicObject>)john["OrganizationWhereEmployee"]!).Count());
+            Assert.Contains(acme, (IEnumerable<DynamicObject>)john["OrganizationWhereEmployee"]!);
+            Assert.Contains(hooli, (IEnumerable<DynamicObject>)john["OrganizationWhereEmployee"]!);
 
-            Assert.Single((IEnumerable<DynamicObject>)jenny["OrganizationWhereEmployee"]);
-            Assert.Contains(acme, (IEnumerable<DynamicObject>)jenny["OrganizationWhereEmployee"]);
+            Assert.Single((IEnumerable<DynamicObject>)jenny["OrganizationWhereEmployee"]!);
+            Assert.Contains(acme, (IEnumerable<DynamicObject>)jenny["OrganizationWhereEmployee"]!);
 
-            Assert.Equal(3, ((IEnumerable<DynamicObject>)acme["Employees"]).Count());
-            Assert.Contains(jane, (IEnumerable<DynamicObject>)acme["Employees"]);
-            Assert.Contains(john, (IEnumerable<DynamicObject>)acme["Employees"]);
-            Assert.Contains(jenny, (IEnumerable<DynamicObject>)acme["Employees"]);
+            Assert.Equal(3, ((IEnumerable<DynamicObject>)acme["Employees"]!).Count());
+            Assert.Contains(jane, (IEnumerable<DynamicObject>)acme["Employees"]!);
+            Assert.Contains(john, (IEnumerable<DynamicObject>)acme["Employees"]!);
+            Assert.Contains(jenny, (IEnumerable<DynamicObject>)acme["Employees"]!);
 
-            Assert.Equal(2, ((IEnumerable<DynamicObject>)hooli["Employees"]).Count());
-            Assert.Contains(jane, (IEnumerable<DynamicObject>)hooli["Employees"]);
-            Assert.Contains(john, (IEnumerable<DynamicObject>)hooli["Employees"]);
+            Assert.Equal(2, ((IEnumerable<DynamicObject>)hooli["Employees"]!).Count());
+            Assert.Contains(jane, (IEnumerable<DynamicObject>)hooli["Employees"]!);
+            Assert.Contains(john, (IEnumerable<DynamicObject>)hooli["Employees"]!);
 
             hooli.Add(employees, jenny);
 
-            Assert.Equal(2, ((IEnumerable<DynamicObject>)jane["OrganizationWhereEmployee"]).Count());
-            Assert.Contains(acme, (IEnumerable<DynamicObject>)jane["OrganizationWhereEmployee"]);
-            Assert.Contains(hooli, (IEnumerable<DynamicObject>)jane["OrganizationWhereEmployee"]);
+            Assert.Equal(2, ((IEnumerable<DynamicObject>)jane["OrganizationWhereEmployee"]!).Count());
+            Assert.Contains(acme, (IEnumerable<DynamicObject>)jane["OrganizationWhereEmployee"]!);
+            Assert.Contains(hooli, (IEnumerable<DynamicObject>)jane["OrganizationWhereEmployee"]!);
 
-            Assert.Equal(2, ((IEnumerable<DynamicObject>)john["OrganizationWhereEmployee"]).Count());
-            Assert.Contains(acme, (IEnumerable<DynamicObject>)john["OrganizationWhereEmployee"]);
-            Assert.Contains(hooli, (IEnumerable<DynamicObject>)john["OrganizationWhereEmployee"]);
+            Assert.Equal(2, ((IEnumerable<DynamicObject>)john["OrganizationWhereEmployee"]!).Count());
+            Assert.Contains(acme, (IEnumerable<DynamicObject>)john["OrganizationWhereEmployee"]!);
+            Assert.Contains(hooli, (IEnumerable<DynamicObject>)john["OrganizationWhereEmployee"]!);
 
-            Assert.Equal(2, ((IEnumerable<DynamicObject>)jenny["OrganizationWhereEmployee"]).Count());
-            Assert.Contains(acme, (IEnumerable<DynamicObject>)jenny["OrganizationWhereEmployee"]);
-            Assert.Contains(hooli, (IEnumerable<DynamicObject>)jenny["OrganizationWhereEmployee"]);
+            Assert.Equal(2, ((IEnumerable<DynamicObject>)jenny["OrganizationWhereEmployee"]!).Count());
+            Assert.Contains(acme, (IEnumerable<DynamicObject>)jenny["OrganizationWhereEmployee"]!);
+            Assert.Contains(hooli, (IEnumerable<DynamicObject>)jenny["OrganizationWhereEmployee"]!);
 
-            Assert.Equal(3, ((IEnumerable<DynamicObject>)acme["Employees"]).Count());
-            Assert.Contains(jane, (IEnumerable<DynamicObject>)acme["Employees"]);
-            Assert.Contains(john, (IEnumerable<DynamicObject>)acme["Employees"]);
-            Assert.Contains(jenny, (IEnumerable<DynamicObject>)acme["Employees"]);
+            Assert.Equal(3, ((IEnumerable<DynamicObject>)acme["Employees"]!).Count());
+            Assert.Contains(jane, (IEnumerable<DynamicObject>)acme["Employees"]!);
+            Assert.Contains(john, (IEnumerable<DynamicObject>)acme["Employees"]!);
+            Assert.Contains(jenny, (IEnumerable<DynamicObject>)acme["Employees"]!);
 
-            Assert.Equal(3, ((IEnumerable<DynamicObject>)hooli["Employees"]).Count());
-            Assert.Contains(jane, (IEnumerable<DynamicObject>)hooli["Employees"]);
-            Assert.Contains(john, (IEnumerable<DynamicObject>)hooli["Employees"]);
-            Assert.Contains(jenny, (IEnumerable<DynamicObject>)hooli["Employees"]);
+            Assert.Equal(3, ((IEnumerable<DynamicObject>)hooli["Employees"]!).Count());
+            Assert.Contains(jane, (IEnumerable<DynamicObject>)hooli["Employees"]!);
+            Assert.Contains(john, (IEnumerable<DynamicObject>)hooli["Employees"]!);
+            Assert.Contains(jenny, (IEnumerable<DynamicObject>)hooli["Employees"]!);
         }
     }
 }

@@ -29,9 +29,9 @@ namespace Allors.Dynamic.Tests.Domain
             acme.Add(employees, john);
             acme.Add(employees, jenny);
 
-            Assert.Contains(jane, (IEnumerable<DynamicObject>)acme["Employees"]);
-            Assert.Contains(john, (IEnumerable<DynamicObject>)acme["Employees"]);
-            Assert.Contains(jenny, (IEnumerable<DynamicObject>)acme["Employees"]);
+            Assert.Contains(jane, (IEnumerable<DynamicObject>)acme["Employees"]!);
+            Assert.Contains(john, (IEnumerable<DynamicObject>)acme["Employees"]!);
+            Assert.Contains(jenny, (IEnumerable<DynamicObject>)acme["Employees"]!);
 
             Assert.Equal(acme, jane["OrganizationWhereEmployee"]);
             Assert.Equal(acme, john["OrganizationWhereEmployee"]);
@@ -71,11 +71,11 @@ namespace Allors.Dynamic.Tests.Domain
 
             var x = people.Where(v => "Jane".Equals(v["FirstName"]));
 
-            Assert.Contains(jane, (IEnumerable<DynamicObject>)hooli["Employees"]);
+            Assert.Contains(jane, (IEnumerable<DynamicObject>)hooli["Employees"]!);
 
-            Assert.DoesNotContain(jane, (IEnumerable<DynamicObject>)acme["Employees"]);
-            Assert.Contains(john, (IEnumerable<DynamicObject>)acme["Employees"]);
-            Assert.Contains(jenny, (IEnumerable<DynamicObject>)acme["Employees"]);
+            Assert.DoesNotContain(jane, (IEnumerable<DynamicObject>)acme["Employees"]!);
+            Assert.Contains(john, (IEnumerable<DynamicObject>)acme["Employees"]!);
+            Assert.Contains(jenny, (IEnumerable<DynamicObject>)acme["Employees"]!);
 
             Assert.Equal(hooli, jane["OrganizationWhereEmployee"]);
 
@@ -105,9 +105,9 @@ namespace Allors.Dynamic.Tests.Domain
 
             acme.Remove(employees, jane);
 
-            Assert.DoesNotContain(jane, (IEnumerable<DynamicObject>)acme["Employees"]);
-            Assert.Contains(john, (IEnumerable<DynamicObject>)acme["Employees"]);
-            Assert.Contains(jenny, (IEnumerable<DynamicObject>)acme["Employees"]);
+            Assert.DoesNotContain(jane, (IEnumerable<DynamicObject>)acme["Employees"]!);
+            Assert.Contains(john, (IEnumerable<DynamicObject>)acme["Employees"]!);
+            Assert.Contains(jenny, (IEnumerable<DynamicObject>)acme["Employees"]!);
 
             Assert.NotEqual(acme, jane["OrganizationWhereEmployee"]);
             Assert.Equal(acme, john["OrganizationWhereEmployee"]);
@@ -115,9 +115,9 @@ namespace Allors.Dynamic.Tests.Domain
 
             acme.Remove(employees, john);
 
-            Assert.DoesNotContain(jane, (IEnumerable<DynamicObject>)acme["Employees"]);
-            Assert.DoesNotContain(john, (IEnumerable<DynamicObject>)acme["Employees"]);
-            Assert.Contains(jenny, (IEnumerable<DynamicObject>)acme["Employees"]);
+            Assert.DoesNotContain(jane, (IEnumerable<DynamicObject>)acme["Employees"]!);
+            Assert.DoesNotContain(john, (IEnumerable<DynamicObject>)acme["Employees"]!);
+            Assert.Contains(jenny, (IEnumerable<DynamicObject>)acme["Employees"]!);
 
             Assert.NotEqual(acme, jane["OrganizationWhereEmployee"]);
             Assert.NotEqual(acme, john["OrganizationWhereEmployee"]);
@@ -125,9 +125,9 @@ namespace Allors.Dynamic.Tests.Domain
 
             acme.Remove(employees, jenny);
 
-            Assert.DoesNotContain(jane, (IEnumerable<DynamicObject>)acme["Employees"]);
-            Assert.DoesNotContain(john, (IEnumerable<DynamicObject>)acme["Employees"]);
-            Assert.DoesNotContain(jenny, (IEnumerable<DynamicObject>)acme["Employees"]);
+            Assert.DoesNotContain(jane, (IEnumerable<DynamicObject>)acme["Employees"]!);
+            Assert.DoesNotContain(john, (IEnumerable<DynamicObject>)acme["Employees"]!);
+            Assert.DoesNotContain(jenny, (IEnumerable<DynamicObject>)acme["Employees"]!);
 
             Assert.NotEqual(acme, jane["OrganizationWhereEmployee"]);
             Assert.NotEqual(acme, john["OrganizationWhereEmployee"]);

@@ -2,7 +2,7 @@
 {
     using System;
     using System.Collections.Generic;
-    using Allors.Dynamic.Domain.Indexing;
+    using System.Collections.Immutable;
     using Allors.Dynamic.Meta;
 
     public sealed class DynamicObject
@@ -38,12 +38,13 @@
                     {
                         IDynamicOneToAssociationType oneToAssociationType => (DynamicObject?)this.Population.GetAssociation(this, oneToAssociationType),
                         IDynamicManyToAssociationType oneToAssociationType => (IEnumerable<DynamicObject>?)this.Population.GetAssociation(this, oneToAssociationType) ?? [],
-                        _ => throw new InvalidOperationException()
+                        _ => throw new InvalidOperationException(),
                     };
                 }
 
                 throw new ArgumentException("Unknown role or association", nameof(name));
             }
+
             set
             {
                 if (this.ObjectType.RoleTypeByName.TryGetValue(name, out var roleType))
@@ -122,15 +123,15 @@
             set => this.Population.SetToOneRole(this, roleType, value);
         }
 
-        public IEnumerable<DynamicObject> this[DynamicOneToManyRoleType roleType]
+        public IReadOnlySet<DynamicObject> this[DynamicOneToManyRoleType roleType]
         {
-            get => (IEnumerable<DynamicObject>?)this.Population.GetRole(this, roleType) ?? [];
+            get => (IReadOnlySet<DynamicObject>?)this.Population.GetRole(this, roleType) ?? ImmutableHashSet<DynamicObject>.Empty;
             set => this.Population.SetToManyRole(this, roleType, value);
         }
 
-        public IEnumerable<DynamicObject> this[DynamicManyToManyRoleType roleType]
+        public IReadOnlySet<DynamicObject> this[DynamicManyToManyRoleType roleType]
         {
-            get => (IEnumerable<DynamicObject>?)this.Population.GetRole(this, roleType) ?? [];
+            get => (IReadOnlySet<DynamicObject>?)this.Population.GetRole(this, roleType) ?? ImmutableHashSet<DynamicObject>.Empty;
             set => this.Population.SetToManyRole(this, roleType, value);
         }
 
@@ -145,9 +146,9 @@
 
         public DynamicObject? this[DynamicOneToManyAssociationType associationType] => (DynamicObject?)this.Population.GetAssociation(this, associationType);
 
-        public IEnumerable<DynamicObject> this[DynamicManyToOneAssociationType associationType] => (IEnumerable<DynamicObject>?)this.Population.GetAssociation(this, associationType) ?? [];
+        public IReadOnlySet<DynamicObject> this[DynamicManyToOneAssociationType associationType] => (IReadOnlySet<DynamicObject>?)this.Population.GetAssociation(this, associationType) ?? ImmutableHashSet<DynamicObject>.Empty;
 
-        public IEnumerable<DynamicObject> this[DynamicManyToManyAssociationType associationType] => (IEnumerable<DynamicObject>?)this.Population.GetAssociation(this, associationType) ?? [];
+        public IReadOnlySet<DynamicObject> this[DynamicManyToManyAssociationType associationType] => (IReadOnlySet<DynamicObject>?)this.Population.GetAssociation(this, associationType) ?? ImmutableHashSet<DynamicObject>.Empty;
 
         public void Add(IDynamicToManyRoleType roleType, DynamicObject role) => this.Population.AddRole(this, roleType, role);
 

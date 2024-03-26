@@ -38,17 +38,17 @@ namespace Allors.Dynamic.Tests.Domain
             Assert.Contains(john, lastNameDoe);
             Assert.Contains(jenny, lastNameDoe);
 
-            var lessThanFourLetterFirstNames = population.Objects.Where(v => ((string)v["FirstName"]).Length < 4).ToArray();
+            var lessThanFourLetterFirstNames = population.Objects.Where(v => ((string)v["FirstName"]!).Length < 4).ToArray();
 
             Assert.Empty(lessThanFourLetterFirstNames);
 
-            var fourLetterFirstNames = population.Objects.Where(v => ((string)v["FirstName"]).Length == 4).ToArray();
+            var fourLetterFirstNames = population.Objects.Where(v => ((string)v["FirstName"]!).Length == 4).ToArray();
 
             Assert.Equal(2, fourLetterFirstNames.Length);
             Assert.Contains(jane, fourLetterFirstNames);
             Assert.Contains(john, fourLetterFirstNames);
 
-            var fiveLetterFirstNames = population.Objects.Where(v => ((string)v["FirstName"]).Length == 5).ToArray();
+            var fiveLetterFirstNames = population.Objects.Where(v => ((string)v["FirstName"]!).Length == 5).ToArray();
             Assert.Single(fiveLetterFirstNames);
             Assert.Contains(jenny, fiveLetterFirstNames);
         }

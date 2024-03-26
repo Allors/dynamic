@@ -24,7 +24,7 @@ namespace Allors.Dynamic.Tests.Domain
                 v["Owner"] = population.Create(person, w => w["Name"] = "Jane");
             });
 
-            var jane = (DynamicObject)acme["Owner"];
+            var jane = (DynamicObject)acme["Owner"]!;
 
             Assert.Equal("Acme", acme["Name"]);
             Assert.Equal("Jane", jane["Name"]);
