@@ -1,11 +1,11 @@
-﻿using System;
-using System.Linq;
-using Allors.Dynamic.Domain;
-using Allors.Dynamic.Meta;
-using Xunit;
-
-namespace Allors.Dynamic.Tests.Domain
+﻿namespace Allors.Dynamic.Tests.Domain
 {
+    using System;
+    using System.Linq;
+    using Allors.Dynamic.Domain;
+    using Allors.Dynamic.Meta;
+    using Xunit;
+
     public class DerivationTests
     {
         [Fact]
@@ -18,12 +18,12 @@ namespace Allors.Dynamic.Tests.Domain
             meta.AddUnit<string>(person, "FullName");
             meta.AddUnit<DateTime>(person, "DerivedAt");
 
-            var population = new DynamicPopulation(meta)
+            var population = new DynamicPopulation
             {
                 DerivationById =
                 {
                     ["FullName"] = new FullNameDerivation(firstName, lastName)
-                }
+                },
             };
 
             var john = population.Create(person);

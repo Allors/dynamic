@@ -1,8 +1,7 @@
-﻿using Allors.Dynamic.Domain;
-
-namespace Allors.Dynamic.Tests.Domain
+﻿namespace Allors.Dynamic.Tests.Domain
 {
     using System;
+    using Allors.Dynamic.Domain;
     using Allors.Dynamic.Meta;
     using Xunit;
 
@@ -18,7 +17,7 @@ namespace Allors.Dynamic.Tests.Domain
             meta.AddOneToOne(organization, person, "Owner");
             meta.AddOneToOne(organization, named, "Named");
 
-            var population = new DynamicPopulation(meta);
+            var population = new DynamicPopulation();
 
             var acme = population.Create(organization);
             var gizmo = population.Create(organization);
@@ -51,7 +50,7 @@ namespace Allors.Dynamic.Tests.Domain
             var person = meta.AddClass("Person");
             var (owner, property) = meta.AddOneToOne(organization, person, "Owner");
 
-            var population = new DynamicPopulation(meta);
+            var population = new DynamicPopulation();
 
             var acme = population.Create(organization);
             var gizmo = population.Create(organization);
@@ -88,7 +87,7 @@ namespace Allors.Dynamic.Tests.Domain
             var person = meta.AddClass("Person");
             var (owner, property) = meta.AddOneToOne(organization, person, "Owner");
 
-            var population = new DynamicPopulation(meta);
+            var population = new DynamicPopulation();
 
             var acme = population.Create(organization);
             var gizmo = population.Create(organization);
@@ -127,7 +126,7 @@ namespace Allors.Dynamic.Tests.Domain
             var person = meta.AddClass("Person");
             var (owner, property) = meta.AddOneToOne(organization, person, "Owner");
 
-            var population = new DynamicPopulation(meta);
+            var population = new DynamicPopulation();
 
             var acme = population.Create(organization);
             var gizmo = population.Create(organization);

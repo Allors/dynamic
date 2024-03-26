@@ -18,8 +18,6 @@
 
         public bool IsMany { get; }
 
-        public bool IsUnit { get; }
-
         void IDynamicRoleType.Deconstruct(out IDynamicRoleType roleType, out IDynamicAssociationType associationType)
         {
             associationType = this.AssociationType;
@@ -32,7 +30,7 @@
             roleType = this;
         }
 
-        internal DynamicOneToOneRoleType(DynamicObjectType objectType, string singularName, string pluralName, string name, bool isOne, bool isMany, bool isUnit)
+        internal DynamicOneToOneRoleType(DynamicObjectType objectType, string singularName, string pluralName, string name, bool isOne, bool isMany)
         {
             this.ObjectType = objectType;
             this.SingularName = singularName;
@@ -40,7 +38,6 @@
             this.Name = name;
             this.IsOne = isOne;
             this.IsMany = isMany;
-            this.IsUnit = isUnit;
         }
 
         public override string ToString()

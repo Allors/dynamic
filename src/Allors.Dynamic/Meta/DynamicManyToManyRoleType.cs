@@ -1,11 +1,11 @@
 ﻿
 namespace Allors.Dynamic.Meta
 {
-    public sealed class DynamicUnitRoleType : IDynamicRoleType
+    public sealed class DynamicManyToManyRoleType : IDynamicToManyRoleType
     {
         IDynamicAssociationType IDynamicRoleType.AssociationType => this.AssociationType;
 
-        public DynamicUnitAssociationType AssociationType { get; internal set; } = null!;
+        public DynamicManyToManyAssociationType AssociationType { get; internal set; } = null!;
 
         public DynamicObjectType ObjectType { get; }
 
@@ -19,21 +19,19 @@ namespace Allors.Dynamic.Meta
 
         public bool IsMany { get; }
 
-        public bool IsUnit { get; }
-
         void IDynamicRoleType.Deconstruct(out IDynamicRoleType roleType, out IDynamicAssociationType associationType)
         {
             associationType = this.AssociationType;
             roleType = this;
         }
 
-        public void Deconstruct(out DynamicUnitRoleType roleType, out DynamicUnitAssociationType associationType)
+        public void Deconstruct(out DynamicManyToManyRoleType roleType, out DynamicManyToManyAssociationType associationType)
         {
             associationType = this.AssociationType;
             roleType = this;
         }
 
-        internal DynamicUnitRoleType(DynamicObjectType objectType, string singularName, string pluralName, string name, bool isOne, bool isMany, bool isUnit)
+        internal DynamicManyToManyRoleType(DynamicObjectType objectType, string singularName, string pluralName, string name, bool isOne, bool isMany)
         {
             this.ObjectType = objectType;
             this.SingularName = singularName;
@@ -41,7 +39,6 @@ namespace Allors.Dynamic.Meta
             this.Name = name;
             this.IsOne = isOne;
             this.IsMany = isMany;
-            this.IsUnit = isUnit;
         }
 
         public override string ToString()

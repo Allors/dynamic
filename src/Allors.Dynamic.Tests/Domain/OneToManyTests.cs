@@ -1,12 +1,13 @@
-﻿using Allors.Dynamic.Domain;
-using DynamicObject = Allors.Dynamic.Domain.DynamicObject;
-
-namespace Allors.Dynamic.Tests.Domain
+﻿namespace Allors.Dynamic.Tests.Domain
 {
+    using System;
     using System.Collections.Generic;
+    using System.Collections.Immutable;
     using System.Linq;
+    using Allors.Dynamic.Domain;
     using Allors.Dynamic.Meta;
     using Xunit;
+    using DynamicObject = Allors.Dynamic.Domain.DynamicObject;
 
     public class OneToManyTests
     {
@@ -18,7 +19,7 @@ namespace Allors.Dynamic.Tests.Domain
             var person = meta.AddClass("Person");
             var (employees, organizationWhereEmployee) = meta.AddOneToMany(organization, person, "Employee");
 
-            var population = new DynamicPopulation(meta);
+            var population = new DynamicPopulation();
 
             var acme = population.Create(organization);
             var jane = population.Create(person);
@@ -48,7 +49,7 @@ namespace Allors.Dynamic.Tests.Domain
             meta.AddUnit<string>(named, "Name");
             var (employees, organizationWhereEmployee) = meta.AddOneToMany(organization, person, "Employee");
 
-            var population = new DynamicPopulation(meta);
+            var population = new DynamicPopulation();
 
             var acme = population.Create(organization);
 
@@ -92,7 +93,7 @@ namespace Allors.Dynamic.Tests.Domain
             var person = meta.AddClass("Person");
             var (employees, organizationWhereEmployee) = meta.AddOneToMany(organization, person, "Employee");
 
-            var population = new DynamicPopulation(meta);
+            var population = new DynamicPopulation();
 
             var acme = population.Create(organization);
             var jane = population.Create(person);
@@ -124,6 +125,65 @@ namespace Allors.Dynamic.Tests.Domain
             Assert.Equal(acme, jenny["OrganizationWhereEmployee"]);
 
             acme.Remove(employees, jenny);
+
+            Assert.DoesNotContain(jane, (IEnumerable<DynamicObject>)acme["Employees"]!);
+            Assert.DoesNotContain(john, (IEnumerable<DynamicObject>)acme["Employees"]!);
+            Assert.DoesNotContain(jenny, (IEnumerable<DynamicObject>)acme["Employees"]!);
+
+            Assert.NotEqual(acme, jane["OrganizationWhereEmployee"]);
+            Assert.NotEqual(acme, john["OrganizationWhereEmployee"]);
+            Assert.NotEqual(acme, jenny["OrganizationWhereEmployee"]);
+        }
+
+        [Fact]
+        public void RemoveAll()
+        {
+            var meta = new DynamicMeta();
+            var organization = meta.AddClass("Organization");
+            var person = meta.AddClass("Person");
+            var (employees, organizationWhereEmployee) = meta.AddOneToMany(organization, person, "Employee");
+
+            var population = new DynamicPopulation();
+
+            var acme = population.Create(organization);
+            var jane = population.Create(person);
+            var john = population.Create(person);
+            var jenny = population.Create(person);
+
+            acme.Add(employees, jane);
+            acme.Add(employees, john);
+            acme.Add(employees, jenny);
+
+            acme["Employees"] = null;
+
+            Assert.DoesNotContain(jane, (IEnumerable<DynamicObject>)acme["Employees"]!);
+            Assert.DoesNotContain(john, (IEnumerable<DynamicObject>)acme["Employees"]!);
+            Assert.DoesNotContain(jenny, (IEnumerable<DynamicObject>)acme["Employees"]!);
+
+            Assert.NotEqual(acme, jane["OrganizationWhereEmployee"]);
+            Assert.NotEqual(acme, john["OrganizationWhereEmployee"]);
+            Assert.NotEqual(acme, jenny["OrganizationWhereEmployee"]);
+
+            acme.Add(employees, jane);
+            acme.Add(employees, john);
+            acme.Add(employees, jenny);
+
+            acme["Employees"] = Array.Empty<DynamicObject>();
+
+            Assert.DoesNotContain(jane, (IEnumerable<DynamicObject>)acme["Employees"]!);
+            Assert.DoesNotContain(john, (IEnumerable<DynamicObject>)acme["Employees"]!);
+            Assert.DoesNotContain(jenny, (IEnumerable<DynamicObject>)acme["Employees"]!);
+
+            Assert.NotEqual(acme, jane["OrganizationWhereEmployee"]);
+            Assert.NotEqual(acme, john["OrganizationWhereEmployee"]);
+            Assert.NotEqual(acme, jenny["OrganizationWhereEmployee"]);
+
+
+            acme.Add(employees, jane);
+            acme.Add(employees, john);
+            acme.Add(employees, jenny);
+
+            acme["Employees"] = ImmutableHashSet<DynamicObject>.Empty;
 
             Assert.DoesNotContain(jane, (IEnumerable<DynamicObject>)acme["Employees"]!);
             Assert.DoesNotContain(john, (IEnumerable<DynamicObject>)acme["Employees"]!);

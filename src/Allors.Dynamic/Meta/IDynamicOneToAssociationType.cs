@@ -1,6 +1,4 @@
 ﻿namespace Allors.Dynamic.Meta
 {
-    public interface IDynamicOneToAssociationType : IDynamicCompositeAssociationType
-    {
-    }
+    public interface IDynamicOneToAssociationType : IDynamicCompositeAssociationType;
 }

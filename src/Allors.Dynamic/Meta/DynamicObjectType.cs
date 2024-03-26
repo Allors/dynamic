@@ -20,14 +20,15 @@
             this.Kind = kind;
             this.Name = name;
 
-            this.supertypes = [..supertypes];
+            this.supertypes = [.. supertypes];
             this.assignedAssociationTypeByName = [];
             this.assignedRoleTypeByName = [];
 
             this.Meta.ResetDerivations();
         }
 
-        internal DynamicObjectType(DynamicMeta meta, Type type) : this(meta, DynamicObjectTypeKind.Unit, type.Name, [])
+        internal DynamicObjectType(DynamicMeta meta, Type type)
+            : this(meta, DynamicObjectTypeKind.Unit, type.Name, [])
         {
             this.Type = type;
             this.TypeCode = Type.GetTypeCode(type);
@@ -118,8 +119,7 @@
                 rolePluralName,
                 roleSingularName,
                 true,
-                false,
-                true
+                false
             );
 
             string associationPluralName;
@@ -138,9 +138,7 @@
                 roleType,
                 associationSingularName,
                 associationPluralName,
-                associationSingularName,
-                true,
-                false
+                associationSingularName
             );
 
             this.AddRoleType(roleType);
@@ -163,7 +161,6 @@
                 rolePluralName,
                 roleSingularName,
                 true,
-                false,
                 false
             );
 
@@ -208,7 +205,6 @@
                 rolePluralName,
                 roleSingularName,
                 true,
-                false,
                 false
             );
 
@@ -254,8 +250,7 @@
                 rolePluralName,
                 rolePluralName,
                 false,
-                true,
-                false
+                true
             );
 
             string associationPluralName;
@@ -298,10 +293,9 @@
                 rolePluralName,
                 rolePluralName,
                 false,
-                true,
-                false
+                true
             );
-            
+
             string associationPluralName;
             if (associationSingularName != null)
             {

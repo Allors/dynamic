@@ -1,10 +1,9 @@
-﻿using Allors.Dynamic.Domain;
-
-namespace Allors.Dynamic.Tests.Domain
+﻿namespace Allors.Dynamic.Tests.Domain
 {
+    using System.Linq;
+    using Allors.Dynamic.Domain;
     using Allors.Dynamic.Meta;
     using Xunit;
-    using System.Linq;
 
     public class ObjectsTests
     {
@@ -16,7 +15,7 @@ namespace Allors.Dynamic.Tests.Domain
             meta.AddUnit<string>(person, "FirstName");
             meta.AddUnit<string>(person, "LastName");
 
-            var population = new DynamicPopulation(meta);
+            var population = new DynamicPopulation();
 
             dynamic NewPerson(string firstName, string lastName)
             {

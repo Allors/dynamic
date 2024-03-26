@@ -1,9 +1,9 @@
-﻿using Allors.Dynamic.Domain;
-using Allors.Dynamic.Meta;
-using Xunit;
-
-namespace Allors.Dynamic.Tests.Domain
+﻿namespace Allors.Dynamic.Tests.Domain
 {
+    using Allors.Dynamic.Domain;
+    using Allors.Dynamic.Meta;
+    using Xunit;
+
     public class DynamicPopulationTests
     {
         [Fact]
@@ -16,7 +16,7 @@ namespace Allors.Dynamic.Tests.Domain
             meta.AddUnit<string>(named, "Name");
             meta.AddOneToOne(organization, person, "Owner");
 
-            var population = new DynamicPopulation(meta);
+            var population = new DynamicPopulation();
 
             var acme = population.Create(organization, v =>
             {

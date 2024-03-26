@@ -1,10 +1,10 @@
-﻿using System;
-using Allors.Dynamic.Domain;
-using Allors.Dynamic.Meta;
-using Xunit;
-
-namespace Allors.Dynamic.Tests.Domain
+﻿namespace Allors.Dynamic.Tests.Domain
 {
+    using System;
+    using Allors.Dynamic.Domain;
+    using Allors.Dynamic.Meta;
+    using Xunit;
+
     public class SnapshotTests
     {
         [Fact]
@@ -15,7 +15,7 @@ namespace Allors.Dynamic.Tests.Domain
             var firstName = meta.AddUnit<string>(person, "FirstName");
             var lastName = meta.AddUnit<string>(person, "LastName");
 
-            var population = new DynamicPopulation(meta);
+            var population = new DynamicPopulation();
 
             var john = population.Create(person);
             var jane = population.Create(person);
@@ -60,7 +60,7 @@ namespace Allors.Dynamic.Tests.Domain
             var employee = meta.AddManyToMany(organization, person, "Employee");
 
 
-            var population = new DynamicPopulation(meta);
+            var population = new DynamicPopulation();
 
             var john = population.Create(person);
             var jane = population.Create(person);

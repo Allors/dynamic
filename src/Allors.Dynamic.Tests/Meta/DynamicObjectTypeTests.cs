@@ -1,8 +1,8 @@
-using Allors.Dynamic.Meta;
-using Xunit;
-
 namespace Allors.Dynamic.Tests.Meta
 {
+    using Allors.Dynamic.Meta;
+    using Xunit;
+
     public class DynamicObjectTypeTests
     {
         [Fact]

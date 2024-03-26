@@ -139,7 +139,7 @@
         {
             IDynamicOneToAssociationType oneToAssociationType => (DynamicObject?)this.Population.GetAssociation(this, oneToAssociationType),
             IDynamicManyToAssociationType oneToAssociationType => (IEnumerable<DynamicObject>?)this.Population.GetAssociation(this, oneToAssociationType) ?? [],
-            _ => throw new InvalidOperationException()
+            _ => throw new InvalidOperationException(),
         };
 
         public DynamicObject? this[DynamicOneToOneAssociationType associationType] => (DynamicObject?)this.Population.GetAssociation(this, associationType);

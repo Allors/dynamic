@@ -1,7 +1,6 @@
-﻿using Allors.Dynamic.Domain;
-
-namespace Allors.Dynamic.Tests.Domain
+﻿namespace Allors.Dynamic.Tests.Domain
 {
+    using Allors.Dynamic.Domain;
     using Allors.Dynamic.Meta;
     using Xunit;
 
@@ -16,7 +15,7 @@ namespace Allors.Dynamic.Tests.Domain
             meta.AddUnit<string>(c1, "Same");
             meta.AddUnit<string>(c2, "Same");
 
-            var population = new DynamicPopulation(meta);
+            var population = new DynamicPopulation();
 
             var c1a = population.Create(c1, v =>
             {
@@ -39,7 +38,7 @@ namespace Allors.Dynamic.Tests.Domain
             var person = meta.AddClass("Person");
             meta.AddUnit<string>(person, "FirstName");
 
-            var population = new DynamicPopulation(meta);
+            var population = new DynamicPopulation();
 
             var john = population.Create(person);
             var jane = population.Create(person);

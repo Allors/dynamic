@@ -1,6 +1,4 @@
 ﻿namespace Allors.Dynamic.Meta
 {
-    public interface IDynamicToOneRoleType : IDynamicCompositeRoleType
-    {
-    }
+    public interface IDynamicToOneRoleType : IDynamicCompositeRoleType;
 }

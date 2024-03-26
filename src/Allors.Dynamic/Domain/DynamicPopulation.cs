@@ -7,7 +7,7 @@
     using System.Linq;
     using Allors.Dynamic.Meta;
 
-    public sealed class DynamicPopulation(DynamicMeta meta)
+    public sealed class DynamicPopulation
     {
         private readonly Dictionary<IDynamicRoleType, Dictionary<DynamicObject, object>> roleByAssociationByRoleType = [];
         private readonly Dictionary<IDynamicCompositeAssociationType, Dictionary<DynamicObject, object>> associationByRoleByAssociationType = [];
@@ -46,9 +46,11 @@
                     var role = changedRoleByAssociation[association];
                     roleByAssociation.TryGetValue(association, out var originalRole);
 
+                    var compositeRoleType = roleType as IDynamicCompositeRoleType;
+
                     var areEqual = ReferenceEquals(originalRole, role) ||
-                                   (roleType.IsOne && Equals(originalRole, role)) ||
-                                   (roleType.IsMany && Same(originalRole, role));
+                                   (compositeRoleType?.IsOne == true && Equals(originalRole, role)) ||
+                                   (compositeRoleType?.IsMany == true && Same(originalRole, role));
 
                     if (areEqual)
                     {
@@ -94,7 +96,7 @@
                 }
             }
 
-            var snapshot = new DynamicChangeSet(meta, this.changedRoleByAssociationByRoleType, this.changedAssociationByRoleByAssociationType);
+            var snapshot = new DynamicChangeSet(this.changedRoleByAssociationByRoleType, this.changedAssociationByRoleByAssociationType);
 
             foreach (var kvp in this.changedRoleByAssociationByRoleType)
             {
@@ -412,7 +414,36 @@
 
         private void RemoveRole(DynamicObject association, IDynamicRoleType roleType)
         {
-            throw new NotImplementedException();
+            var associationType = (IDynamicCompositeAssociationType)roleType.AssociationType;
+
+            var previousRole = (IImmutableSet<DynamicObject>?)this.GetRole(association, roleType);
+            if (previousRole != null)
+            {
+                // Role
+                var changedRoleByAssociation = this.ChangedRoleByAssociation(roleType);
+                changedRoleByAssociation.Remove(association);
+
+                // Association
+                var changedAssociationByRole = this.ChangedAssociationByRole(associationType);
+                foreach (var role in previousRole)
+                {
+                    if (associationType.IsOne)
+                    {
+                        // One to Many
+                        changedAssociationByRole.Remove(role);
+                    }
+                    else
+                    {
+                        var previousAssociation = (IImmutableSet<DynamicObject>?)this.GetAssociation(role, associationType);
+
+                        // Many to Many
+                        if (previousAssociation != null && previousAssociation.Contains(association))
+                        {
+                            changedAssociationByRole[role] = previousAssociation.Remove(association);
+                        }
+                    }
+                }
+            }
         }
     }
 }

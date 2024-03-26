@@ -19,27 +19,15 @@
 
         string Name { get; }
 
-        bool IsOne { get; }
-
-        bool IsMany { get; }
-
-        bool IsUnit { get; }
-
         void Deconstruct(out IDynamicRoleType roleType, out IDynamicAssociationType associationType);
 
-        internal object? Normalize(object? value)
-        {
-            if (this.IsUnit)
+        internal object? Normalize(object? value) =>
+            this switch
             {
-                return this.NormalizeUnit(value);
-            }
-
-            return this.IsOne switch
-            {
-                true => this.NormalizeToOne(value),
-                _ => this.NormalizeToMany(value)
+                DynamicUnitRoleType => this.NormalizeUnit(value),
+                IDynamicToOneRoleType => this.NormalizeToOne(value),
+                _ => this.NormalizeToMany(value),
             };
-        }
 
         private object? NormalizeUnit(object? value)
         {
@@ -56,7 +44,7 @@
                     DateTimeKind.Unspecified => throw new ArgumentException(@"DateTime value is of DateTimeKind.Kind Unspecified.
 Unspecified is only allowed for DateTime.MaxValue and DateTime.MinValue. 
 Use DateTimeKind.Utc or DateTimeKind.Local."),
-                    _ => dateTime
+                    _ => dateTime,
                 };
 
                 return new DateTime(dateTime.Year, dateTime.Month, dateTime.Day, dateTime.Hour, dateTime.Minute, dateTime.Second, dateTime.Millisecond, DateTimeKind.Utc);
@@ -96,7 +84,7 @@ Use DateTimeKind.Utc or DateTimeKind.Local."),
             {
                 null => null,
                 ICollection collection => this.NormalizeToMany(collection).ToArray(),
-                _ => throw new ArgumentException($"{value.GetType()} is not a collection Type")
+                _ => throw new ArgumentException($"{value.GetType()} is not a collection Type"),
             };
         }
 

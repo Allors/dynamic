@@ -1,14 +1,13 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using Allors.Dynamic.Domain;
-using Allors.Dynamic.Meta;
-using Xunit;
-using DynamicObject = Allors.Dynamic.Domain.DynamicObject;
-
-namespace Allors.Dynamic.Tests.Domain
+﻿namespace Allors.Dynamic.Tests.Domain
 {
+    using System;
     using System.Collections.Frozen;
+    using System.Collections.Generic;
+    using System.Linq;
+    using Allors.Dynamic.Domain;
+    using Allors.Dynamic.Meta;
+    using Xunit;
+    using DynamicObject = Allors.Dynamic.Domain.DynamicObject;
 
     public class ManyToManyTests
     {
@@ -21,7 +20,7 @@ namespace Allors.Dynamic.Tests.Domain
             var name = meta.AddUnit<string>(organization, "Name");
             var (employees, organizationWhereEmployee) = meta.AddManyToMany(organization, person, "Employee");
 
-            var population = new DynamicPopulation(meta);
+            var population = new DynamicPopulation();
 
             var acme = population.Create(organization, v => v[name] = "Acme");
             var hooli = population.Create(organization, v => v[name] = "Hooli");
@@ -60,7 +59,7 @@ namespace Allors.Dynamic.Tests.Domain
             var name = meta.AddUnit<string>(organization, "Name");
             var (employees, organizationWhereEmployee) = meta.AddManyToMany(organization, person, "Employee");
 
-            var population = new DynamicPopulation(meta);
+            var population = new DynamicPopulation();
 
             var acme = population.Create(organization, v => v[name] = "Acme");
             var hooli = population.Create(organization, v => v[name] = "Hooli");
@@ -136,7 +135,7 @@ namespace Allors.Dynamic.Tests.Domain
             meta.AddUnit<string>(organization, "Name");
             var (employees, organizationWhereEmployee) = meta.AddManyToMany(organization, person, "Employee");
 
-            var population = new DynamicPopulation(meta);
+            var population = new DynamicPopulation();
 
             var acme = population.Create(organization, v => v["Name"] = "Acme");
             var hooli = population.Create(organization, v => v["Name"] = ("Hooli"));
@@ -196,7 +195,7 @@ namespace Allors.Dynamic.Tests.Domain
             meta.AddUnit<string>(organization, "Name");
             var (employees, organizationWhereEmployee) = meta.AddManyToMany(organization, person, "Employee");
 
-            var population = new DynamicPopulation(meta);
+            var population = new DynamicPopulation();
 
             var acme = population.Create(organization, v => v["Name"] = "Acme");
             var hooli = population.Create(organization, v => v["Name"] = "Hooli");
