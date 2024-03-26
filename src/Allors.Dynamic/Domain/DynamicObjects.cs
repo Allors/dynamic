@@ -27,7 +27,7 @@
 
         public int Count => this.objects.Length;
 
-        internal static DynamicObjects Ensure(object list)
+        internal static DynamicObjects Ensure(object? list)
         {
             if (list == null)
             {

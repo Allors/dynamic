@@ -231,7 +231,7 @@
             var previousRole = this.GetRole(association, roleType);
 
             var roles = ((IEnumerable)normalizedRole)?.Cast<DynamicObject>().ToArray() ?? Array.Empty<DynamicObject>();
-            var previousRoles = (IEnumerable<DynamicObject>)previousRole ?? Array.Empty<DynamicObject>();
+            var previousRoles = (IEnumerable<DynamicObject>?)previousRole ?? Array.Empty<DynamicObject>();
 
             // Use Diff (Add/Remove)
             var addedRoles = roles.Except(previousRoles);
@@ -256,7 +256,7 @@
             // Role
             var changedRoleByAssociation = this.ChangedRoleByAssociation(roleType);
             var previousRole = this.GetRole(association, roleType);
-            var roleArray = (IEnumerable<DynamicObject>)previousRole;
+            var roleArray = (IEnumerable<DynamicObject>?)previousRole;
             roleArray = DynamicObjects.Ensure(roleArray).Add(role);
             changedRoleByAssociation[association] = roleArray;
 
@@ -265,7 +265,7 @@
             if (associationType.IsOne)
             {
                 // One to Many
-                var previousAssociationObject = (DynamicObject)previousAssociation;
+                var previousAssociationObject = (DynamicObject?)previousAssociation;
                 if (previousAssociationObject != null)
                 {
                     var previousAssociationRole = this.GetRole(previousAssociationObject, roleType);
@@ -298,7 +298,7 @@
                 if (associationType.IsOne)
                 {
                     // One to Many
-                    changedAssociationByRole[role] = null;
+                    changedAssociationByRole.Remove(role);
                 }
                 else
                 {
