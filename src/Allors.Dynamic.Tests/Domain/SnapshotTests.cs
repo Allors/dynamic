@@ -1,6 +1,5 @@
-using System;
+﻿using System;
 using Allors.Dynamic.Domain;
-using Allors.Dynamic.Domain.Indexing;
 using Allors.Dynamic.Meta;
 using Xunit;
 

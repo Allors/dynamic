@@ -1,5 +1,4 @@
-using Allors.Dynamic.Domain;
-using Allors.Dynamic.Domain.Indexing;
+﻿using Allors.Dynamic.Domain;
 
 namespace Allors.Dynamic.Tests.Domain
 {

@@ -1,23 +1,23 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Collections.ObjectModel;
-
-namespace Allors.Dynamic.Meta
+﻿namespace Allors.Dynamic.Meta
 {
+    using System;
+    using System.Collections.Generic;
+    using System.Collections.ObjectModel;
+
     public sealed class DynamicMeta
     {
         private readonly Dictionary<string, DynamicObjectType> objectTypeByName;
 
         public DynamicMeta()
         {
-            objectTypeByName = [];
+            this.objectTypeByName = [];
 
             this.ObjectTypeByName = new ReadOnlyDictionary<string, DynamicObjectType>(this.objectTypeByName);
         }
 
         public IReadOnlyDictionary<string, DynamicObjectType> ObjectTypeByName { get; }
 
-        public DynamicUnitRoleType AddUnit<TRole>(DynamicObjectType associationObjectType, string roleName, string? associationName = null) => associationObjectType.AddUnit(Unit(typeof(TRole)), roleName, associationName);
+        public DynamicUnitRoleType AddUnit<TRole>(DynamicObjectType associationObjectType, string roleName, string? associationName = null) => associationObjectType.AddUnit(this.Unit(typeof(TRole)), roleName, associationName);
 
         public DynamicOneToOneRoleType AddOneToOne(DynamicObjectType associationObjectType, DynamicObjectType roleObjectType, string roleName, string? associationName = null) => associationObjectType.AddOneToOne(roleObjectType, roleName, associationName);
 
@@ -30,23 +30,23 @@ namespace Allors.Dynamic.Meta
         public DynamicObjectType AddInterface(string name, params DynamicObjectType[] supertypes)
         {
             var objectType = new DynamicObjectType(this, DynamicObjectTypeKind.Interface, name, supertypes);
-            objectTypeByName.Add(objectType.Name, objectType);
+            this.objectTypeByName.Add(objectType.Name, objectType);
             return objectType;
         }
 
         public DynamicObjectType AddClass(string name, params DynamicObjectType[] supertypes)
         {
             var objectType = new DynamicObjectType(this, DynamicObjectTypeKind.Class, name, supertypes);
-            objectTypeByName.Add(objectType.Name, objectType);
+            this.objectTypeByName.Add(objectType.Name, objectType);
             return objectType;
         }
 
         private DynamicObjectType Unit(Type type)
         {
-            if (!ObjectTypeByName.TryGetValue(type.Name, out var objectType))
+            if (!this.ObjectTypeByName.TryGetValue(type.Name, out var objectType))
             {
                 objectType = new DynamicObjectType(this, type);
-                objectTypeByName.Add(objectType.Name, objectType);
+                this.objectTypeByName.Add(objectType.Name, objectType);
             }
 
             return objectType;
@@ -98,7 +98,7 @@ namespace Allors.Dynamic.Meta
 
         internal void ResetDerivations()
         {
-            foreach ((_, DynamicObjectType? objectType) in ObjectTypeByName)
+            foreach ((_, DynamicObjectType? objectType) in this.ObjectTypeByName)
             {
                 objectType.ResetDerivations();
             }

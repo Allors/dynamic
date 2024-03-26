@@ -1,10 +1,10 @@
-﻿using System.Collections.Generic;
-using System.Collections.ObjectModel;
-using System.Linq;
-using Allors.Dynamic.Meta;
-
-namespace Allors.Dynamic.Domain
+﻿namespace Allors.Dynamic.Domain
 {
+    using System.Collections.Generic;
+    using System.Collections.ObjectModel;
+    using System.Linq;
+    using Allors.Dynamic.Meta;
+
     public sealed class DynamicChangeSet(
         DynamicMeta meta,
         IReadOnlyDictionary<IDynamicRoleType, Dictionary<DynamicObject, object>> roleByAssociationByRoleType,
@@ -21,7 +21,7 @@ namespace Allors.Dynamic.Domain
         public IReadOnlyDictionary<DynamicObject, object> ChangedRoles(DynamicObjectType objectType, string name)
         {
             var roleType = objectType.RoleTypeByName[name];
-            return ChangedRoles(roleType) ?? Empty;
+            return this.ChangedRoles(roleType) ?? Empty;
         }
 
         public IReadOnlyDictionary<DynamicObject, object> ChangedRoles(IDynamicRoleType roleType)
