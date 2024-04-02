@@ -8,19 +8,19 @@
     {
         private readonly Dictionary<string, IDynamicAssociationType> assignedAssociationTypeByName;
         private readonly Dictionary<string, IDynamicRoleType> assignedRoleTypeByName;
-        private readonly HashSet<DynamicObjectType> supertypes;
+        private readonly HashSet<DynamicObjectType> directSupertypes;
 
         private IDictionary<string, IDynamicAssociationType>? derivedAssociationTypeByName;
         private IDictionary<string, IDynamicRoleType>? derivedRoleTypeByName;
         private HashSet<DynamicObjectType>? derivedSupertypes;
 
-        internal DynamicObjectType(DynamicMeta meta, DynamicObjectTypeKind kind, string name, DynamicObjectType[] supertypes)
+        internal DynamicObjectType(DynamicMeta meta, DynamicObjectTypeKind kind, string name, DynamicObjectType[] directSupertypes)
         {
             this.Meta = meta;
             this.Kind = kind;
             this.Name = name;
 
-            this.supertypes = [.. supertypes];
+            this.directSupertypes = [.. directSupertypes];
             this.assignedAssociationTypeByName = [];
             this.assignedRoleTypeByName = [];
 
@@ -48,29 +48,15 @@
         {
             get
             {
-                if (this.derivedSupertypes == null)
+                if (this.derivedSupertypes != null)
                 {
-                    this.derivedSupertypes = [];
-                    this.AddSupertypes(this.derivedSupertypes);
+                    return this.derivedSupertypes;
                 }
 
+                this.derivedSupertypes = [];
+                this.AddSupertypes(this.derivedSupertypes);
                 return this.derivedSupertypes;
             }
-        }
-
-        private void AddSupertypes(HashSet<DynamicObjectType> newDerivedSupertypes)
-        {
-            foreach (var supertype in this.supertypes.Where(supertype => !newDerivedSupertypes.Contains(supertype)))
-            {
-                newDerivedSupertypes.Add(supertype);
-                supertype.AddSupertypes(newDerivedSupertypes);
-            }
-        }
-
-        public void AddSupertype(DynamicObjectType supertype)
-        {
-            this.supertypes.Add(supertype);
-            this.Meta.ResetDerivations();
         }
 
         public IDictionary<string, IDynamicAssociationType> AssociationTypeByName
@@ -107,6 +93,17 @@
 
                 return this.derivedRoleTypeByName;
             }
+        }
+
+        public void AddDirectSupertype(DynamicObjectType directSupertype)
+        {
+            this.directSupertypes.Add(directSupertype);
+            this.Meta.ResetDerivations();
+        }
+
+        public bool IsAssignableFrom(DynamicObjectType other)
+        {
+            return this == other || other.Supertypes.Contains(this);
         }
 
         internal DynamicUnitRoleType AddUnit(DynamicObjectType objectType, string? roleSingularName, string? associationSingularName)
@@ -301,6 +298,15 @@
             this.derivedRoleTypeByName = null;
         }
 
+        private void AddSupertypes(HashSet<DynamicObjectType> newDerivedSupertypes)
+        {
+            foreach (var supertype in this.directSupertypes.Where(supertype => !newDerivedSupertypes.Contains(supertype)))
+            {
+                newDerivedSupertypes.Add(supertype);
+                supertype.AddSupertypes(newDerivedSupertypes);
+            }
+        }
+
         private void AddAssociationType(IDynamicAssociationType associationType)
         {
             this.CheckNames(associationType.SingularName, associationType.PluralName);
@@ -330,11 +336,6 @@
             {
                 throw new ArgumentException($"{pluralName} is not unique");
             }
-        }
-
-        public bool IsAssignableFrom(DynamicObjectType other)
-        {
-            return this == other || other.Supertypes.Contains(this);
         }
     }
 }

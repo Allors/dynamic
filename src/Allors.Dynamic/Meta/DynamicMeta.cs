@@ -41,17 +41,6 @@
             return objectType;
         }
 
-        private DynamicObjectType Unit(Type type)
-        {
-            if (!this.ObjectTypeByName.TryGetValue(type.Name, out var objectType))
-            {
-                objectType = new DynamicObjectType(this, type);
-                this.objectTypeByName.Add(objectType.Name, objectType);
-            }
-
-            return objectType;
-        }
-
         internal string Pluralize(string singular)
         {
             static bool EndsWith(string word, string ending) => word.EndsWith(ending, StringComparison.InvariantCultureIgnoreCase);
@@ -102,6 +91,17 @@
             {
                 objectType.ResetDerivations();
             }
+        }
+
+        private DynamicObjectType Unit(Type type)
+        {
+            if (!this.ObjectTypeByName.TryGetValue(type.Name, out var objectType))
+            {
+                objectType = new DynamicObjectType(this, type);
+                this.objectTypeByName.Add(objectType.Name, objectType);
+            }
+
+            return objectType;
         }
     }
 }
