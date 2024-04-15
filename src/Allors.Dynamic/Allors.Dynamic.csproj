@@ -6,14 +6,13 @@
     <WarningsAsErrors>nullable</WarningsAsErrors>
     <Title>Allors Dynamic</Title>
     <Authors>allors</Authors>
-    <Company>Allors bvba</Company>
-    <Copyright>(c) Allors bvba</Copyright>
+    <Company>Allors bv</Company>
+    <Copyright>(c) Allors bv</Copyright>
     <Description>Dynamic implementation of Allors.</Description>
     <PackageProjectUrl>https://github.com/Allors/Dynamic</PackageProjectUrl>
     <PackageDescription>Dynamic reactive domain implementation.</PackageDescription>
     <PackageReadmeFile>README.md</PackageReadmeFile>
     <PackageIcon>icon.png</PackageIcon>
-    <PackageLicenseExpression>LGPL-3.0-or-later</PackageLicenseExpression>
     <PackageLicenseExpression>LGPL-3.0-or-later</PackageLicenseExpression>
     <PackageTags>dynamic;reactive;domain</PackageTags>
     <RepositoryUrl>https://github.com/Allors/Dynamic.git</RepositoryUrl>
@@ -23,6 +22,10 @@
     <!--<GenerateDocumentationFile>true</GenerateDocumentationFile>-->
   </PropertyGroup>
 
+  <PropertyGroup Condition="'$(TF_BUILD)' == 'true' Or '$(GITHUB_ACTIONS)' == 'true'">
+    <ContinuousIntegrationBuild>true</ContinuousIntegrationBuild>
+  </PropertyGroup>
+    
   <ItemGroup>
     <None Include="icon.png" Pack="true" PackagePath="" />
     <None Include="..\..\README.md" Pack="true" PackagePath="\" />
